@@ -141,7 +141,7 @@
       transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* 3 Summary Badges */
+    /* 2 Summary Cards */
     .summary-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -157,6 +157,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      cursor: pointer;
       transition: transform 0.15s ease;
     }
     .stat-card:active { transform: scale(0.98); }
@@ -184,7 +185,7 @@
       align-items: center;
     }
 
-    /* Last 7 Days Interactive Chart */
+    /* Chart */
     .chart-box {
       display: flex;
       align-items: flex-end;
@@ -218,7 +219,7 @@
     }
     .chart-day { font-size: 11px; font-weight: 600; margin-top: 6px; color: var(--secondary); }
 
-    /* Expense List & Search */
+    /* Search & Expense List */
     .search-input {
       width: 100%;
       padding: 12px 16px;
@@ -252,12 +253,17 @@
     .expense-name { font-weight: 700; font-size: 15px; }
     .expense-meta { font-size: 12px; color: var(--secondary); margin-top: 2px; }
     .expense-cost { font-size: 16px; font-weight: 800; font-family: monospace; text-align: right; }
-    .receipt-badge {
-      font-size: 11px;
+    .receipt-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: var(--pine-subtle);
       color: var(--pine);
-      font-weight: 600;
-      margin-top: 2px;
-      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 8px;
+      margin-top: 4px;
       cursor: pointer;
     }
     .btn-delete {
@@ -327,7 +333,7 @@
     .nav-tab.active { color: var(--pine); font-weight: 700; }
     .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
 
-    /* Modal / Bottom Sheet */
+    /* Modal / Bottom Sheets */
     .modal {
       position: fixed;
       inset: 0;
@@ -354,7 +360,7 @@
       to { transform: translateY(0); }
     }
 
-    /* Modal Inputs & Category Grid */
+    /* Modal Form Inputs */
     .form-group { margin-bottom: 16px; }
     label { font-size: 12px; font-weight: 700; color: var(--secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .amount-wrapper {
@@ -387,7 +393,7 @@
       outline: none;
     }
 
-    /* Quick Amount Chips */
+    /* Quick Chips */
     .chip-row {
       display: flex;
       gap: 8px;
@@ -408,7 +414,7 @@
     }
     .chip:active { transform: scale(0.94); }
 
-    /* Category 4x2 Grid */
+    /* Category Grid */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -435,7 +441,7 @@
     .category-emoji { font-size: 26px; }
     .category-title { font-size: 11px; font-weight: 700; text-align: center; }
 
-    /* Quick Date Selector */
+    /* Date Pills */
     .date-pills { display: flex; gap: 8px; margin-bottom: 8px; }
     .date-pill {
       flex: 1;
@@ -475,7 +481,20 @@
       cursor: pointer;
     }
 
-    /* Empty State Illustration */
+    /* In-App Image Viewer Modal */
+    #receiptViewerModal .modal-content {
+      text-align: center;
+      padding: 20px;
+    }
+    #viewerImage {
+      width: 100%;
+      max-height: 65vh;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 14px;
+    }
+
     .empty-state {
       text-align: center;
       padding: 36px 16px;
@@ -487,7 +506,7 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Top Header -->
   <header>
     <div>
       <h1 id="headerTitle">Daily Expenses</h1>
@@ -502,7 +521,6 @@
   <div class="container">
     <!-- Tab 1: Dashboard -->
     <div id="tabDashboard">
-      <!-- Friendly Budget & Status Card -->
       <div class="personality-card">
         <div class="coach-header">
           <span class="coach-greeting" id="coachGreeting">STATUS</span>
@@ -514,7 +532,6 @@
         </div>
       </div>
 
-      <!-- Quick Summary Cards -->
       <div class="summary-grid">
         <div class="stat-card" onclick="switchTab('entries')">
           <span class="stat-label" id="lblToday">TODAY</span>
@@ -526,22 +543,19 @@
         </div>
       </div>
 
-      <!-- Last 7 Days Graph -->
       <div class="content-card">
         <div class="card-title">
           <span id="lblLast7Days">Last 7 Days</span>
-          <span style="font-size: 11px; text-transform: none; color: var(--pine);" id="lblWeekAvg">Tap bars to view</span>
+          <span style="font-size: 11px; text-transform: none; color: var(--pine);">Tap bars to view</span>
         </div>
         <div class="chart-box" id="barChart"></div>
       </div>
 
-      <!-- Categories Breakdown -->
       <div class="content-card">
         <div class="card-title" id="lblCategories">Top Spending Categories</div>
         <div id="categoryBreakdown"></div>
       </div>
 
-      <!-- Data Export Options -->
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
         <div style="display: flex; gap: 10px;">
@@ -551,7 +565,7 @@
       </div>
     </div>
 
-    <!-- Tab 2: Entries List -->
+    <!-- Tab 2: Entries -->
     <div id="tabEntries" style="display: none;">
       <div class="content-card">
         <input type="search" class="search-input" id="searchBar" placeholder="🔍 Search by note or category..." oninput="filterEntries()" />
@@ -571,7 +585,22 @@
           <label id="lblBudgetSet">Monthly Budget (USD)</label>
           <input type="number" id="settingBudget" placeholder="e.g. 500" class="search-input" onchange="updateBudget(this.value)" />
         </div>
-        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle); margin-top: 14px;" onclick="clearAllData()">Reset All Data</button>
+      </div>
+
+      <!-- Security Settings Card -->
+      <div class="content-card">
+        <div class="card-title">Reset Security Credentials</div>
+        <div class="form-group">
+          <label>Admin Username</label>
+          <input type="text" id="settingAdminUser" class="search-input" value="admin" onchange="updateCredentials()" />
+        </div>
+        <div class="form-group">
+          <label>Admin Password</label>
+          <input type="password" id="settingAdminPass" class="search-input" value="1234" onchange="updateCredentials()" />
+        </div>
+        <p style="font-size: 12px; color: var(--secondary); margin-top:-6px;">These credentials are required whenever you request to reset all data.</p>
+        
+        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle); margin-top: 10px;" onclick="promptResetAuth()">Reset All Data</button>
       </div>
     </div>
   </div>
@@ -595,7 +624,7 @@
     </button>
   </nav>
 
-  <!-- Friendly 1-Tap Add Expense Modal -->
+  <!-- Add Expense Modal -->
   <div class="modal" id="addModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -603,24 +632,20 @@
         <button onclick="closeAddModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
       </div>
 
-      <!-- Amount + Currency Pill -->
       <div class="form-group">
         <label id="lblAmount">Amount</label>
         <div class="amount-wrapper">
           <button type="button" class="cur-pill" id="btnModalCur" onclick="toggleFormCurrency()">USD ($)</button>
           <input type="number" id="inpAmount" class="amount-input" placeholder="0.00" step="any" inputmode="decimal" />
         </div>
-        <!-- Quick Pick Chips -->
         <div class="chip-row" id="quickChips"></div>
       </div>
 
-      <!-- 1-Tap Category Grid -->
       <div class="form-group">
         <label id="lblCategory">Select Category</label>
         <div class="category-grid" id="categoryGrid"></div>
       </div>
 
-      <!-- Date Pills -->
       <div class="form-group">
         <label id="lblDate">When</label>
         <div class="date-pills">
@@ -631,11 +656,11 @@
         <input type="date" id="inpDate" class="search-input" style="display: none; margin-top: 6px;" />
       </div>
 
-      <!-- Note & Optional Receipt -->
       <div class="form-group">
         <label id="lblNote">Note & Receipt</label>
         <input type="text" id="inpNote" class="search-input" placeholder="e.g. Iced Latte with friends" />
-        <input type="file" id="inpReceipt" accept="image/*" style="font-size: 12px; margin-top: 4px;" />
+        <input type="file" id="inpReceipt" accept="image/*" class="search-input" style="padding: 10px;" />
+        <div id="receiptPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ Photo ready to attach</div>
       </div>
 
       <button class="btn-action" onclick="saveExpense()" id="btnSave">Save Expense</button>
@@ -643,8 +668,39 @@
     </div>
   </div>
 
+  <!-- In-App Receipt Photo Lightbox Modal -->
+  <div class="modal" id="receiptViewerModal">
+    <div class="modal-content">
+      <h3 style="margin-top: 0;">Receipt Photo</h3>
+      <img id="viewerImage" src="" alt="Receipt" />
+      <button class="btn-action" onclick="closeReceiptModal()">Done</button>
+    </div>
+  </div>
+
+  <!-- Reset Security Authentication Modal -->
+  <div class="modal" id="resetAuthModal">
+    <div class="modal-content">
+      <h2 style="margin-top:0; color: var(--danger);">Authorize Data Reset</h2>
+      <p style="font-size: 13px; color: var(--secondary);">Enter your administrator username and password to wipe all transactions.</p>
+      
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="authInputUser" class="search-input" placeholder="Username" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="authInputPass" class="search-input" placeholder="Password" />
+      </div>
+      
+      <div id="authErrorMsg" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-bottom: 10px; display: none;">Invalid username or password!</div>
+      
+      <button class="btn-action" style="background: var(--danger);" onclick="executeDataReset()">Verify & Wipe All</button>
+      <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+    </div>
+  </div>
+
   <script>
-    // Categories with Emojis[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+    // Categories with Emojis[span_2](start_span)[span_2](end_span)
     const categories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
       { id: "drinks", emoji: "☕", labelEn: "Drinks", labelKm: "ភេសជ្ជៈ", color: "#1F7A72" },
@@ -656,7 +712,7 @@
       { id: "other", emoji: "📦", labelEn: "Other", labelKm: "ផ្សេងទៀត", color: "#6E6A5E" }
     ];
 
-    // Bilingual Khmer & English dictionary[span_5](start_span)[span_5](end_span)
+    // Bilingual Khmer & English dictionary[span_3](start_span)[span_3](end_span)
     const i18n = {
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
       entries: { en: "Entries", km: "ចំណាយទាំងអស់" },
@@ -680,16 +736,17 @@
       budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" }
     };
 
-    // Global Store[span_6](start_span)[span_6](end_span)
+    // Global State with Security Defaults[span_4](start_span)[span_4](end_span)
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
       displayCurrency: localStorage.getItem("ledger_cur") || "USD",
       monthlyBudgetUSD: parseFloat(localStorage.getItem("ledger_budget") || "0"),
       lang: localStorage.getItem("ledger_lang") || "en",
+      adminUser: localStorage.getItem("ledger_admin_user") || "admin",
+      adminPass: localStorage.getItem("ledger_admin_pass") || "1234",
       activeFormCur: "USD",
-      selectedCat: "food",
-      receiptBase64: null
+      selectedCat: "food"
     };
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -697,18 +754,29 @@
       buildCategoryGrid();
       applyLanguage();
       render();
+
+      document.getElementById("inpReceipt").addEventListener("change", function() {
+        const preview = document.getElementById("receiptPreviewIndicator");
+        preview.style.display = this.files.length > 0 ? "block" : "none";
+      });
     });
 
     function saveState() {
-      localStorage.setItem("ledger_entries", JSON.stringify(state.entries));
-      localStorage.setItem("ledger_rate", state.exchangeRate);
-      localStorage.setItem("ledger_cur", state.displayCurrency);
-      localStorage.setItem("ledger_budget", state.monthlyBudgetUSD);
-      localStorage.setItem("ledger_lang", state.lang);
+      try {
+        localStorage.setItem("ledger_entries", JSON.stringify(state.entries));
+        localStorage.setItem("ledger_rate", state.exchangeRate);
+        localStorage.setItem("ledger_cur", state.displayCurrency);
+        localStorage.setItem("ledger_budget", state.monthlyBudgetUSD);
+        localStorage.setItem("ledger_lang", state.lang);
+        localStorage.setItem("ledger_admin_user", state.adminUser);
+        localStorage.setItem("ledger_admin_pass", state.adminPass);
+      } catch (err) {
+        alert("Device storage full! Please delete some old receipt photos or expenses.");
+      }
       render();
     }
 
-    // Currency Formatting[span_7](start_span)[span_7](end_span)
+    // Currency Formatting[span_5](start_span)[span_5](end_span)
     function toUSD(val, cur) {
       return cur === "KHR" ? val / state.exchangeRate : val;
     }
@@ -729,7 +797,7 @@
       document.getElementById("liveDate").innerText = now.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
     }
 
-    // Render Dashboard & UI[span_8](start_span)[span_8](end_span)
+    // Render Dashboard[span_6](start_span)[span_6](end_span)
     function render() {
       const now = new Date();
       const todayStr = now.toISOString().split("T")[0];
@@ -751,25 +819,19 @@
         }
       });
 
-      // Update Summary Cards[span_9](start_span)[span_9](end_span)
       document.getElementById("valToday").innerText = fmt(fromUSD(todayUSD, state.displayCurrency));
       document.getElementById("valMonth").innerText = fmt(fromUSD(monthUSD, state.displayCurrency));
 
-      // Update Personality Budget Coach
       updatePersonalityCard(monthUSD);
-
-      // Render Last 7 Days Bars[span_10](start_span)[span_10](end_span)
       renderWeeklyChart();
-
-      // Render Categories
       renderCategoryList(catMap, monthUSD);
-
-      // Render Entries Tab
       renderEntriesList();
 
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
       document.getElementById("settingRate").value = state.exchangeRate;
       document.getElementById("settingBudget").value = state.monthlyBudgetUSD || "";
+      document.getElementById("settingAdminUser").value = state.adminUser;
+      document.getElementById("settingAdminPass").value = state.adminPass;
     }
 
     function updatePersonalityCard(monthUSD) {
@@ -802,7 +864,6 @@
       }
     }
 
-    // Weekly Chart with Rounded Bars[span_11](start_span)[span_11](end_span)
     function renderWeeklyChart() {
       const container = document.getElementById("barChart");
       container.innerHTML = "";
@@ -842,7 +903,6 @@
       });
     }
 
-    // Category Breakdown[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)
     function renderCategoryList(catMap, monthUSD) {
       const container = document.getElementById("categoryBreakdown");
       container.innerHTML = "";
@@ -873,7 +933,6 @@
       });
     }
 
-    // Entries Tab & Search Filter[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span)
     function renderEntriesList(filtered = null) {
       const container = document.getElementById("entriesList");
       container.innerHTML = "";
@@ -894,7 +953,7 @@
           <div class="expense-details">
             <div class="expense-name">${name}</div>
             <div class="expense-meta">${e.date} ${e.note ? "• " + e.note : ""}</div>
-            ${e.receipt ? `<span class="receipt-badge" onclick="viewReceipt('${e.id}')">📎 View Receipt</span>` : ""}
+            ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">📎 View Receipt</div>` : ""}
           </div>
           <div class="expense-cost">${fmt(e.amount, e.currency)}</div>
           <button class="btn-delete" onclick="deleteEntry('${e.id}')">✕</button>
@@ -914,7 +973,6 @@
       renderEntriesList(filtered);
     }
 
-    // 1-Tap Category Grid Generator
     function buildCategoryGrid() {
       const grid = document.getElementById("categoryGrid");
       grid.innerHTML = "";
@@ -932,7 +990,6 @@
       });
     }
 
-    // Quick Amount Chips
     function updateQuickChips() {
       const container = document.getElementById("quickChips");
       container.innerHTML = "";
@@ -952,11 +1009,11 @@
       });
     }
 
-    // Modal Handlers[span_16](start_span)[span_16](end_span)
     function openAddModal() {
       document.getElementById("inpAmount").value = "";
       document.getElementById("inpNote").value = "";
       document.getElementById("inpReceipt").value = "";
+      document.getElementById("receiptPreviewIndicator").style.display = "none";
       selectDatePill("today");
       state.activeFormCur = state.displayCurrency;
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
@@ -994,15 +1051,56 @@
       }
     }
 
-    // Save Expense with Image Attachment[span_17](start_span)[span_17](end_span)
+    // Photo Compression via Canvas (Solves QuotaExceeded Error)
+    function compressImageFile(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width = Math.round((width * MAX_HEIGHT) / height);
+                height = MAX_HEIGHT;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Compress to JPEG ~50KB-80KB to fit easily in localStorage
+            resolve(canvas.toDataURL("image/jpeg", 0.65));
+          };
+          img.onerror = () => resolve(null);
+        };
+        reader.onerror = () => resolve(null);
+      });
+    }
+
     async function saveExpense() {
       const amt = parseFloat(document.getElementById("inpAmount").value);
       if (!amt || amt <= 0) return alert("Please enter a valid expense amount.");
 
       const fileInput = document.getElementById("inpReceipt");
       let receiptData = null;
+
       if (fileInput.files.length > 0) {
-        receiptData = await fileToBase64(fileInput.files[0]);
+        receiptData = await compressImageFile(fileInput.files[0]);
       }
 
       const item = {
@@ -1020,20 +1118,16 @@
       closeAddModal();
     }
 
-    function fileToBase64(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function viewReceipt(id) {
+    function openReceiptModal(id) {
       const item = state.entries.find(e => e.id === id);
       if (item && item.receipt) {
-        const win = window.open("");
-        win.document.write(`<img src="${item.receipt}" style="max-width:100%; border-radius:12px;" />`);
+        document.getElementById("viewerImage").src = item.receipt;
+        document.getElementById("receiptViewerModal").style.display = "flex";
       }
+    }
+
+    function closeReceiptModal() {
+      document.getElementById("receiptViewerModal").style.display = "none";
     }
 
     function deleteEntry(id) {
@@ -1043,7 +1137,42 @@
       }
     }
 
-    // Settings & Language[span_18](start_span)[span_18](end_span)
+    // Reset Authentication Flow
+    function promptResetAuth() {
+      document.getElementById("authInputUser").value = "";
+      document.getElementById("authInputPass").value = "";
+      document.getElementById("authErrorMsg").style.display = "none";
+      document.getElementById("resetAuthModal").style.display = "flex";
+    }
+
+    function closeResetModal() {
+      document.getElementById("resetAuthModal").style.display = "none";
+    }
+
+    function executeDataReset() {
+      const u = document.getElementById("authInputUser").value.trim();
+      const p = document.getElementById("authInputPass").value.trim();
+
+      if (u === state.adminUser && p === state.adminPass) {
+        localStorage.clear();
+        alert("All data cleared successfully.");
+        location.reload();
+      } else {
+        document.getElementById("authErrorMsg").style.display = "block";
+      }
+    }
+
+    function updateCredentials() {
+      const u = document.getElementById("settingAdminUser").value.trim();
+      const p = document.getElementById("settingAdminPass").value.trim();
+      if (u && p) {
+        state.adminUser = u;
+        state.adminPass = p;
+        saveState();
+      }
+    }
+
+    // Settings & Language[span_7](start_span)[span_7](end_span)
     function toggleLanguage() {
       state.lang = state.lang === "en" ? "km" : "en";
       applyLanguage();
@@ -1090,7 +1219,6 @@
       saveState();
     }
 
-    // Tabs[span_19](start_span)[span_19](end_span)
     function switchTab(tab) {
       document.getElementById("tabDashboard").style.display = tab === "dashboard" ? "block" : "none";
       document.getElementById("tabEntries").style.display = tab === "entries" ? "block" : "none";
@@ -1101,7 +1229,6 @@
       document.getElementById("navSettings").className = "nav-tab " + (tab === "settings" ? "active" : "");
     }
 
-    // Export & Backup[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)[span_22](start_span)[span_22](end_span)
     function exportCSV() {
       let csv = "Date,Category,Amount,Currency,Note\n";
       state.entries.forEach(e => {
@@ -1121,13 +1248,6 @@
       a.href = URL.createObjectURL(blob);
       a.download = filename;
       a.click();
-    }
-
-    function clearAllData() {
-      if (confirm("Clear all recorded expenses? This cannot be undone.")) {
-        localStorage.clear();
-        location.reload();
-      }
     }
   </script>
 </body>
