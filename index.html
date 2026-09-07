@@ -89,7 +89,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: transform 0.15s ease;
+      transition: transform 0.15s ease, background 0.2s ease;
     }
     .pill-btn:active { transform: scale(0.95); }
 
@@ -125,7 +125,6 @@
     .coach-badge.over { background: var(--danger-subtle); color: var(--danger); }
     .coach-quote { font-size: 16px; font-weight: 700; line-height: 1.35; margin: 0; }
     
-    /* Specific styling for over-limit highlighted number */
     .over-limit-amount {
       color: var(--danger);
       font-weight: 800;
@@ -314,7 +313,7 @@
       background: var(--pine-dark);
     }
 
-    /* Tab Bar */
+    /* Bottom Nav */
     nav {
       position: fixed;
       bottom: 0;
@@ -470,6 +469,17 @@
     }
     .date-pill.active { background: var(--pine); color: #fff; border-color: var(--pine); }
 
+    /* Voice Note Button Pulse */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+    }
+    .listening-pulse {
+      animation: pulse 1.4s infinite;
+      border-color: var(--danger) !important;
+    }
+
     .btn-action {
       width: 100%;
       padding: 16px;
@@ -495,7 +505,6 @@
       cursor: pointer;
     }
 
-    /* Lightbox Modal */
     #receiptViewerModal .modal-content {
       text-align: center;
       padding: 20px;
@@ -570,7 +579,6 @@
         <div id="categoryBreakdown"></div>
       </div>
 
-      <!-- Export Tools -->
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
         <div>
@@ -601,7 +609,6 @@
         </div>
       </div>
 
-      <!-- Reset Security -->
       <div class="content-card">
         <div class="card-title">Reset Security Credentials</div>
         <div class="form-group">
@@ -670,9 +677,23 @@
         <input type="date" id="inpDate" class="search-input" style="display: none; margin-top: 6px;" />
       </div>
 
+      <!-- Note with Khmer Voice Button -->
       <div class="form-group">
-        <label id="lblNote">Note & Receipt</label>
-        <input type="text" id="inpNote" class="search-input" placeholder="e.g. Iced Latte with friends" />
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label id="lblNote" style="margin-bottom: 0;">Note & Voice</label>
+          <span style="font-size: 11px; color: var(--pine); font-weight: 700;">🇰🇭 Khmer Voice</span>
+        </div>
+        
+        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
+          <input type="text" id="inpNote" class="search-input" style="margin-bottom: 0;" placeholder="e.g. បាយថ្ងៃត្រង់ / Lunch" />
+          <button type="button" id="btnVoiceNote" class="pill-btn" style="height: 48px; padding: 0 16px; border-radius: 14px; font-size: 20px;" onclick="toggleKhmerVoiceRecognition()">
+            🎙️
+          </button>
+        </div>
+        <div id="voiceStatusIndicator" style="font-size: 12px; color: var(--danger); font-weight: 700; margin-top: -6px; margin-bottom: 8px; display: none;">
+          🔴 កំពុងស្តាប់ភាសាខ្មែរ... (Speak in Khmer now)
+        </div>
+
         <input type="file" id="inpReceipt" accept="image/*" class="search-input" style="padding: 10px;" />
         <div id="receiptPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ Photo ready to attach</div>
       </div>
@@ -682,7 +703,7 @@
     </div>
   </div>
 
-  <!-- Day Detail Modal (Shows all expenses for the clicked day) -->
+  <!-- Day Detail Modal -->
   <div class="modal" id="dayDetailModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -729,7 +750,7 @@
   </div>
 
   <script>
-    // Categories[span_2](start_span)[span_2](end_span)
+    // Categories[span_1](start_span)[span_1](end_span)
     const categories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
       { id: "drinks", emoji: "☕", labelEn: "Drinks", labelKm: "ភេសជ្ជៈ", color: "#1F7A72" },
@@ -741,7 +762,7 @@
       { id: "other", emoji: "📦", labelEn: "Other", labelKm: "ផ្សេងទៀត", color: "#6E6A5E" }
     ];
 
-    // Language dictionary[span_3](start_span)[span_3](end_span)
+    // Language dictionary[span_2](start_span)[span_2](end_span)
     const i18n = {
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
       entries: { en: "Entries", km: "ចំណាយទាំងអស់" },
@@ -755,7 +776,7 @@
       amount: { en: "Amount", km: "ចំនួនទឹកប្រាក់" },
       category: { en: "Select Category", km: "ជ្រើសរើសប្រភេទ" },
       date: { en: "When", km: "កាលបរិច្ឆេទ" },
-      note: { en: "Note & Receipt", km: "កំណត់ចំណាំ & បង្កាន់ដៃ" },
+      note: { en: "Note & Voice", km: "កំណត់ចំណាំ & សំឡេង" },
       save: { en: "Save Expense", km: "រក្សាទុកចំណាយ" },
       cancel: { en: "Cancel", km: "បោះបង់" },
       today: { en: "Today", km: "ថ្ងៃនេះ" },
@@ -766,7 +787,7 @@
       tap_hint: { en: "Tap day to view", km: "ចុចមើលតាមថ្ងៃ" }
     };
 
-    // State[span_4](start_span)[span_4](end_span)
+    // State[span_3](start_span)[span_3](end_span)
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
@@ -778,6 +799,10 @@
       activeFormCur: "USD",
       selectedCat: "food"
     };
+
+    // Voice recognition instances
+    let speechRecognition = null;
+    let isVoiceListening = false;
 
     window.addEventListener("DOMContentLoaded", () => {
       updateLiveDate();
@@ -806,7 +831,7 @@
       render();
     }
 
-    // Currency Conversion[span_5](start_span)[span_5](end_span)
+    // Currency Conversion[span_4](start_span)[span_4](end_span)
     function toUSD(val, cur) {
       return cur === "KHR" ? val / state.exchangeRate : val;
     }
@@ -827,7 +852,82 @@
       document.getElementById("liveDate").innerText = now.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
     }
 
-    // Render Dashboard[span_6](start_span)[span_6](end_span)
+    // Voice to Text Recognition (Khmer language)
+    function toggleKhmerVoiceRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert(state.lang === 'km' 
+          ? "កម្មវិធីរុករក Safari មិនគាំទ្រ Voice Recognition ទេ សូមបើក Dictation នៅក្នុង iPhone Settings > General > Keyboard > Enable Dictation"
+          : "Voice recognition is not supported in this browser. Please make sure Dictation is enabled in iPhone Settings > General > Keyboard > Enable Dictation.");
+        return;
+      }
+
+      if (!speechRecognition) {
+        speechRecognition = new SpeechRecognition();
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
+        speechRecognition.lang = 'km-KH'; // Khmer voice to text recognition
+
+        speechRecognition.onstart = () => {
+          isVoiceListening = true;
+          updateVoiceButtonUI(true);
+        };
+
+        speechRecognition.onresult = (event) => {
+          const spokenText = event.results[0][0].transcript;
+          const noteInput = document.getElementById("inpNote");
+          if (noteInput.value.trim().length > 0) {
+            noteInput.value += " " + spokenText;
+          } else {
+            noteInput.value = spokenText;
+          }
+        };
+
+        speechRecognition.onerror = (event) => {
+          isVoiceListening = false;
+          updateVoiceButtonUI(false);
+          if (event.error === 'not-allowed') {
+            alert(state.lang === 'km' 
+              ? "សូមអនុញ្ញាតការប្រើប្រាស់ Microphone សម្រាប់ Safari នៅក្នុង Settings របស់ iPhone"
+              : "Please allow Microphone permission for Safari in iPhone Settings.");
+          }
+        };
+
+        speechRecognition.onend = () => {
+          isVoiceListening = false;
+          updateVoiceButtonUI(false);
+        };
+      }
+
+      if (isVoiceListening) {
+        speechRecognition.stop();
+      } else {
+        speechRecognition.lang = 'km-KH'; // Ensure language is Khmer
+        try {
+          speechRecognition.start();
+        } catch (e) {
+          speechRecognition.stop();
+        }
+      }
+    }
+
+    function updateVoiceButtonUI(listening) {
+      const btn = document.getElementById("btnVoiceNote");
+      const indicator = document.getElementById("voiceStatusIndicator");
+      if (listening) {
+        btn.classList.add("listening-pulse");
+        btn.style.background = "var(--danger)";
+        btn.style.color = "#fff";
+        indicator.style.display = "block";
+      } else {
+        btn.classList.remove("listening-pulse");
+        btn.style.background = "";
+        btn.style.color = "var(--pine)";
+        indicator.style.display = "none";
+      }
+    }
+
+    // Render Dashboard[span_5](start_span)[span_5](end_span)
     function render() {
       const now = new Date();
       const todayStr = now.toISOString().split("T")[0];
@@ -889,7 +989,6 @@
           badgeEl.className = "coach-badge over";
           badgeEl.innerText = state.lang === "km" ? "លើសកម្រិត ⚠️" : "Over Limit ⚠️";
           const diff = fmt(fromUSD(monthUSD - state.monthlyBudgetUSD, state.displayCurrency));
-          // Color RED ONLY on the number
           quoteEl.innerHTML = state.lang === "km"
             ? `អ្នកបានចំណាយលើសថវិកាចំនួន <span class="over-limit-amount">${diff}</span>!`
             : `Budget exceeded by <span class="over-limit-amount">${diff}</span>!`;
@@ -904,7 +1003,7 @@
       }
     }
 
-    // Weekly Chart with click-to-view day details[span_7](start_span)[span_7](end_span)
+    // Weekly Chart with day clicks[span_6](start_span)[span_6](end_span)
     function renderWeeklyChart() {
       const container = document.getElementById("barChart");
       container.innerHTML = "";
@@ -938,7 +1037,6 @@
           <div class="chart-day">${dayName}</div>
         `;
 
-        // Open detailed view for clicked day
         col.onclick = () => {
           const dStr = item.date.toISOString().split("T")[0];
           const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
@@ -949,7 +1047,6 @@
       });
     }
 
-    // Day Details Modal Actions
     function openDayDetailModal(dStr, formattedDate) {
       const dayEntries = state.entries.filter(e => e.date.startsWith(dStr));
       const totalUSD = dayEntries.reduce((acc, e) => acc + toUSD(e.amount, e.currency), 0);
@@ -1104,6 +1201,7 @@
       document.getElementById("inpNote").value = "";
       document.getElementById("inpReceipt").value = "";
       document.getElementById("receiptPreviewIndicator").style.display = "none";
+      updateVoiceButtonUI(false);
       selectDatePill("today");
       state.activeFormCur = state.displayCurrency;
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
@@ -1112,6 +1210,9 @@
     }
 
     function closeAddModal() {
+      if (speechRecognition && isVoiceListening) {
+        speechRecognition.stop();
+      }
       document.getElementById("addModal").style.display = "none";
     }
 
