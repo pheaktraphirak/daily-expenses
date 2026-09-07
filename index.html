@@ -89,7 +89,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: transform 0.15s ease, background 0.2s ease;
+      transition: transform 0.15s ease;
     }
     .pill-btn:active { transform: scale(0.95); }
 
@@ -406,13 +406,17 @@
       outline: none;
     }
 
-    /* Chips */
+    /* Horizontal Chips */
     .chip-row {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 8px 0 2px 0;
+      padding: 8px 0 4px 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
+    .chip-row::-webkit-scrollbar { display: none; }
+
     .chip {
       background: var(--pine-subtle);
       color: var(--pine);
@@ -423,6 +427,7 @@
       border: none;
       white-space: nowrap;
       cursor: pointer;
+      flex-shrink: 0;
       transition: transform 0.1s ease;
     }
     .chip:active { transform: scale(0.94); }
@@ -468,17 +473,6 @@
       cursor: pointer;
     }
     .date-pill.active { background: var(--pine); color: #fff; border-color: var(--pine); }
-
-    /* Voice Note Button Pulse */
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.5); }
-      70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
-    }
-    .listening-pulse {
-      animation: pulse 1.4s infinite;
-      border-color: var(--danger) !important;
-    }
 
     .btn-action {
       width: 100%;
@@ -677,23 +671,27 @@
         <input type="date" id="inpDate" class="search-input" style="display: none; margin-top: 6px;" />
       </div>
 
-      <!-- Note with Khmer Voice Button -->
+      <!-- Note with Khmer Quick-Tap Tags -->
       <div class="form-group">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <label id="lblNote" style="margin-bottom: 0;">Note & Voice</label>
-          <span style="font-size: 11px; color: var(--pine); font-weight: 700;">🇰🇭 Khmer Voice</span>
-        </div>
-        
-        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
-          <input type="text" id="inpNote" class="search-input" style="margin-bottom: 0;" placeholder="e.g. បាយថ្ងៃត្រង់ / Lunch" />
-          <button type="button" id="btnVoiceNote" class="pill-btn" style="height: 48px; padding: 0 16px; border-radius: 14px; font-size: 20px;" onclick="toggleKhmerVoiceRecognition()">
-            🎙️
-          </button>
-        </div>
-        <div id="voiceStatusIndicator" style="font-size: 12px; color: var(--danger); font-weight: 700; margin-top: -6px; margin-bottom: 8px; display: none;">
-          🔴 កំពុងស្តាប់ភាសាខ្មែរ... (Speak in Khmer now)
+          <label id="lblNote" style="margin-bottom: 0;">Note & Quick Tags</label>
+          <span style="font-size: 11px; color: var(--pine); font-weight: 700;">🇰🇭 1-Tap Khmer</span>
         </div>
 
+        <!-- Scrollable Khmer Note Presets -->
+        <div class="chip-row" style="padding-top: 0; margin-bottom: 8px;">
+          <button type="button" class="chip" onclick="addKhmerTag('☕ កាហ្វេ')">☕ កាហ្វេ</button>
+          <button type="button" class="chip" onclick="addKhmerTag('🍛 បាយថ្ងៃត្រង់')">🍛 បាយថ្ងៃត្រង់</button>
+          <button type="button" class="chip" onclick="addKhmerTag('🍲 អាហារពេលល្ងាច')">🍲 អាហារពេលល្ងាច</button>
+          <button type="button" class="chip" onclick="addKhmerTag('⛽ ចាក់សាំង')">⛽ ចាក់សាំង</button>
+          <button type="button" class="chip" onclick="addKhmerTag('🛒 ទិញម្ហូប')">🛒 ទិញម្ហូប</button>
+          <button type="button" class="chip" onclick="addKhmerTag('💡 ទឹកភ្លើង')">💡 ទឹកភ្លើង</button>
+          <button type="button" class="chip" onclick="addKhmerTag('💊 ទិញថ្នាំ')">💊 ទិញថ្នាំ</button>
+          <button type="button" class="chip" onclick="addKhmerTag('🛵 ថ្លៃ PassApp')">🛵 PassApp</button>
+          <button type="button" class="chip" onclick="addKhmerTag('📶 អ៊ីនធឺណិត')">📶 អ៊ីនធឺណិត</button>
+        </div>
+
+        <input type="text" id="inpNote" class="search-input" placeholder="e.g. បាយថ្ងៃត្រង់ / Lunch" />
         <input type="file" id="inpReceipt" accept="image/*" class="search-input" style="padding: 10px;" />
         <div id="receiptPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ Photo ready to attach</div>
       </div>
@@ -776,7 +774,7 @@
       amount: { en: "Amount", km: "ចំនួនទឹកប្រាក់" },
       category: { en: "Select Category", km: "ជ្រើសរើសប្រភេទ" },
       date: { en: "When", km: "កាលបរិច្ឆេទ" },
-      note: { en: "Note & Voice", km: "កំណត់ចំណាំ & សំឡេង" },
+      note: { en: "Note & Quick Tags", km: "កំណត់ចំណាំ & ផ្លាករហ័ស" },
       save: { en: "Save Expense", km: "រក្សាទុកចំណាយ" },
       cancel: { en: "Cancel", km: "បោះបង់" },
       today: { en: "Today", km: "ថ្ងៃនេះ" },
@@ -799,10 +797,6 @@
       activeFormCur: "USD",
       selectedCat: "food"
     };
-
-    // Voice recognition instances
-    let speechRecognition = null;
-    let isVoiceListening = false;
 
     window.addEventListener("DOMContentLoaded", () => {
       updateLiveDate();
@@ -852,78 +846,13 @@
       document.getElementById("liveDate").innerText = now.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
     }
 
-    // Voice to Text Recognition (Khmer language)
-    function toggleKhmerVoiceRecognition() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert(state.lang === 'km' 
-          ? "កម្មវិធីរុករក Safari មិនគាំទ្រ Voice Recognition ទេ សូមបើក Dictation នៅក្នុង iPhone Settings > General > Keyboard > Enable Dictation"
-          : "Voice recognition is not supported in this browser. Please make sure Dictation is enabled in iPhone Settings > General > Keyboard > Enable Dictation.");
-        return;
-      }
-
-      if (!speechRecognition) {
-        speechRecognition = new SpeechRecognition();
-        speechRecognition.continuous = false;
-        speechRecognition.interimResults = false;
-        speechRecognition.lang = 'km-KH'; // Khmer voice to text recognition
-
-        speechRecognition.onstart = () => {
-          isVoiceListening = true;
-          updateVoiceButtonUI(true);
-        };
-
-        speechRecognition.onresult = (event) => {
-          const spokenText = event.results[0][0].transcript;
-          const noteInput = document.getElementById("inpNote");
-          if (noteInput.value.trim().length > 0) {
-            noteInput.value += " " + spokenText;
-          } else {
-            noteInput.value = spokenText;
-          }
-        };
-
-        speechRecognition.onerror = (event) => {
-          isVoiceListening = false;
-          updateVoiceButtonUI(false);
-          if (event.error === 'not-allowed') {
-            alert(state.lang === 'km' 
-              ? "សូមអនុញ្ញាតការប្រើប្រាស់ Microphone សម្រាប់ Safari នៅក្នុង Settings របស់ iPhone"
-              : "Please allow Microphone permission for Safari in iPhone Settings.");
-          }
-        };
-
-        speechRecognition.onend = () => {
-          isVoiceListening = false;
-          updateVoiceButtonUI(false);
-        };
-      }
-
-      if (isVoiceListening) {
-        speechRecognition.stop();
+    // 1-Tap Khmer Tag Insertion
+    function addKhmerTag(tag) {
+      const noteInput = document.getElementById("inpNote");
+      if (noteInput.value.trim().length === 0) {
+        noteInput.value = tag;
       } else {
-        speechRecognition.lang = 'km-KH'; // Ensure language is Khmer
-        try {
-          speechRecognition.start();
-        } catch (e) {
-          speechRecognition.stop();
-        }
-      }
-    }
-
-    function updateVoiceButtonUI(listening) {
-      const btn = document.getElementById("btnVoiceNote");
-      const indicator = document.getElementById("voiceStatusIndicator");
-      if (listening) {
-        btn.classList.add("listening-pulse");
-        btn.style.background = "var(--danger)";
-        btn.style.color = "#fff";
-        indicator.style.display = "block";
-      } else {
-        btn.classList.remove("listening-pulse");
-        btn.style.background = "";
-        btn.style.color = "var(--pine)";
-        indicator.style.display = "none";
+        noteInput.value += " " + tag;
       }
     }
 
@@ -1201,7 +1130,6 @@
       document.getElementById("inpNote").value = "";
       document.getElementById("inpReceipt").value = "";
       document.getElementById("receiptPreviewIndicator").style.display = "none";
-      updateVoiceButtonUI(false);
       selectDatePill("today");
       state.activeFormCur = state.displayCurrency;
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
@@ -1210,9 +1138,6 @@
     }
 
     function closeAddModal() {
-      if (speechRecognition && isVoiceListening) {
-        speechRecognition.stop();
-      }
       document.getElementById("addModal").style.display = "none";
     }
 
