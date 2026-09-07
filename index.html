@@ -52,7 +52,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Navigation Header */
+    /* Header */
     header {
       position: sticky;
       top: 0;
@@ -124,6 +124,14 @@
     .coach-badge.warning { background: rgba(255, 149, 0, 0.15); color: var(--warning); }
     .coach-badge.over { background: var(--danger-subtle); color: var(--danger); }
     .coach-quote { font-size: 16px; font-weight: 700; line-height: 1.35; margin: 0; }
+    
+    /* Specific styling for over-limit highlighted number */
+    .over-limit-amount {
+      color: var(--danger);
+      font-weight: 800;
+      font-family: monospace;
+    }
+
     .progress-bar-bg {
       height: 8px;
       background: rgba(0, 0, 0, 0.06);
@@ -141,7 +149,7 @@
       transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* 2 Summary Cards */
+    /* Summary Cards */
     .summary-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -201,7 +209,9 @@
       height: 100%;
       justify-content: flex-end;
       cursor: pointer;
+      transition: transform 0.1s ease;
     }
+    .chart-col:active { transform: scale(0.95); }
     .chart-bar-bg {
       width: 100%;
       background: var(--pine-subtle);
@@ -219,7 +229,7 @@
     }
     .chart-day { font-size: 11px; font-weight: 600; margin-top: 6px; color: var(--secondary); }
 
-    /* Search & Expense List */
+    /* List & Search */
     .search-input {
       width: 100%;
       padding: 12px 16px;
@@ -277,20 +287,21 @@
     }
     .btn-delete:active { background: var(--danger-subtle); }
 
-    /* Floating Add Button */
+    /* Centered Floating Add Button */
     .fab {
       position: fixed;
-      right: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 84px;
-      width: 60px;
-      height: 60px;
-      border-radius: 30px;
+      width: 62px;
+      height: 62px;
+      border-radius: 31px;
       background: var(--pine);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 300;
       box-shadow: 0 8px 24px var(--pine-glow);
       border: none;
@@ -298,7 +309,10 @@
       z-index: 30;
       transition: transform 0.15s ease, background-color 0.2s;
     }
-    .fab:active { transform: scale(0.92); background: var(--pine-dark); }
+    .fab:active {
+      transform: translateX(-50%) scale(0.92);
+      background: var(--pine-dark);
+    }
 
     /* Tab Bar */
     nav {
@@ -333,7 +347,7 @@
     .nav-tab.active { color: var(--pine); font-weight: 700; }
     .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
 
-    /* Modal / Bottom Sheets */
+    /* Modals */
     .modal {
       position: fixed;
       inset: 0;
@@ -360,7 +374,7 @@
       to { transform: translateY(0); }
     }
 
-    /* Modal Form Inputs */
+    /* Form Elements */
     .form-group { margin-bottom: 16px; }
     label { font-size: 12px; font-weight: 700; color: var(--secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .amount-wrapper {
@@ -393,7 +407,7 @@
       outline: none;
     }
 
-    /* Quick Chips */
+    /* Chips */
     .chip-row {
       display: flex;
       gap: 8px;
@@ -481,7 +495,7 @@
       cursor: pointer;
     }
 
-    /* In-App Image Viewer Modal */
+    /* Lightbox Modal */
     #receiptViewerModal .modal-content {
       text-align: center;
       padding: 20px;
@@ -546,7 +560,7 @@
       <div class="content-card">
         <div class="card-title">
           <span id="lblLast7Days">Last 7 Days</span>
-          <span style="font-size: 11px; text-transform: none; color: var(--pine);">Tap bars to view</span>
+          <span style="font-size: 11px; text-transform: none; color: var(--pine);" id="lblChartHint">Tap day to view</span>
         </div>
         <div class="chart-box" id="barChart"></div>
       </div>
@@ -556,11 +570,11 @@
         <div id="categoryBreakdown"></div>
       </div>
 
+      <!-- Export Tools -->
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
-        <div style="display: flex; gap: 10px;">
-          <button class="pill-btn" style="flex:1; justify-content:center; padding:12px;" onclick="exportCSV()">📄 Export CSV</button>
-          <button class="pill-btn" style="flex:1; justify-content:center; padding:12px;" onclick="backupJSON()">📦 Backup JSON</button>
+        <div>
+          <button class="pill-btn" style="width:100%; justify-content:center; padding:12px;" onclick="exportCSV()">📄 Export CSV</button>
         </div>
       </div>
     </div>
@@ -587,7 +601,7 @@
         </div>
       </div>
 
-      <!-- Security Settings Card -->
+      <!-- Reset Security -->
       <div class="content-card">
         <div class="card-title">Reset Security Credentials</div>
         <div class="form-group">
@@ -605,7 +619,7 @@
     </div>
   </div>
 
-  <!-- Floating Add Button -->
+  <!-- Centered Floating Add Button -->
   <button class="fab" onclick="openAddModal()">+</button>
 
   <!-- Bottom Navigation -->
@@ -668,7 +682,22 @@
     </div>
   </div>
 
-  <!-- In-App Receipt Photo Lightbox Modal -->
+  <!-- Day Detail Modal (Shows all expenses for the clicked day) -->
+  <div class="modal" id="dayDetailModal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div>
+          <h2 style="margin: 0; font-size: 18px; font-weight: 800;" id="dayDetailTitle">Day Expenses</h2>
+          <span id="dayDetailSubtitle" style="font-size: 13px; color: var(--secondary); font-weight: 600;"></span>
+        </div>
+        <button onclick="closeDayDetailModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
+      </div>
+      <div id="dayDetailList" style="margin-top: 8px;"></div>
+      <button class="btn-action" style="margin-top: 14px;" onclick="closeDayDetailModal()">Done</button>
+    </div>
+  </div>
+
+  <!-- Receipt Viewer Modal -->
   <div class="modal" id="receiptViewerModal">
     <div class="modal-content">
       <h3 style="margin-top: 0;">Receipt Photo</h3>
@@ -677,7 +706,7 @@
     </div>
   </div>
 
-  <!-- Reset Security Authentication Modal -->
+  <!-- Reset Security Modal -->
   <div class="modal" id="resetAuthModal">
     <div class="modal-content">
       <h2 style="margin-top:0; color: var(--danger);">Authorize Data Reset</h2>
@@ -700,7 +729,7 @@
   </div>
 
   <script>
-    // Categories with Emojis[span_2](start_span)[span_2](end_span)
+    // Categories[span_2](start_span)[span_2](end_span)
     const categories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
       { id: "drinks", emoji: "☕", labelEn: "Drinks", labelKm: "ភេសជ្ជៈ", color: "#1F7A72" },
@@ -712,7 +741,7 @@
       { id: "other", emoji: "📦", labelEn: "Other", labelKm: "ផ្សេងទៀត", color: "#6E6A5E" }
     ];
 
-    // Bilingual Khmer & English dictionary[span_3](start_span)[span_3](end_span)
+    // Language dictionary[span_3](start_span)[span_3](end_span)
     const i18n = {
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
       entries: { en: "Entries", km: "ចំណាយទាំងអស់" },
@@ -733,10 +762,11 @@
       yesterday: { en: "Yesterday", km: "ម្សិលមិញ" },
       custom: { en: "Custom", km: "ជ្រើសរើស" },
       ex_rate: { en: "Exchange Rate (1 USD = ? KHR)", km: "អត្រាប្តូរប្រាក់ (1 USD = ? ៛)" },
-      budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" }
+      budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" },
+      tap_hint: { en: "Tap day to view", km: "ចុចមើលតាមថ្ងៃ" }
     };
 
-    // Global State with Security Defaults[span_4](start_span)[span_4](end_span)
+    // State[span_4](start_span)[span_4](end_span)
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
@@ -776,7 +806,7 @@
       render();
     }
 
-    // Currency Formatting[span_5](start_span)[span_5](end_span)
+    // Currency Conversion[span_5](start_span)[span_5](end_span)
     function toUSD(val, cur) {
       return cur === "KHR" ? val / state.exchangeRate : val;
     }
@@ -845,25 +875,36 @@
 
         if (pct < 60) {
           badgeEl.className = "coach-badge";
-          badgeEl.innerText = "Great Pace 🌿";
-          quoteEl.innerText = `You've used ${pct.toFixed(0)}% of your monthly budget. Looking healthy!`;
+          badgeEl.innerText = state.lang === "km" ? "ល្អប្រសើរ 🌿" : "Great Pace 🌿";
+          quoteEl.innerHTML = state.lang === "km" 
+            ? `អ្នកបានប្រើប្រាស់ ${pct.toFixed(0)}% នៃថវិកាប្រចាំខែរបស់អ្នក។` 
+            : `You've used ${pct.toFixed(0)}% of your monthly budget. Looking healthy!`;
         } else if (pct <= 90) {
           badgeEl.className = "coach-badge warning";
-          badgeEl.innerText = "Careful 📊";
-          quoteEl.innerText = `You've reached ${pct.toFixed(0)}% of your budget. Spend wisely!`;
+          badgeEl.innerText = state.lang === "km" ? "ប្រយ័ត្ន 📊" : "Careful 📊";
+          quoteEl.innerHTML = state.lang === "km"
+            ? `អ្នកបានចំណាយ ${pct.toFixed(0)}% នៃថវិការួចហើយ។`
+            : `You've reached ${pct.toFixed(0)}% of your budget. Spend wisely!`;
         } else {
           badgeEl.className = "coach-badge over";
-          badgeEl.innerText = "Over Limit ⚠️";
-          quoteEl.innerText = `Budget exceeded by ${fmt(fromUSD(monthUSD - state.monthlyBudgetUSD, state.displayCurrency))}!`;
+          badgeEl.innerText = state.lang === "km" ? "លើសកម្រិត ⚠️" : "Over Limit ⚠️";
+          const diff = fmt(fromUSD(monthUSD - state.monthlyBudgetUSD, state.displayCurrency));
+          // Color RED ONLY on the number
+          quoteEl.innerHTML = state.lang === "km"
+            ? `អ្នកបានចំណាយលើសថវិកាចំនួន <span class="over-limit-amount">${diff}</span>!`
+            : `Budget exceeded by <span class="over-limit-amount">${diff}</span>!`;
         }
       } else {
         progressEl.style.width = "25%";
         badgeEl.className = "coach-badge";
-        badgeEl.innerText = "Active ✨";
-        quoteEl.innerText = "Logging expenses daily keeps your finances crystal clear!";
+        badgeEl.innerText = state.lang === "km" ? "ដំណើរការ ✨" : "Active ✨";
+        quoteEl.innerHTML = state.lang === "km"
+          ? "ការកត់ត្រាចំណាយប្រចាំថ្ងៃ ជួយឱ្យការគ្រប់គ្រងហិរញ្ញវត្ថុកាន់តែច្បាស់លាស់!"
+          : "Logging expenses daily keeps your finances crystal clear!";
       }
     }
 
+    // Weekly Chart with click-to-view day details[span_7](start_span)[span_7](end_span)
     function renderWeeklyChart() {
       const container = document.getElementById("barChart");
       container.innerHTML = "";
@@ -896,11 +937,60 @@
           </div>
           <div class="chart-day">${dayName}</div>
         `;
+
+        // Open detailed view for clicked day
         col.onclick = () => {
-          alert(`${dayName}: ${fmt(item.amount)} spent`);
+          const dStr = item.date.toISOString().split("T")[0];
+          const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
+          const formattedDate = item.date.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
+          openDayDetailModal(dStr, formattedDate);
         };
         container.appendChild(col);
       });
+    }
+
+    // Day Details Modal Actions
+    function openDayDetailModal(dStr, formattedDate) {
+      const dayEntries = state.entries.filter(e => e.date.startsWith(dStr));
+      const totalUSD = dayEntries.reduce((acc, e) => acc + toUSD(e.amount, e.currency), 0);
+
+      document.getElementById("dayDetailTitle").innerText = formattedDate;
+      document.getElementById("dayDetailSubtitle").innerText = `${state.lang === 'km' ? 'សរុប' : 'Total'}: ${fmt(fromUSD(totalUSD, state.displayCurrency))}`;
+
+      const container = document.getElementById("dayDetailList");
+      container.innerHTML = "";
+
+      if (dayEntries.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 24px 0;">
+            <div class="empty-emoji">☕</div>
+            <div class="empty-title">${state.lang === 'km' ? 'គ្មានចំណាយសម្រាប់ថ្ងៃនេះទេ' : 'No expenses on this day'}</div>
+          </div>
+        `;
+      } else {
+        dayEntries.forEach(e => {
+          const cat = categories.find(c => c.id === e.categoryId) || { emoji: "📦", labelEn: e.categoryId, labelKm: e.categoryId, color: "#999" };
+          const name = state.lang === "km" ? cat.labelKm : cat.labelEn;
+          const row = document.createElement("div");
+          row.className = "expense-item";
+          row.innerHTML = `
+            <div class="cat-avatar" style="background:${cat.color}1A; color:${cat.color}">${cat.emoji}</div>
+            <div class="expense-details">
+              <div class="expense-name">${name}</div>
+              <div class="expense-meta">${e.note ? e.note : name}</div>
+              ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">📎 ${state.lang === 'km' ? 'មើលបង្កាន់ដៃ' : 'View Receipt'}</div>` : ""}
+            </div>
+            <div class="expense-cost">${fmt(e.amount, e.currency)}</div>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      document.getElementById("dayDetailModal").style.display = "flex";
+    }
+
+    function closeDayDetailModal() {
+      document.getElementById("dayDetailModal").style.display = "none";
     }
 
     function renderCategoryList(catMap, monthUSD) {
@@ -1051,7 +1141,6 @@
       }
     }
 
-    // Photo Compression via Canvas (Solves QuotaExceeded Error)
     function compressImageFile(file) {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -1082,8 +1171,6 @@
             canvas.height = height;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, width, height);
-
-            // Compress to JPEG ~50KB-80KB to fit easily in localStorage
             resolve(canvas.toDataURL("image/jpeg", 0.65));
           };
           img.onerror = () => resolve(null);
@@ -1137,7 +1224,6 @@
       }
     }
 
-    // Reset Authentication Flow
     function promptResetAuth() {
       document.getElementById("authInputUser").value = "";
       document.getElementById("authInputPass").value = "";
@@ -1172,7 +1258,6 @@
       }
     }
 
-    // Settings & Language[span_7](start_span)[span_7](end_span)
     function toggleLanguage() {
       state.lang = state.lang === "en" ? "km" : "en";
       applyLanguage();
@@ -1187,6 +1272,7 @@
       document.getElementById("lblMonth").innerText = t("spent_this_month");
       document.getElementById("lblToday").innerText = t("spent_today");
       document.getElementById("lblLast7Days").innerText = t("last_7_days");
+      document.getElementById("lblChartHint").innerText = t("tap_hint");
       document.getElementById("lblCategories").innerText = t("categories");
       document.getElementById("lblData").innerText = t("data");
       document.getElementById("tabNameDash").innerText = t("dashboard");
@@ -1235,11 +1321,6 @@
         csv += `"${e.date}","${e.categoryId}","${e.amount}","${e.currency}","${e.note || ''}"\n`;
       });
       downloadBlob(csv, `expenses_${new Date().toISOString().split("T")[0]}.csv`, "text/csv");
-    }
-
-    function backupJSON() {
-      const json = JSON.stringify(state, null, 2);
-      downloadBlob(json, `expenses_backup_${Date.now()}.json`, "application/json");
     }
 
     function downloadBlob(content, filename, mime) {
