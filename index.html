@@ -414,7 +414,7 @@
     }
     .chip:active { transform: scale(0.94); }
 
-    /* Category Grid */
+    /* Category Grid & Deletion */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -422,6 +422,7 @@
       margin-top: 6px;
     }
     .category-card {
+      position: relative;
       background: var(--bg);
       border: 1.5px solid transparent;
       border-radius: 16px;
@@ -444,6 +445,65 @@
     }
     .category-emoji { font-size: 26px; }
     .category-title { font-size: 11px; font-weight: 700; text-align: center; }
+
+    .cat-delete-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--danger);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+      cursor: pointer;
+    }
+
+    /* Custom File Picker Styling */
+    .custom-file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 14px;
+      margin-top: 6px;
+    }
+    .custom-file-btn {
+      background: var(--pine-subtle);
+      color: var(--pine);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.1s ease;
+    }
+    .custom-file-btn:active { transform: scale(0.95); }
+    .custom-file-label {
+      font-size: 13px;
+      color: var(--secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .btn-clear-file {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
 
     /* Date Pills */
     .date-pills { display: flex; gap: 8px; margin-bottom: 8px; }
@@ -621,7 +681,7 @@
     </button>
   </nav>
 
-  <!-- Add Expense Modal (Without Suggestion Chips) -->
+  <!-- Add Expense Modal -->
   <div class="modal" id="addModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -638,8 +698,12 @@
         <div class="chip-row" id="quickChips"></div>
       </div>
 
+      <!-- Category Selector with Delete/Manage Toggle -->
       <div class="form-group">
-        <label id="lblCategory">Select Category</label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label id="lblCategory" style="margin-bottom: 0;">Select Category</label>
+          <button type="button" onclick="toggleCategoryManageMode()" id="btnManageCat" style="background: none; border: none; color: var(--pine); font-size: 12px; font-weight: 700; cursor: pointer; padding: 2px 6px;">Manage</button>
+        </div>
         <div class="category-grid" id="categoryGrid"></div>
       </div>
 
@@ -656,7 +720,14 @@
       <div class="form-group">
         <label id="lblNote">Note & Receipt</label>
         <input type="text" id="inpNote" class="search-input" placeholder="e.g. Iced Latte with friends" />
-        <input type="file" id="inpReceipt" accept="image/*" class="search-input" style="padding: 10px;" />
+        
+        <!-- Fully Bilingual Custom File Upload Row -->
+        <div class="custom-file-row">
+          <label for="inpReceipt" class="custom-file-btn" id="lblChooseFileBtn">📎 Choose File</label>
+          <input type="file" id="inpReceipt" accept="image/*" style="display: none;" onchange="handleFileChange(this)" />
+          <span class="custom-file-label" id="fileChosenText">No file chosen</span>
+          <button type="button" id="btnClearFile" class="btn-clear-file" style="display: none;" onclick="clearChosenFile()">✕</button>
+        </div>
         <div id="receiptPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ Photo ready to attach</div>
       </div>
 
@@ -675,9 +746,7 @@
 
       <div class="form-group">
         <label id="lblNewCatEmoji">Select Icon / Emoji</label>
-        <div style="display: flex; gap: 8px; margin-bottom: 8px; overflow-x: auto; padding-bottom: 4px;" id="emojiPickerRow">
-          <!-- Quick emoji buttons -->
-        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 8px; overflow-x: auto; padding-bottom: 4px;" id="emojiPickerRow"></div>
         <input type="text" id="inpCustomEmoji" class="search-input" placeholder="Or type any emoji (e.g. 🎁)" maxlength="4" style="text-align: center; font-size: 20px;" />
       </div>
 
@@ -735,22 +804,23 @@
   </div>
 
   <script>
-    // Default Preset Categories
+    // Default Preset Categories (Removed "Fun" and "Other")
     const defaultCategories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
       { id: "drinks", emoji: "☕", labelEn: "Drinks", labelKm: "ភេសជ្ជៈ", color: "#1F7A72" },
       { id: "transport", emoji: "🛵", labelEn: "Transport", labelKm: "ធ្វើដំណើរ", color: "#2F5D50" },
       { id: "shopping", emoji: "🛍️", labelEn: "Shopping", labelKm: "ទិញទំនិញ", color: "#4D6A82" },
       { id: "bills", emoji: "💡", labelEn: "Bills", labelKm: "វិក្កយបត្រ", color: "#9C3D2E" },
-      { id: "health", emoji: "💊", labelEn: "Health", labelKm: "សុខភាព", color: "#4E7A63" },
-      { id: "fun", emoji: "🎮", labelEn: "Fun", labelKm: "កម្សាន្ត", color: "#8B5E83" },
-      { id: "other", emoji: "📦", labelEn: "Other", labelKm: "ផ្សេងទៀត", color: "#6E6A5E" }
+      { id: "health", emoji: "💊", labelEn: "Health", labelKm: "សុខភាព", color: "#4E7A63" }
     ];
 
-    // Load Categories from LocalStorage or default
-    let categories = JSON.parse(localStorage.getItem("ledger_categories") || "null") || defaultCategories;
+    // Load Categories from LocalStorage and explicitly remove 'fun' or 'other' if previously cached
+    let loadedCats = JSON.parse(localStorage.getItem("ledger_categories") || "null") || defaultCategories;
+    let categories = loadedCats.filter(c => c.id !== "fun" && c.id !== "other");
 
-    // Comprehensive Dictionary Covering Every Element in the Web App
+    let isManagingCategories = false;
+
+    // Bilingual Dictionary
     const i18n = {
       app_title: { en: "Daily Expenses", km: "សៀវភៅចំណាយ" },
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
@@ -779,12 +849,16 @@
       add_title: { en: "Add Expense", km: "បន្ថែមចំណាយ" },
       amount: { en: "Amount", km: "ចំនួនទឹកប្រាក់" },
       category: { en: "Select Category", km: "ជ្រើសរើសប្រភេទ" },
+      manage_cat: { en: "Manage", km: "គ្រប់គ្រង" },
+      done_cat: { en: "Done", km: "រួចរាល់" },
       date: { en: "When", km: "កាលបរិច្ឆេទ" },
       today: { en: "Today", km: "ថ្ងៃនេះ" },
       yesterday: { en: "Yesterday", km: "ម្សិលមិញ" },
       custom: { en: "Custom", km: "ជ្រើសរើសថ្ងៃ" },
       note: { en: "Note & Receipt", km: "កំណត់ចំណាំ & បង្កាន់ដៃ" },
       note_ph: { en: "e.g. Iced Latte with friends", km: "ឧ. ញ៉ាំកាហ្វេជាមួយមិត្តភក្តិ" },
+      choose_file: { en: "📎 Choose File", km: "📎 ជ្រើសរើសឯកសារ" },
+      no_file_chosen: { en: "No file chosen", km: "មិនទាន់ជ្រើសឯកសារ" },
       photo_ready: { en: "✓ Photo ready to attach", km: "✓ រូបថតរួចរាល់សម្រាប់ភ្ជាប់" },
       save: { en: "Save Expense", km: "រក្សាទុកចំណាយ" },
       cancel: { en: "Cancel", km: "បោះបង់" },
@@ -805,7 +879,8 @@
       no_entries_found: { en: "No expenses found", km: "រកមិនឃើញការចំណាយទេ" },
       trans_appear_here: { en: "Your transactions will appear right here.", km: "រាល់ការចំណាយរបស់អ្នកនឹងបង្ហាញនៅទីនេះ។" },
       confirm_del: { en: "Remove this entry?", km: "តើអ្នកពិតជាចង់លុបចំណាយនេះមែនទេ?" },
-      day_breakdown_title: { en: "Day Expenses", km: "ចំណាយប្រចាំថ្ងៃ" },
+      confirm_del_cat: { en: "Are you sure you want to remove this category?", km: "តើអ្នកពិតជាចង់លុបប្រភេទចំណាយនេះមែនទេ?" },
+      keep_one_cat: { en: "You must keep at least one category!", km: "អ្នកត្រូវទុកប្រភេទចំណាយយ៉ាងហោចណាស់មួយ!" },
       no_exp_day: { en: "No expenses logged on this day.", km: "គ្មានចំណាយនៅក្នុងថ្ងៃនេះទេ។" }
     };
 
@@ -818,7 +893,7 @@
       adminUser: localStorage.getItem("ledger_admin_user") || "admin",
       adminPass: localStorage.getItem("ledger_admin_pass") || "1234",
       activeFormCur: "USD",
-      selectedCat: "food"
+      selectedCat: categories[0]?.id || "food"
     };
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -827,11 +902,6 @@
       buildCategoryGrid();
       applyLanguage();
       render();
-
-      document.getElementById("inpReceipt").addEventListener("change", function() {
-        const preview = document.getElementById("receiptPreviewIndicator");
-        preview.style.display = this.files.length > 0 ? "block" : "none";
-      });
     });
 
     function saveState() {
@@ -869,6 +939,144 @@
       const now = new Date();
       const options = { weekday: 'long', month: 'short', day: 'numeric' };
       document.getElementById("liveDate").innerText = now.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
+    }
+
+    // File Input Helper
+    function handleFileChange(input) {
+      const textEl = document.getElementById("fileChosenText");
+      const clearBtn = document.getElementById("btnClearFile");
+      const preview = document.getElementById("receiptPreviewIndicator");
+
+      if (input.files && input.files.length > 0) {
+        textEl.innerText = input.files[0].name;
+        clearBtn.style.display = "block";
+        preview.style.display = "block";
+      } else {
+        textEl.innerText = state.lang === "km" ? i18n.no_file_chosen.km : i18n.no_file_chosen.en;
+        clearBtn.style.display = "none";
+        preview.style.display = "none";
+      }
+    }
+
+    function clearChosenFile() {
+      const input = document.getElementById("inpReceipt");
+      input.value = "";
+      handleFileChange(input);
+    }
+
+    // Category Grid Builder with Manage/Delete option
+    function toggleCategoryManageMode() {
+      isManagingCategories = !isManagingCategories;
+      const btn = document.getElementById("btnManageCat");
+      btn.innerText = isManagingCategories 
+        ? (state.lang === "km" ? i18n.done_cat.km : i18n.done_cat.en)
+        : (state.lang === "km" ? i18n.manage_cat.km : i18n.manage_cat.en);
+      buildCategoryGrid();
+    }
+
+    function deleteCategory(catId, event) {
+      event.stopPropagation();
+      if (categories.length <= 1) {
+        alert(state.lang === "km" ? i18n.keep_one_cat.km : i18n.keep_one_cat.en);
+        return;
+      }
+      const conf = confirm(state.lang === "km" ? i18n.confirm_del_cat.km : i18n.confirm_del_cat.en);
+      if (conf) {
+        categories = categories.filter(c => c.id !== catId);
+        if (state.selectedCat === catId) {
+          state.selectedCat = categories[0].id;
+        }
+        saveState();
+        buildCategoryGrid();
+      }
+    }
+
+    function buildCategoryGrid() {
+      const grid = document.getElementById("categoryGrid");
+      grid.innerHTML = "";
+
+      categories.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "category-card" + (state.selectedCat === c.id ? " selected" : "");
+        card.onclick = () => {
+          document.querySelectorAll(".category-card").forEach(el => el.classList.remove("selected"));
+          card.classList.add("selected");
+          state.selectedCat = c.id;
+        };
+
+        const name = state.lang === "km" ? (c.labelKm || c.labelEn) : c.labelEn;
+        let deleteBadge = "";
+        if (isManagingCategories) {
+          deleteBadge = `<div class="cat-delete-badge" onclick="deleteCategory('${c.id}', event)">✕</div>`;
+        }
+
+        card.innerHTML = `
+          ${deleteBadge}
+          <span class="category-emoji">${c.emoji}</span>
+          <span class="category-title">${name}</span>
+        `;
+        grid.appendChild(card);
+      });
+
+      // "+ New" Custom Category Tile
+      const addBtn = document.createElement("div");
+      addBtn.className = "category-card add-btn";
+      addBtn.onclick = openNewCatModal;
+      addBtn.innerHTML = `<span class="category-emoji">➕</span><span class="category-title">${state.lang === 'km' ? 'បន្ថែមថ្មី' : 'New'}</span>`;
+      grid.appendChild(addBtn);
+    }
+
+    // Emoji Presets for Custom Category Creation
+    function setupEmojiPickerPresets() {
+      const row = document.getElementById("emojiPickerRow");
+      row.innerHTML = "";
+      const presets = ["🏋️", "🎬", "🎁", "📚", "✈️", "🐶", "💄", "👶", "🚗", "🏠", "🍕", "💻"];
+      presets.forEach(emo => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "pill-btn";
+        b.style.padding = "6px 10px";
+        b.style.fontSize = "18px";
+        b.innerText = emo;
+        b.onclick = () => {
+          document.getElementById("inpCustomEmoji").value = emo;
+        };
+        row.appendChild(b);
+      });
+    }
+
+    function openNewCatModal() {
+      document.getElementById("inpCustomEmoji").value = "🏷️";
+      document.getElementById("inpCustomCatName").value = "";
+      document.getElementById("newCatModal").style.display = "flex";
+    }
+
+    function closeNewCatModal() {
+      document.getElementById("newCatModal").style.display = "none";
+    }
+
+    function saveCustomCategory() {
+      const name = document.getElementById("inpCustomCatName").value.trim();
+      const emoji = document.getElementById("inpCustomEmoji").value.trim() || "🏷️";
+      if (!name) {
+        alert(state.lang === "km" ? "សូមបញ្ចូលឈ្មោះប្រភេទ!" : "Please enter a category name!");
+        return;
+      }
+
+      const newId = "custom_" + Date.now();
+      const newCat = {
+        id: newId,
+        emoji: emoji,
+        labelEn: name,
+        labelKm: name,
+        color: "#2F5D50"
+      };
+
+      categories.push(newCat);
+      state.selectedCat = newId;
+      saveState();
+      buildCategoryGrid();
+      closeNewCatModal();
     }
 
     // Rendering Engine
@@ -1090,86 +1298,6 @@
       renderEntriesList(filtered);
     }
 
-    // Category Grid Builder with "+ New" Custom Category Option
-    function buildCategoryGrid() {
-      const grid = document.getElementById("categoryGrid");
-      grid.innerHTML = "";
-
-      categories.forEach(c => {
-        const card = document.createElement("div");
-        card.className = "category-card" + (state.selectedCat === c.id ? " selected" : "");
-        card.onclick = () => {
-          document.querySelectorAll(".category-card").forEach(el => el.classList.remove("selected"));
-          card.classList.add("selected");
-          state.selectedCat = c.id;
-        };
-        const name = state.lang === "km" ? (c.labelKm || c.labelEn) : c.labelEn;
-        card.innerHTML = `<span class="category-emoji">${c.emoji}</span><span class="category-title">${name}</span>`;
-        grid.appendChild(card);
-      });
-
-      // Custom Category Button
-      const addBtn = document.createElement("div");
-      addBtn.className = "category-card add-btn";
-      addBtn.onclick = openNewCatModal;
-      addBtn.innerHTML = `<span class="category-emoji">➕</span><span class="category-title">${state.lang === 'km' ? 'បន្ថែមថ្មី' : 'New'}</span>`;
-      grid.appendChild(addBtn);
-    }
-
-    // Emoji Presets for Custom Category Creation
-    function setupEmojiPickerPresets() {
-      const row = document.getElementById("emojiPickerRow");
-      row.innerHTML = "";
-      const presets = ["🏋️", "🎬", "🎁", "📚", "✈️", "🐶", "💄", "👶", "🚗", "🏠", "🍕", "💻"];
-      presets.forEach(emo => {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "pill-btn";
-        b.style.padding = "6px 10px";
-        b.style.fontSize = "18px";
-        b.innerText = emo;
-        b.onclick = () => {
-          document.getElementById("inpCustomEmoji").value = emo;
-        };
-        row.appendChild(b);
-      });
-    }
-
-    function openNewCatModal() {
-      document.getElementById("inpCustomEmoji").value = "🏷️";
-      document.getElementById("inpCustomCatName").value = "";
-      document.getElementById("newCatModal").style.display = "flex";
-    }
-
-    function closeNewCatModal() {
-      document.getElementById("newCatModal").style.display = "none";
-    }
-
-    function saveCustomCategory() {
-      const name = document.getElementById("inpCustomCatName").value.trim();
-      const emoji = document.getElementById("inpCustomEmoji").value.trim() || "🏷️";
-      if (!name) {
-        alert(state.lang === "km" ? "សូមបញ្ចូលឈ្មោះប្រភេទ!" : "Please enter a category name!");
-        return;
-      }
-
-      const newId = "custom_" + Date.now();
-      const newCat = {
-        id: newId,
-        emoji: emoji,
-        labelEn: name,
-        labelKm: name,
-        color: "#2F5D50",
-        isCustom: true
-      };
-
-      categories.push(newCat);
-      state.selectedCat = newId;
-      saveState();
-      buildCategoryGrid();
-      closeNewCatModal();
-    }
-
     function updateQuickChips() {
       const container = document.getElementById("quickChips");
       container.innerHTML = "";
@@ -1192,11 +1320,13 @@
     function openAddModal() {
       document.getElementById("inpAmount").value = "";
       document.getElementById("inpNote").value = "";
-      document.getElementById("inpReceipt").value = "";
-      document.getElementById("receiptPreviewIndicator").style.display = "none";
+      clearChosenFile();
       selectDatePill("today");
       state.activeFormCur = state.displayCurrency;
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
+      isManagingCategories = false;
+      document.getElementById("btnManageCat").innerText = state.lang === "km" ? i18n.manage_cat.km : i18n.manage_cat.en;
+      buildCategoryGrid();
       updateQuickChips();
       document.getElementById("addModal").style.display = "flex";
     }
@@ -1382,12 +1512,20 @@
       document.getElementById("lblAddTitle").innerText = t("add_title");
       document.getElementById("lblAmount").innerText = t("amount");
       document.getElementById("lblCategory").innerText = t("category");
+      document.getElementById("btnManageCat").innerText = isManagingCategories ? t("done_cat") : t("manage_cat");
       document.getElementById("lblDate").innerText = t("date");
       document.getElementById("pillToday").innerText = t("today");
       document.getElementById("pillYesterday").innerText = t("yesterday");
       document.getElementById("pillCustom").innerText = t("custom");
       document.getElementById("lblNote").innerText = t("note");
       document.getElementById("inpNote").placeholder = t("note_ph");
+      document.getElementById("lblChooseFileBtn").innerText = t("choose_file");
+      
+      const fileInput = document.getElementById("inpReceipt");
+      if (!fileInput.files || fileInput.files.length === 0) {
+        document.getElementById("fileChosenText").innerText = t("no_file_chosen");
+      }
+      
       document.getElementById("receiptPreviewIndicator").innerText = t("photo_ready");
       document.getElementById("btnSave").innerText = t("save");
       document.getElementById("btnCancel").innerText = t("cancel");
