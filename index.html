@@ -99,6 +99,33 @@
       margin: 0 auto;
     }
 
+    /* Typewriter Animated Greeting Banner */
+    .greeting-banner {
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+    .greeting-text {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.4px;
+    }
+    .typing-cursor {
+      display: inline-block;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--pine);
+      margin-left: 2px;
+      animation: blinkCursor 0.75s infinite;
+    }
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
     /* Month Selector Bar */
     .month-bar {
       display: flex;
@@ -615,6 +642,11 @@
   <div class="container">
     <!-- Tab 1: Dashboard -->
     <div id="tabDashboard">
+      <!-- Animated Typewriter Greeting -->
+      <div class="greeting-banner">
+        <span class="greeting-text" id="greetingText"></span><span class="typing-cursor">|</span>
+      </div>
+
       <!-- Month Archive Navigator -->
       <div class="month-bar">
         <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
@@ -937,12 +969,48 @@
       viewMonth: new Date().getMonth()
     };
 
+    /* Typewriter Writing Animation Engine */
+    let typewriterTimer = null;
+
+    function getPeriodGreeting() {
+      const hour = new Date().getHours();
+      const isKm = state.lang === "km";
+      if (hour >= 5 && hour < 12) {
+        return isKm ? "អរុណសួស្ដី 🌅" : "Good Morning ☀️";
+      } else if (hour >= 12 && hour < 17) {
+        return isKm ? "ទិវាសួស្ដី 🌤️" : "Good Afternoon 🌤️";
+      } else if (hour >= 17 && hour < 21) {
+        return isKm ? "សាយណ្ហសួស្ដី 🌆" : "Good Evening 🌇";
+      } else {
+        return isKm ? "រាត្រីសួស្ដី 🌙" : "Good Night 🌙";
+      }
+    }
+
+    function playTypewriterGreeting() {
+      if (typewriterTimer) clearTimeout(typewriterTimer);
+      const text = getPeriodGreeting();
+      const el = document.getElementById("greetingText");
+      if (!el) return;
+      el.textContent = "";
+
+      let charIndex = 0;
+      function typeChar() {
+        if (charIndex < text.length) {
+          el.textContent += text.charAt(charIndex);
+          charIndex++;
+          typewriterTimer = setTimeout(typeChar, 65);
+        }
+      }
+      typeChar();
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       updateLiveDate();
       setupEmojiPickerPresets();
       buildCategoryGrid();
       applyLanguage();
       render();
+      playTypewriterGreeting();
     });
 
     function saveState() {
@@ -1145,6 +1213,7 @@
 
       applyLanguage();
       buildCategoryGrid();
+      playTypewriterGreeting();
       saveState();
     }
 
@@ -1176,7 +1245,6 @@
       renderCategoryList(catMap, monthUSD);
       renderEntriesList();
 
-      // Top buttons always reflect their current synchronized mode
       document.getElementById("langBtn").innerText = state.lang === "en" ? "🇺🇸 English" : "🇰🇭 ភាសាខ្មែរ";
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
 
@@ -1330,7 +1398,6 @@
       });
     }
 
-    /* Converts every entry in the list to the active currency */
     function renderEntriesList(filtered = null) {
       const container = document.getElementById("entriesList");
       container.innerHTML = "";
@@ -1625,6 +1692,10 @@
       document.getElementById("navDash").className = "nav-tab " + (tab === "dashboard" ? "active" : "");
       document.getElementById("navEntries").className = "nav-tab " + (tab === "entries" ? "active" : "");
       document.getElementById("navSettings").className = "nav-tab " + (tab === "settings" ? "active" : "");
+
+      if (tab === "dashboard") {
+        playTypewriterGreeting();
+      }
     }
 
     async function exportCSV() {
