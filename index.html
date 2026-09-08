@@ -52,7 +52,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Navigation Header */
+    /* Top Header */
     header {
       position: sticky;
       top: 0;
@@ -580,7 +580,6 @@
       cursor: pointer;
     }
 
-    /* In-App Image Viewer */
     #viewerImage {
       width: 100%;
       max-height: 65vh;
@@ -601,15 +600,15 @@
 </head>
 <body>
 
-  <!-- Top Header with Both Distinct Buttons -->
+  <!-- Top Header with Separate Buttons Linked Together -->
   <header>
     <div>
       <h1 id="headerTitle">Daily Expenses</h1>
       <div id="liveDate" style="font-size: 12px; color: var(--secondary); font-weight: 600;"></div>
     </div>
     <div class="header-actions">
-      <button class="pill-btn" onclick="toggleLanguage()" id="langBtn">🇰🇭 ភាសាខ្មែរ</button>
-      <button class="pill-btn" onclick="toggleCurrency()" id="curBtn">USD ($)</button>
+      <button class="pill-btn" onclick="toggleLanguageAndCurrency()" id="langBtn">🇺🇸 English</button>
+      <button class="pill-btn" onclick="toggleLanguageAndCurrency()" id="curBtn">USD ($)</button>
     </div>
   </header>
 
@@ -734,13 +733,12 @@
       <div class="form-group">
         <label id="lblAmount">Amount</label>
         <div class="amount-wrapper">
-          <button type="button" class="cur-pill" id="btnModalCur" onclick="toggleFormCurrency()">USD ($)</button>
+          <button type="button" class="cur-pill" id="btnModalCur" onclick="toggleLanguageAndCurrency()">USD ($)</button>
           <input type="number" id="inpAmount" class="amount-input" placeholder="0.00" step="any" inputmode="decimal" />
         </div>
         <div class="chip-row" id="quickChips"></div>
       </div>
 
-      <!-- Category Selector with Manage Toggle -->
       <div class="form-group">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <label id="lblCategory" style="margin-bottom: 0;">Select Category</label>
@@ -763,7 +761,6 @@
         <label id="lblNote">Note & Receipt</label>
         <input type="text" id="inpNote" class="search-input" placeholder="e.g. Iced Latte with friends" />
         
-        <!-- Fully Bilingual Custom File Upload Row -->
         <div class="custom-file-row">
           <label for="inpReceipt" class="custom-file-btn" id="lblChooseFileBtn">📎 Choose File</label>
           <input type="file" id="inpReceipt" accept="image/*" style="display: none;" onchange="handleFileChange(this)" />
@@ -925,27 +922,20 @@
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
     const englishMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+    let savedLang = localStorage.getItem("ledger_lang") || "en";
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
-      displayCurrency: localStorage.getItem("ledger_cur") || "USD",
+      lang: savedLang,
+      displayCurrency: savedLang === "km" ? "KHR" : "USD",
       monthlyBudgetUSD: parseFloat(localStorage.getItem("ledger_budget") || "0"),
-      lang: localStorage.getItem("ledger_lang") || "en",
       adminUser: localStorage.getItem("ledger_admin_user") || "admin",
       adminPass: localStorage.getItem("ledger_admin_pass") || "1234",
-      activeFormCur: "USD",
+      activeFormCur: savedLang === "km" ? "KHR" : "USD",
       selectedCat: categories[0]?.id || "food",
       viewYear: new Date().getFullYear(),
       viewMonth: new Date().getMonth()
     };
-
-    // Ensure synchronized initial state if not matched
-    if (state.lang === "km" && state.displayCurrency !== "KHR") {
-      state.displayCurrency = "KHR";
-    } else if (state.lang === "en" && state.displayCurrency !== "USD") {
-      state.displayCurrency = "USD";
-    }
-    state.activeFormCur = state.displayCurrency;
 
     window.addEventListener("DOMContentLoaded", () => {
       updateLiveDate();
@@ -1142,6 +1132,22 @@
       closeNewCatModal();
     }
 
+    /* 100% Linked Toggle: English is always USD ($), Khmer is always KHR (៛) */
+    function toggleLanguageAndCurrency() {
+      if (state.lang === "en") {
+        state.lang = "km";
+        state.displayCurrency = "KHR";
+      } else {
+        state.lang = "en";
+        state.displayCurrency = "USD";
+      }
+      state.activeFormCur = state.displayCurrency;
+
+      applyLanguage();
+      buildCategoryGrid();
+      saveState();
+    }
+
     function render() {
       const now = new Date();
       const todayStr = now.toISOString().split("T")[0];
@@ -1170,8 +1176,9 @@
       renderCategoryList(catMap, monthUSD);
       renderEntriesList();
 
+      // Top buttons always reflect their current synchronized mode
+      document.getElementById("langBtn").innerText = state.lang === "en" ? "🇺🇸 English" : "🇰🇭 ភាសាខ្មែរ";
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
-      document.getElementById("langBtn").innerText = state.lang === "en" ? "🇰🇭 ភាសាខ្មែរ" : "🇺🇸 English";
 
       document.getElementById("settingRate").value = state.exchangeRate;
       document.getElementById("settingBudget").value = state.monthlyBudgetUSD || "";
@@ -1271,6 +1278,8 @@
         dayItems.forEach(e => {
           const cat = categories.find(c => c.id === e.categoryId) || { emoji: "📦", labelEn: e.categoryId, labelKm: e.categoryId, color: "#999" };
           const name = state.lang === "km" ? (cat.labelKm || cat.labelEn) : cat.labelEn;
+          const convertedAmt = fromUSD(toUSD(e.amount, e.currency), state.displayCurrency);
+
           const row = document.createElement("div");
           row.className = "expense-item";
           row.innerHTML = `
@@ -1279,7 +1288,7 @@
               <div class="expense-name">${name}</div>
               <div class="expense-meta">${e.note || ""}</div>
             </div>
-            <div class="expense-cost">${fmt(e.amount, e.currency)}</div>
+            <div class="expense-cost">${fmt(convertedAmt, state.displayCurrency)}</div>
           `;
           listContainer.appendChild(row);
         });
@@ -1321,6 +1330,7 @@
       });
     }
 
+    /* Converts every entry in the list to the active currency */
     function renderEntriesList(filtered = null) {
       const container = document.getElementById("entriesList");
       container.innerHTML = "";
@@ -1333,7 +1343,9 @@
 
       list.forEach(e => {
         const cat = categories.find(c => c.id === e.categoryId) || { emoji: "📦", labelEn: e.categoryId, labelKm: e.categoryId, color: "#999" };
-        const name = state.lang === "km" ? (cat.labelKm || cat.labelEn) : cat.labelEn;
+        const name = state.lang === "km" ? (cat.labelKm || cat.labelEn) : (cat.labelEn || cat.labelKm);
+        const convertedAmt = fromUSD(toUSD(e.amount, e.currency), state.displayCurrency);
+
         const row = document.createElement("div");
         row.className = "expense-item";
         row.innerHTML = `
@@ -1343,7 +1355,7 @@
             <div class="expense-meta">${e.date} ${e.note ? "• " + e.note : ""}</div>
             ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">${state.lang === 'km' ? i18n.view_receipt.km : i18n.view_receipt.en}</div>` : ""}
           </div>
-          <div class="expense-cost">${fmt(e.amount, e.currency)}</div>
+          <div class="expense-cost">${fmt(convertedAmt, state.displayCurrency)}</div>
           <button class="btn-delete" onclick="deleteEntry('${e.id}')">✕</button>
         `;
         container.appendChild(row);
@@ -1364,7 +1376,7 @@
     function updateQuickChips() {
       const container = document.getElementById("quickChips");
       container.innerHTML = "";
-      const isUSD = state.activeFormCur === "USD";
+      const isUSD = state.displayCurrency === "USD";
       const values = isUSD ? [1, 2, 5, 10, 20] : [2000, 5000, 10000, 20000, 50000];
 
       values.forEach(v => {
@@ -1386,7 +1398,7 @@
       clearChosenFile();
       selectDatePill("today");
       state.activeFormCur = state.displayCurrency;
-      document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
+      document.getElementById("btnModalCur").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
       isManagingCategories = false;
       document.getElementById("btnManageCat").innerText = state.lang === "km" ? i18n.manage_cat.km : i18n.manage_cat.en;
       buildCategoryGrid();
@@ -1396,12 +1408,6 @@
 
     function closeAddModal() {
       document.getElementById("addModal").style.display = "none";
-    }
-
-    function toggleFormCurrency() {
-      state.activeFormCur = state.activeFormCur === "USD" ? "KHR" : "USD";
-      document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
-      updateQuickChips();
     }
 
     function selectDatePill(pill) {
@@ -1473,7 +1479,7 @@
       const item = {
         id: "exp_" + Date.now(),
         amount: amt,
-        currency: state.activeFormCur,
+        currency: state.displayCurrency,
         categoryId: state.selectedCat,
         date: document.getElementById("inpDate").value || new Date().toISOString().split("T")[0],
         note: document.getElementById("inpNote").value.trim(),
@@ -1537,25 +1543,6 @@
         state.adminPass = p;
         saveState();
       }
-    }
-
-    /* Linked Language & Currency Logic with Separate Buttons */
-    function toggleLanguage() {
-      state.lang = state.lang === "en" ? "km" : "en";
-      state.displayCurrency = state.lang === "en" ? "USD" : "KHR";
-      state.activeFormCur = state.displayCurrency;
-      applyLanguage();
-      buildCategoryGrid();
-      saveState();
-    }
-
-    function toggleCurrency() {
-      state.displayCurrency = state.displayCurrency === "USD" ? "KHR" : "USD";
-      state.lang = state.displayCurrency === "USD" ? "en" : "km";
-      state.activeFormCur = state.displayCurrency;
-      applyLanguage();
-      buildCategoryGrid();
-      saveState();
     }
 
     function applyLanguage() {
