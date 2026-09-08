@@ -601,7 +601,7 @@
 </head>
 <body>
 
-  <!-- Top Header -->
+  <!-- Top Header with Both Distinct Buttons -->
   <header>
     <div>
       <h1 id="headerTitle">Daily Expenses</h1>
@@ -846,7 +846,6 @@
   </div>
 
   <script>
-    // Categories Cleaned (without Fun or Other)
     const defaultCategories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
       { id: "drinks", emoji: "☕", labelEn: "Drinks", labelKm: "ភេសជ្ជៈ", color: "#1F7A72" },
@@ -860,7 +859,6 @@
     let categories = loadedCats.filter(c => c.id !== "fun" && c.id !== "other");
     let isManagingCategories = false;
 
-    // Bilingual Dictionary
     const i18n = {
       app_title: { en: "Daily Expenses", km: "សៀវភៅចំណាយ" },
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
@@ -941,6 +939,14 @@
       viewMonth: new Date().getMonth()
     };
 
+    // Ensure synchronized initial state if not matched
+    if (state.lang === "km" && state.displayCurrency !== "KHR") {
+      state.displayCurrency = "KHR";
+    } else if (state.lang === "en" && state.displayCurrency !== "USD") {
+      state.displayCurrency = "USD";
+    }
+    state.activeFormCur = state.displayCurrency;
+
     window.addEventListener("DOMContentLoaded", () => {
       updateLiveDate();
       setupEmojiPickerPresets();
@@ -985,7 +991,6 @@
       document.getElementById("liveDate").innerText = now.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
     }
 
-    // Month Navigation Controls
     function changeMonth(delta) {
       state.viewMonth += delta;
       if (state.viewMonth > 11) {
@@ -1166,6 +1171,8 @@
       renderEntriesList();
 
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
+      document.getElementById("langBtn").innerText = state.lang === "en" ? "🇰🇭 ភាសាខ្មែរ" : "🇺🇸 English";
+
       document.getElementById("settingRate").value = state.exchangeRate;
       document.getElementById("settingBudget").value = state.monthlyBudgetUSD || "";
       document.getElementById("settingAdminUser").value = state.adminUser;
@@ -1532,8 +1539,20 @@
       }
     }
 
+    /* Linked Language & Currency Logic with Separate Buttons */
     function toggleLanguage() {
       state.lang = state.lang === "en" ? "km" : "en";
+      state.displayCurrency = state.lang === "en" ? "USD" : "KHR";
+      state.activeFormCur = state.displayCurrency;
+      applyLanguage();
+      buildCategoryGrid();
+      saveState();
+    }
+
+    function toggleCurrency() {
+      state.displayCurrency = state.displayCurrency === "USD" ? "KHR" : "USD";
+      state.lang = state.displayCurrency === "USD" ? "en" : "km";
+      state.activeFormCur = state.displayCurrency;
       applyLanguage();
       buildCategoryGrid();
       saveState();
@@ -1541,7 +1560,6 @@
 
     function applyLanguage() {
       const t = (k) => i18n[k]?.[state.lang] || k;
-      document.getElementById("langBtn").innerText = state.lang === "en" ? "🇰🇭 ភាសាខ្មែរ" : "🇺🇸 English";
       document.getElementById("headerTitle").innerText = t("app_title");
       document.getElementById("coachGreeting").innerText = t("status");
       document.getElementById("lblToday").innerText = t("spent_today");
@@ -1604,10 +1622,6 @@
       updateMonthDisplay();
     }
 
-    function toggleCurrency() {
-      state.displayCurrency = state.displayCurrency === "USD" ? "KHR" : "USD";
-      saveState();
-    }
     function updateRate(v) {
       if (v > 0) { state.exchangeRate = parseFloat(v); saveState(); }
     }
@@ -1626,7 +1640,6 @@
       document.getElementById("navSettings").className = "nav-tab " + (tab === "settings" ? "active" : "");
     }
 
-    // Modern CSV Export & Native Sharing
     async function exportCSV() {
       let csv = "Date,Category,Amount,Currency,Note\n";
       state.entries.forEach(e => {
