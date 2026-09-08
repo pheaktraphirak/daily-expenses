@@ -44,15 +44,15 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Kantumruy Pro", "Khmer OS Battambang", sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: 95px;
+      padding-bottom: 100px;
       user-select: none;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Header */
+    /* Top Navigation Header */
     header {
       position: sticky;
       top: 0;
@@ -71,7 +71,7 @@
     }
     header h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
     }
@@ -80,15 +80,15 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 6px 14px;
+      padding: 6px 12px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--pine);
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       transition: transform 0.15s ease;
     }
     .pill-btn:active { transform: scale(0.95); }
@@ -97,6 +97,41 @@
       padding: 16px 18px;
       max-width: 520px;
       margin: 0 auto;
+    }
+
+    /* Month Selector Bar */
+    .month-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 6px 10px;
+      margin-bottom: 14px;
+      box-shadow: var(--card-shadow);
+    }
+    .month-nav-btn {
+      background: var(--pine-subtle);
+      color: var(--pine);
+      border: none;
+      border-radius: 12px;
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .month-nav-btn:active { transform: scale(0.92); }
+    .month-nav-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.2px;
     }
 
     /* Personality & Budget Card */
@@ -112,7 +147,7 @@
       gap: 10px;
     }
     .coach-header { display: flex; justify-content: space-between; align-items: center; }
-    .coach-greeting { font-size: 13px; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .coach-greeting { font-size: 12px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
     .coach-badge {
       font-size: 12px;
       font-weight: 700;
@@ -123,14 +158,7 @@
     }
     .coach-badge.warning { background: rgba(255, 149, 0, 0.15); color: var(--warning); }
     .coach-badge.over { background: var(--danger-subtle); color: var(--danger); }
-    .coach-quote { font-size: 16px; font-weight: 700; line-height: 1.35; margin: 0; }
-    
-    .over-limit-amount {
-      color: var(--danger);
-      font-weight: 800;
-      font-family: monospace;
-    }
-
+    .coach-quote { font-size: 15px; font-weight: 600; line-height: 1.4; margin: 0; }
     .progress-bar-bg {
       height: 8px;
       background: rgba(0, 0, 0, 0.06);
@@ -148,7 +176,7 @@
       transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Summary Cards */
+    /* Summary Grid */
     .summary-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -169,7 +197,7 @@
     }
     .stat-card:active { transform: scale(0.98); }
     .stat-label { font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.6px; }
-    .stat-value { font-size: 20px; font-weight: 800; font-family: -apple-system-headline, monospace; color: var(--pine); }
+    .stat-value { font-size: 20px; font-weight: 800; font-family: monospace; color: var(--pine); }
 
     /* Content Cards */
     .content-card {
@@ -181,7 +209,7 @@
       box-shadow: var(--card-shadow);
     }
     .card-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--secondary);
       text-transform: uppercase;
@@ -192,7 +220,7 @@
       align-items: center;
     }
 
-    /* Chart */
+    /* Interactive Chart */
     .chart-box {
       display: flex;
       align-items: flex-end;
@@ -208,9 +236,7 @@
       height: 100%;
       justify-content: flex-end;
       cursor: pointer;
-      transition: transform 0.1s ease;
     }
-    .chart-col:active { transform: scale(0.95); }
     .chart-bar-bg {
       width: 100%;
       background: var(--pine-subtle);
@@ -228,7 +254,7 @@
     }
     .chart-day { font-size: 11px; font-weight: 600; margin-top: 6px; color: var(--secondary); }
 
-    /* List & Search */
+    /* Search & Expense List */
     .search-input {
       width: 100%;
       padding: 12px 16px;
@@ -286,7 +312,7 @@
     }
     .btn-delete:active { background: var(--danger-subtle); }
 
-    /* Centered Floating Add Button */
+    /* Centered Floating Action Button */
     .fab {
       position: fixed;
       left: 50%;
@@ -300,7 +326,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 300;
       box-shadow: 0 8px 24px var(--pine-glow);
       border: none;
@@ -308,12 +334,9 @@
       z-index: 30;
       transition: transform 0.15s ease, background-color 0.2s;
     }
-    .fab:active {
-      transform: translateX(-50%) scale(0.92);
-      background: var(--pine-dark);
-    }
+    .fab:active { transform: translateX(-50%) scale(0.92); background: var(--pine-dark); }
 
-    /* Bottom Nav */
+    /* Tab Bar */
     nav {
       position: fixed;
       bottom: 0;
@@ -346,7 +369,7 @@
     .nav-tab.active { color: var(--pine); font-weight: 700; }
     .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
 
-    /* Modals */
+    /* Modal Sheets */
     .modal {
       position: fixed;
       inset: 0;
@@ -373,7 +396,7 @@
       to { transform: translateY(0); }
     }
 
-    /* Form Elements */
+    /* Modal Form Inputs */
     .form-group { margin-bottom: 16px; }
     label { font-size: 12px; font-weight: 700; color: var(--secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .amount-wrapper {
@@ -406,17 +429,13 @@
       outline: none;
     }
 
-    /* Horizontal Chips */
+    /* Quick Chips */
     .chip-row {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 8px 0 4px 0;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      padding: 8px 0 2px 0;
     }
-    .chip-row::-webkit-scrollbar { display: none; }
-
     .chip {
       background: var(--pine-subtle);
       color: var(--pine);
@@ -427,12 +446,10 @@
       border: none;
       white-space: nowrap;
       cursor: pointer;
-      flex-shrink: 0;
-      transition: transform 0.1s ease;
     }
     .chip:active { transform: scale(0.94); }
 
-    /* Category Grid */
+    /* Category Grid & Deletion */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -440,6 +457,7 @@
       margin-top: 6px;
     }
     .category-card {
+      position: relative;
       background: var(--bg);
       border: 1.5px solid transparent;
       border-radius: 16px;
@@ -456,8 +474,71 @@
       border-color: var(--pine);
       background: var(--pine-subtle);
     }
+    .category-card.add-btn {
+      border: 1.5px dashed var(--pine);
+      background: transparent;
+    }
     .category-emoji { font-size: 26px; }
     .category-title { font-size: 11px; font-weight: 700; text-align: center; }
+
+    .cat-delete-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--danger);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+      cursor: pointer;
+    }
+
+    /* Custom File Picker */
+    .custom-file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 14px;
+      margin-top: 6px;
+    }
+    .custom-file-btn {
+      background: var(--pine-subtle);
+      color: var(--pine);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.1s ease;
+    }
+    .custom-file-btn:active { transform: scale(0.95); }
+    .custom-file-label {
+      font-size: 13px;
+      color: var(--secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .btn-clear-file {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
 
     /* Date Pills */
     .date-pills { display: flex; gap: 8px; margin-bottom: 8px; }
@@ -499,10 +580,7 @@
       cursor: pointer;
     }
 
-    #receiptViewerModal .modal-content {
-      text-align: center;
-      padding: 20px;
-    }
+    /* In-App Image Viewer */
     #viewerImage {
       width: 100%;
       max-height: 65vh;
@@ -523,21 +601,28 @@
 </head>
 <body>
 
-  <!-- Top Header with Unified Switcher -->
+  <!-- Top Header -->
   <header>
     <div>
       <h1 id="headerTitle">Daily Expenses</h1>
       <div id="liveDate" style="font-size: 12px; color: var(--secondary); font-weight: 600;"></div>
     </div>
     <div class="header-actions">
-      <!-- 1-Tap Linked Switcher -->
-      <button class="pill-btn" onclick="toggleLanguageAndCurrency()" id="langCurBtn">🇰🇭 KHR (៛)</button>
+      <button class="pill-btn" onclick="toggleLanguage()" id="langBtn">🇰🇭 ភាសាខ្មែរ</button>
+      <button class="pill-btn" onclick="toggleCurrency()" id="curBtn">USD ($)</button>
     </div>
   </header>
 
   <div class="container">
     <!-- Tab 1: Dashboard -->
     <div id="tabDashboard">
+      <!-- Month Archive Navigator -->
+      <div class="month-bar">
+        <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="month-nav-title" id="lblMonthNav">September 2026</div>
+        <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+
       <div class="personality-card">
         <div class="coach-header">
           <span class="coach-greeting" id="coachGreeting">STATUS</span>
@@ -555,7 +640,7 @@
           <span class="stat-value" id="valToday">$0.00</span>
         </div>
         <div class="stat-card" onclick="switchTab('entries')">
-          <span class="stat-label" id="lblMonth">THIS MONTH</span>
+          <span class="stat-label" id="lblMonth">SELECTED MONTH</span>
           <span class="stat-value" id="valMonth">$0.00</span>
         </div>
       </div>
@@ -563,7 +648,7 @@
       <div class="content-card">
         <div class="card-title">
           <span id="lblLast7Days">Last 7 Days</span>
-          <span style="font-size: 11px; text-transform: none; color: var(--pine);" id="lblChartHint">Tap day to view</span>
+          <span style="font-size: 11px; text-transform: none; color: var(--pine);" id="lblChartHint">Tap bars to view</span>
         </div>
         <div class="chart-box" id="barChart"></div>
       </div>
@@ -575,9 +660,7 @@
 
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
-        <div>
-          <button class="pill-btn" style="width:100%; justify-content:center; padding:12px;" onclick="exportCSV()">📄 Export CSV</button>
-        </div>
+        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px;" onclick="exportCSV()" id="btnExportCSV">📄 Export & Share CSV</button>
       </div>
     </div>
 
@@ -603,19 +686,20 @@
         </div>
       </div>
 
+      <!-- Security Settings Card -->
       <div class="content-card">
-        <div class="card-title">Reset Security Credentials</div>
+        <div class="card-title" id="lblSecurityTitle">Reset Security Credentials</div>
         <div class="form-group">
-          <label>Admin Username</label>
+          <label id="lblAdminUser">Admin Username</label>
           <input type="text" id="settingAdminUser" class="search-input" value="admin" onchange="updateCredentials()" />
         </div>
         <div class="form-group">
-          <label>Admin Password</label>
+          <label id="lblAdminPass">Admin Password</label>
           <input type="password" id="settingAdminPass" class="search-input" value="1234" onchange="updateCredentials()" />
         </div>
-        <p style="font-size: 12px; color: var(--secondary); margin-top:-6px;">These credentials are required whenever you request to reset all data.</p>
+        <p style="font-size: 12px; color: var(--secondary); margin-top:-6px;" id="lblAdminHelp">These credentials are required whenever you request to reset all data.</p>
         
-        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle); margin-top: 10px;" onclick="promptResetAuth()">Reset All Data</button>
+        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle); margin-top: 10px;" onclick="promptResetAuth()" id="btnResetData">Reset All Data</button>
       </div>
     </div>
   </div>
@@ -656,8 +740,12 @@
         <div class="chip-row" id="quickChips"></div>
       </div>
 
+      <!-- Category Selector with Manage Toggle -->
       <div class="form-group">
-        <label id="lblCategory">Select Category</label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label id="lblCategory" style="margin-bottom: 0;">Select Category</label>
+          <button type="button" onclick="toggleCategoryManageMode()" id="btnManageCat" style="background: none; border: none; color: var(--pine); font-size: 12px; font-weight: 700; cursor: pointer; padding: 2px 6px;">Manage</button>
+        </div>
         <div class="category-grid" id="categoryGrid"></div>
       </div>
 
@@ -671,27 +759,17 @@
         <input type="date" id="inpDate" class="search-input" style="display: none; margin-top: 6px;" />
       </div>
 
-      <!-- Note with Khmer Quick-Tap Tags -->
       <div class="form-group">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <label id="lblNote" style="margin-bottom: 0;">Note & Quick Tags</label>
-          <span style="font-size: 11px; color: var(--pine); font-weight: 700;">🇰🇭 1-Tap Khmer</span>
+        <label id="lblNote">Note & Receipt</label>
+        <input type="text" id="inpNote" class="search-input" placeholder="e.g. Iced Latte with friends" />
+        
+        <!-- Fully Bilingual Custom File Upload Row -->
+        <div class="custom-file-row">
+          <label for="inpReceipt" class="custom-file-btn" id="lblChooseFileBtn">📎 Choose File</label>
+          <input type="file" id="inpReceipt" accept="image/*" style="display: none;" onchange="handleFileChange(this)" />
+          <span class="custom-file-label" id="fileChosenText">No file chosen</span>
+          <button type="button" id="btnClearFile" class="btn-clear-file" style="display: none;" onclick="clearChosenFile()">✕</button>
         </div>
-
-        <div class="chip-row" style="padding-top: 0; margin-bottom: 8px;">
-          <button type="button" class="chip" onclick="addKhmerTag('☕ កាហ្វេ')">☕ កាហ្វេ</button>
-          <button type="button" class="chip" onclick="addKhmerTag('🍛 បាយថ្ងៃត្រង់')">🍛 បាយថ្ងៃត្រង់</button>
-          <button type="button" class="chip" onclick="addKhmerTag('🍲 អាហារពេលល្ងាច')">🍲 អាហារពេលល្ងាច</button>
-          <button type="button" class="chip" onclick="addKhmerTag('⛽ ចាក់សាំង')">⛽ ចាក់សាំង</button>
-          <button type="button" class="chip" onclick="addKhmerTag('🛒 ទិញម្ហូប')">🛒 ទិញម្ហូប</button>
-          <button type="button" class="chip" onclick="addKhmerTag('💡 ទឹកភ្លើង')">💡 ទឹកភ្លើង</button>
-          <button type="button" class="chip" onclick="addKhmerTag('💊 ទិញថ្នាំ')">💊 ទិញថ្នាំ</button>
-          <button type="button" class="chip" onclick="addKhmerTag('🛵 ថ្លៃ PassApp')">🛵 PassApp</button>
-          <button type="button" class="chip" onclick="addKhmerTag('📶 អ៊ីនធឺណិត')">📶 អ៊ីនធឺណិត</button>
-        </div>
-
-        <input type="text" id="inpNote" class="search-input" placeholder="e.g. បាយថ្ងៃត្រង់ / Lunch" />
-        <input type="file" id="inpReceipt" accept="image/*" class="search-input" style="padding: 10px;" />
         <div id="receiptPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ Photo ready to attach</div>
       </div>
 
@@ -700,115 +778,175 @@
     </div>
   </div>
 
-  <!-- Day Detail Modal -->
-  <div class="modal" id="dayDetailModal">
+  <!-- Create Custom Category Modal -->
+  <div class="modal" id="newCatModal" style="z-index: 50;">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <div>
-          <h2 style="margin: 0; font-size: 18px; font-weight: 800;" id="dayDetailTitle">Day Expenses</h2>
-          <span id="dayDetailSubtitle" style="font-size: 13px; color: var(--secondary); font-weight: 600;"></span>
-        </div>
-        <button onclick="closeDayDetailModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="lblNewCatTitle">Create Custom Category</h2>
+        <button onclick="closeNewCatModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
       </div>
-      <div id="dayDetailList" style="margin-top: 8px;"></div>
-      <button class="btn-action" style="margin-top: 14px;" onclick="closeDayDetailModal()">Done</button>
+
+      <div class="form-group">
+        <label id="lblNewCatEmoji">Select Icon / Emoji</label>
+        <div style="display: flex; gap: 8px; margin-bottom: 8px; overflow-x: auto; padding-bottom: 4px;" id="emojiPickerRow"></div>
+        <input type="text" id="inpCustomEmoji" class="search-input" placeholder="Or type any emoji (e.g. 🎁)" maxlength="4" style="text-align: center; font-size: 20px;" />
+      </div>
+
+      <div class="form-group">
+        <label id="lblNewCatName">Category Name</label>
+        <input type="text" id="inpCustomCatName" class="search-input" placeholder="e.g. Gym, Pet, Gifts" />
+      </div>
+
+      <button class="btn-action" onclick="saveCustomCategory()" id="btnSaveCategory">Add Category</button>
+      <button class="btn-secondary" onclick="closeNewCatModal()" id="btnCancelCategory">Cancel</button>
     </div>
   </div>
 
-  <!-- Receipt Viewer Modal -->
-  <div class="modal" id="receiptViewerModal">
+  <!-- In-App Day Breakdown Modal -->
+  <div class="modal" id="dayBreakdownModal">
     <div class="modal-content">
-      <h3 style="margin-top: 0;">Receipt Photo</h3>
-      <img id="viewerImage" src="" alt="Receipt" />
-      <button class="btn-action" onclick="closeReceiptModal()">Done</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="margin: 0;" id="dayModalTitle">Day Expenses</h3>
+        <button onclick="closeDayBreakdownModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
+      </div>
+      <div id="dayEntriesList"></div>
+      <button class="btn-action" style="margin-top: 14px;" onclick="closeDayBreakdownModal()" id="btnDayModalClose">Done</button>
     </div>
   </div>
 
-  <!-- Reset Security Modal -->
+  <!-- In-App Receipt Photo Modal -->
+  <div class="modal" id="receiptViewerModal">
+    <div class="modal-content" style="text-align: center;">
+      <h3 style="margin-top: 0;" id="lblReceiptModalTitle">Receipt Photo</h3>
+      <img id="viewerImage" src="" alt="Receipt" />
+      <button class="btn-action" onclick="closeReceiptModal()" id="btnReceiptDone">Done</button>
+    </div>
+  </div>
+
+  <!-- Reset Security Authentication Modal -->
   <div class="modal" id="resetAuthModal">
     <div class="modal-content">
-      <h2 style="margin-top:0; color: var(--danger);">Authorize Data Reset</h2>
-      <p style="font-size: 13px; color: var(--secondary);">Enter your administrator username and password to wipe all transactions.</p>
+      <h2 style="margin-top:0; color: var(--danger);" id="lblResetAuthTitle">Authorize Data Reset</h2>
+      <p style="font-size: 13px; color: var(--secondary);" id="lblResetAuthDesc">Enter your administrator username and password to wipe all transactions.</p>
       
       <div class="form-group">
-        <label>Username</label>
+        <label id="lblAuthUser">Username</label>
         <input type="text" id="authInputUser" class="search-input" placeholder="Username" autocomplete="off" />
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label id="lblAuthPass">Password</label>
         <input type="password" id="authInputPass" class="search-input" placeholder="Password" />
       </div>
       
       <div id="authErrorMsg" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-bottom: 10px; display: none;">Invalid username or password!</div>
       
-      <button class="btn-action" style="background: var(--danger);" onclick="executeDataReset()">Verify & Wipe All</button>
-      <button class="btn-secondary" onclick="closeResetModal()">Cancel</button>
+      <button class="btn-action" style="background: var(--danger);" onclick="executeDataReset()" id="btnConfirmReset">Verify & Wipe All</button>
+      <button class="btn-secondary" onclick="closeResetModal()" id="btnCancelReset">Cancel</button>
     </div>
   </div>
 
   <script>
-    // Categories[span_3](start_span)[span_3](end_span)
-    const categories = [
+    // Categories Cleaned (without Fun or Other)
+    const defaultCategories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
       { id: "drinks", emoji: "☕", labelEn: "Drinks", labelKm: "ភេសជ្ជៈ", color: "#1F7A72" },
       { id: "transport", emoji: "🛵", labelEn: "Transport", labelKm: "ធ្វើដំណើរ", color: "#2F5D50" },
       { id: "shopping", emoji: "🛍️", labelEn: "Shopping", labelKm: "ទិញទំនិញ", color: "#4D6A82" },
       { id: "bills", emoji: "💡", labelEn: "Bills", labelKm: "វិក្កយបត្រ", color: "#9C3D2E" },
-      { id: "health", emoji: "💊", labelEn: "Health", labelKm: "សុខភាព", color: "#4E7A63" },
-      { id: "fun", emoji: "🎮", labelEn: "Fun", labelKm: "កម្សាន្ត", color: "#8B5E83" },
-      { id: "other", emoji: "📦", labelEn: "Other", labelKm: "ផ្សេងទៀត", color: "#6E6A5E" }
+      { id: "health", emoji: "💊", labelEn: "Health", labelKm: "សុខភាព", color: "#4E7A63" }
     ];
 
-    // Language dictionary[span_4](start_span)[span_4](end_span)
+    let loadedCats = JSON.parse(localStorage.getItem("ledger_categories") || "null") || defaultCategories;
+    let categories = loadedCats.filter(c => c.id !== "fun" && c.id !== "other");
+    let isManagingCategories = false;
+
+    // Bilingual Dictionary
     const i18n = {
+      app_title: { en: "Daily Expenses", km: "សៀវភៅចំណាយ" },
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
       entries: { en: "Entries", km: "ចំណាយទាំងអស់" },
       settings: { en: "Settings", km: "ការកំណត់" },
+      status: { en: "STATUS", km: "ស្ថានភាព" },
+      badge_ontrack: { en: "On Track 🌿", km: "ដំណើរការល្អ 🌿" },
+      badge_careful: { en: "Careful 📊", km: "ប្រុងប្រយ័ត្ន 📊" },
+      badge_over: { en: "Over Limit ⚠️", km: "លើសកម្រិត ⚠️" },
+      badge_active: { en: "Active ✨", km: "សកម្ម ✨" },
       spent_today: { en: "TODAY", km: "ថ្ងៃនេះ" },
-      spent_this_month: { en: "THIS MONTH", km: "ខែនេះ" },
+      spent_this_month: { en: "SELECTED MONTH", km: "ខែដែលបានជ្រើស" },
       last_7_days: { en: "Last 7 Days", km: "៧ ថ្ងៃចុងក្រោយ" },
-      categories: { en: "Top Categories", km: "ចំណាត់ថ្នាក់ចំណាយ" },
-      data: { en: "Data & Tools", km: "ទិន្នន័យ" },
+      chart_hint: { en: "Tap bars to view", km: "ចុចលើរបារដើម្បីមើល" },
+      categories: { en: "Top Spending Categories", km: "ប្រភេទចំណាយច្រើនបំផុត" },
+      data: { en: "Data & Tools", km: "ទិន្នន័យ & ឧបករណ៍" },
+      export_csv: { en: "📄 Export & Share CSV", km: "📄 ទាញយក & ចែករំលែក CSV" },
+      search_placeholder: { en: "🔍 Search by note or category...", km: "🔍 ស្វែងរកតាមចំណាំ ឬប្រភេទ..." },
+      ex_rate: { en: "Exchange Rate (1 USD = ? KHR)", km: "អត្រាប្តូរប្រាក់ (1 USD = ? ៛)" },
+      budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" },
+      security_title: { en: "Reset Security Credentials", km: "ពាក្យសម្ងាត់សម្រាប់កំណត់ឡើងវិញ" },
+      admin_user: { en: "Admin Username", km: "ឈ្មោះអ្នកគ្រប់គ្រង" },
+      admin_pass: { en: "Admin Password", km: "លេខកូដសម្ងាត់" },
+      admin_help: { en: "These credentials are required whenever you request to reset all data.", km: "ត្រូវបញ្ចូលឈ្មោះ និងលេខកូដនេះ នៅពេលចង់លុបទិន្នន័យទាំងអស់ឡើងវិញ។" },
+      reset_data: { en: "Reset All Data", km: "កំណត់ទិន្នន័យឡើងវិញទាំងអស់" },
       add_title: { en: "Add Expense", km: "បន្ថែមចំណាយ" },
       amount: { en: "Amount", km: "ចំនួនទឹកប្រាក់" },
       category: { en: "Select Category", km: "ជ្រើសរើសប្រភេទ" },
+      manage_cat: { en: "Manage", km: "គ្រប់គ្រង" },
+      done_cat: { en: "Done", km: "រួចរាល់" },
       date: { en: "When", km: "កាលបរិច្ឆេទ" },
-      note: { en: "Note & Quick Tags", km: "កំណត់ចំណាំ & ផ្លាករហ័ស" },
-      save: { en: "Save Expense", km: "រក្សាទុកចំណាយ" },
-      cancel: { en: "Cancel", km: "បោះបង់" },
       today: { en: "Today", km: "ថ្ងៃនេះ" },
       yesterday: { en: "Yesterday", km: "ម្សិលមិញ" },
-      custom: { en: "Custom", km: "ជ្រើសរើស" },
-      ex_rate: { en: "Exchange Rate (1 USD = ? KHR)", km: "អត្រាប្តូរប្រាក់ (1 USD = ? ៛)" },
-      budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" },
-      tap_hint: { en: "Tap day to view", km: "ចុចមើលតាមថ្ងៃ" }
+      custom: { en: "Custom", km: "ជ្រើសរើសថ្ងៃ" },
+      note: { en: "Note & Receipt", km: "កំណត់ចំណាំ & បង្កាន់ដៃ" },
+      note_ph: { en: "e.g. Iced Latte with friends", km: "ឧ. ញ៉ាំកាហ្វេជាមួយមិត្តភក្តិ" },
+      choose_file: { en: "📎 Choose File", km: "📎 ជ្រើសរើសឯកសារ" },
+      no_file_chosen: { en: "No file chosen", km: "មិនទាន់ជ្រើសឯកសារ" },
+      photo_ready: { en: "✓ Photo ready to attach", km: "✓ រូបថតរួចរាល់សម្រាប់ភ្ជាប់" },
+      save: { en: "Save Expense", km: "រក្សាទុកចំណាយ" },
+      cancel: { en: "Cancel", km: "បោះបង់" },
+      new_cat_title: { en: "Create Custom Category", km: "បង្កើតប្រភេទចំណាយថ្មី" },
+      new_cat_emoji: { en: "Select Icon / Emoji", km: "ជ្រើសរើសរូបតំណាង Emoji" },
+      new_cat_name: { en: "Category Name", km: "ឈ្មោះប្រភេទចំណាយ" },
+      new_cat_name_ph: { en: "e.g. Gym, Pet, Gifts", km: "ឧ. កន្លែងហាត់ប្រាណ, សត្វចិញ្ចឹម, កាដូ" },
+      save_category: { en: "Add Category", km: "រក្សាទុកប្រភេទថ្មី" },
+      view_receipt: { en: "📎 View Receipt", km: "📎 មើលបង្កាន់ដៃ" },
+      receipt_modal_title: { en: "Receipt Photo", km: "រូបថតបង្កាន់ដៃ" },
+      done: { en: "Done", km: "រួចរាល់" },
+      auth_reset_title: { en: "Authorize Data Reset", km: "ផ្ទៀងផ្ទាត់ការលុបទិន្នន័យ" },
+      auth_reset_desc: { en: "Enter your administrator username and password to wipe all transactions.", km: "សូមបញ្ចូលឈ្មោះ និងលេខសម្ងាត់អ្នកគ្រប់គ្រង ដើម្បីលុបប្រតិបត្តិការទាំងអស់។" },
+      verify_wipe: { en: "Verify & Wipe All", km: "ផ្ទៀងផ្ទាត់ & លុបទាំងអស់" },
+      auth_err: { en: "Invalid username or password!", km: "ឈ្មោះ ឬលេខសម្ងាត់មិនត្រឹមត្រូវទេ!" },
+      no_spending_month: { en: "No spending in this month", km: "មិនទាន់មានចំណាយក្នុងខែនេះទេ" },
+      tap_plus_hint: { en: "Tap the + button to add an expense!", km: "ចុចលើសញ្ញា + ដើម្បីកត់ត្រាចំណាយរបស់អ្នក!" },
+      no_entries_found: { en: "No expenses found", km: "រកមិនឃើញការចំណាយទេ" },
+      trans_appear_here: { en: "Your transactions will appear right here.", km: "រាល់ការចំណាយរបស់អ្នកនឹងបង្ហាញនៅទីនេះ។" },
+      confirm_del: { en: "Remove this entry?", km: "តើអ្នកពិតជាចង់លុបចំណាយនេះមែនទេ?" },
+      confirm_del_cat: { en: "Are you sure you want to remove this category?", km: "តើអ្នកពិតជាចង់លុបប្រភេទចំណាយនេះមែនទេ?" },
+      keep_one_cat: { en: "You must keep at least one category!", km: "អ្នកត្រូវទុកប្រភេទចំណាយយ៉ាងហោចណាស់មួយ!" },
+      no_exp_day: { en: "No expenses logged on this day.", km: "គ្មានចំណាយនៅក្នុងថ្ងៃនេះទេ។" }
     };
 
-    // State[span_5](start_span)[span_5](end_span)
-    let storedLang = localStorage.getItem("ledger_lang") || "en";
+    const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
+    const englishMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
-      // Language and Currency linked strictly: en -> USD, km -> KHR
-      lang: storedLang,
-      displayCurrency: storedLang === "km" ? "KHR" : "USD",
+      displayCurrency: localStorage.getItem("ledger_cur") || "USD",
       monthlyBudgetUSD: parseFloat(localStorage.getItem("ledger_budget") || "0"),
+      lang: localStorage.getItem("ledger_lang") || "en",
       adminUser: localStorage.getItem("ledger_admin_user") || "admin",
       adminPass: localStorage.getItem("ledger_admin_pass") || "1234",
-      activeFormCur: storedLang === "km" ? "KHR" : "USD",
-      selectedCat: "food"
+      activeFormCur: "USD",
+      selectedCat: categories[0]?.id || "food",
+      viewYear: new Date().getFullYear(),
+      viewMonth: new Date().getMonth()
     };
 
     window.addEventListener("DOMContentLoaded", () => {
       updateLiveDate();
+      setupEmojiPickerPresets();
       buildCategoryGrid();
       applyLanguage();
       render();
-
-      document.getElementById("inpReceipt").addEventListener("change", function() {
-        const preview = document.getElementById("receiptPreviewIndicator");
-        preview.style.display = this.files.length > 0 ? "block" : "none";
-      });
     });
 
     function saveState() {
@@ -820,13 +958,13 @@
         localStorage.setItem("ledger_lang", state.lang);
         localStorage.setItem("ledger_admin_user", state.adminUser);
         localStorage.setItem("ledger_admin_pass", state.adminPass);
+        localStorage.setItem("ledger_categories", JSON.stringify(categories));
       } catch (err) {
-        alert("Device storage full! Please delete some old receipt photos or expenses.");
+        alert(state.lang === "km" ? "ទំហំផ្ទុកទូរស័ព្ទពេញហើយ!" : "Device storage full!");
       }
       render();
     }
 
-    // Currency Conversion[span_6](start_span)[span_6](end_span)
     function toUSD(val, cur) {
       return cur === "KHR" ? val / state.exchangeRate : val;
     }
@@ -847,21 +985,161 @@
       document.getElementById("liveDate").innerText = now.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
     }
 
-    function addKhmerTag(tag) {
-      const noteInput = document.getElementById("inpNote");
-      if (noteInput.value.trim().length === 0) {
-        noteInput.value = tag;
+    // Month Navigation Controls
+    function changeMonth(delta) {
+      state.viewMonth += delta;
+      if (state.viewMonth > 11) {
+        state.viewMonth = 0;
+        state.viewYear++;
+      } else if (state.viewMonth < 0) {
+        state.viewMonth = 11;
+        state.viewYear--;
+      }
+      render();
+    }
+
+    function updateMonthDisplay() {
+      const mName = state.lang === "km" ? khmerMonths[state.viewMonth] : englishMonths[state.viewMonth];
+      document.getElementById("lblMonthNav").innerText = `${mName} ${state.viewYear}`;
+    }
+
+    function handleFileChange(input) {
+      const textEl = document.getElementById("fileChosenText");
+      const clearBtn = document.getElementById("btnClearFile");
+      const preview = document.getElementById("receiptPreviewIndicator");
+
+      if (input.files && input.files.length > 0) {
+        textEl.innerText = input.files[0].name;
+        clearBtn.style.display = "block";
+        preview.style.display = "block";
       } else {
-        noteInput.value += " " + tag;
+        textEl.innerText = state.lang === "km" ? i18n.no_file_chosen.km : i18n.no_file_chosen.en;
+        clearBtn.style.display = "none";
+        preview.style.display = "none";
       }
     }
 
-    // Render Dashboard[span_7](start_span)[span_7](end_span)
+    function clearChosenFile() {
+      const input = document.getElementById("inpReceipt");
+      input.value = "";
+      handleFileChange(input);
+    }
+
+    function toggleCategoryManageMode() {
+      isManagingCategories = !isManagingCategories;
+      const btn = document.getElementById("btnManageCat");
+      btn.innerText = isManagingCategories 
+        ? (state.lang === "km" ? i18n.done_cat.km : i18n.done_cat.en)
+        : (state.lang === "km" ? i18n.manage_cat.km : i18n.manage_cat.en);
+      buildCategoryGrid();
+    }
+
+    function deleteCategory(catId, event) {
+      event.stopPropagation();
+      if (categories.length <= 1) {
+        alert(state.lang === "km" ? i18n.keep_one_cat.km : i18n.keep_one_cat.en);
+        return;
+      }
+      const conf = confirm(state.lang === "km" ? i18n.confirm_del_cat.km : i18n.confirm_del_cat.en);
+      if (conf) {
+        categories = categories.filter(c => c.id !== catId);
+        if (state.selectedCat === catId) {
+          state.selectedCat = categories[0].id;
+        }
+        saveState();
+        buildCategoryGrid();
+      }
+    }
+
+    function buildCategoryGrid() {
+      const grid = document.getElementById("categoryGrid");
+      grid.innerHTML = "";
+
+      categories.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "category-card" + (state.selectedCat === c.id ? " selected" : "");
+        card.onclick = () => {
+          document.querySelectorAll(".category-card").forEach(el => el.classList.remove("selected"));
+          card.classList.add("selected");
+          state.selectedCat = c.id;
+        };
+
+        const name = state.lang === "km" ? (c.labelKm || c.labelEn) : c.labelEn;
+        let deleteBadge = "";
+        if (isManagingCategories) {
+          deleteBadge = `<div class="cat-delete-badge" onclick="deleteCategory('${c.id}', event)">✕</div>`;
+        }
+
+        card.innerHTML = `
+          ${deleteBadge}
+          <span class="category-emoji">${c.emoji}</span>
+          <span class="category-title">${name}</span>
+        `;
+        grid.appendChild(card);
+      });
+
+      const addBtn = document.createElement("div");
+      addBtn.className = "category-card add-btn";
+      addBtn.onclick = openNewCatModal;
+      addBtn.innerHTML = `<span class="category-emoji">➕</span><span class="category-title">${state.lang === 'km' ? 'បន្ថែមថ្មី' : 'New'}</span>`;
+      grid.appendChild(addBtn);
+    }
+
+    function setupEmojiPickerPresets() {
+      const row = document.getElementById("emojiPickerRow");
+      row.innerHTML = "";
+      const presets = ["🏋️", "🎬", "🎁", "📚", "✈️", "🐶", "💄", "👶", "🚗", "🏠", "🍕", "💻"];
+      presets.forEach(emo => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "pill-btn";
+        b.style.padding = "6px 10px";
+        b.style.fontSize = "18px";
+        b.innerText = emo;
+        b.onclick = () => {
+          document.getElementById("inpCustomEmoji").value = emo;
+        };
+        row.appendChild(b);
+      });
+    }
+
+    function openNewCatModal() {
+      document.getElementById("inpCustomEmoji").value = "🏷️";
+      document.getElementById("inpCustomCatName").value = "";
+      document.getElementById("newCatModal").style.display = "flex";
+    }
+
+    function closeNewCatModal() {
+      document.getElementById("newCatModal").style.display = "none";
+    }
+
+    function saveCustomCategory() {
+      const name = document.getElementById("inpCustomCatName").value.trim();
+      const emoji = document.getElementById("inpCustomEmoji").value.trim() || "🏷️";
+      if (!name) {
+        alert(state.lang === "km" ? "សូមបញ្ចូលឈ្មោះប្រភេទ!" : "Please enter a category name!");
+        return;
+      }
+
+      const newId = "custom_" + Date.now();
+      const newCat = {
+        id: newId,
+        emoji: emoji,
+        labelEn: name,
+        labelKm: name,
+        color: "#2F5D50"
+      };
+
+      categories.push(newCat);
+      state.selectedCat = newId;
+      saveState();
+      buildCategoryGrid();
+      closeNewCatModal();
+    }
+
     function render() {
       const now = new Date();
       const todayStr = now.toISOString().split("T")[0];
-      const curYear = now.getFullYear();
-      const curMonth = now.getMonth();
 
       let todayUSD = 0;
       let monthUSD = 0;
@@ -872,7 +1150,7 @@
         const costUSD = toUSD(e.amount, e.currency);
 
         if (e.date.startsWith(todayStr)) todayUSD += costUSD;
-        if (eDate.getFullYear() === curYear && eDate.getMonth() === curMonth) {
+        if (eDate.getFullYear() === state.viewYear && eDate.getMonth() === state.viewMonth) {
           monthUSD += costUSD;
           catMap[e.categoryId] = (catMap[e.categoryId] || 0) + costUSD;
         }
@@ -881,11 +1159,13 @@
       document.getElementById("valToday").innerText = fmt(fromUSD(todayUSD, state.displayCurrency));
       document.getElementById("valMonth").innerText = fmt(fromUSD(monthUSD, state.displayCurrency));
 
+      updateMonthDisplay();
       updatePersonalityCard(monthUSD);
       renderWeeklyChart();
       renderCategoryList(catMap, monthUSD);
       renderEntriesList();
 
+      document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
       document.getElementById("settingRate").value = state.exchangeRate;
       document.getElementById("settingBudget").value = state.monthlyBudgetUSD || "";
       document.getElementById("settingAdminUser").value = state.adminUser;
@@ -896,6 +1176,7 @@
       const progressEl = document.getElementById("budgetProgress");
       const badgeEl = document.getElementById("coachBadge");
       const quoteEl = document.getElementById("coachQuote");
+      const isKm = state.lang === "km";
 
       if (state.monthlyBudgetUSD > 0) {
         const pct = Math.min((monthUSD / state.monthlyBudgetUSD) * 100, 100);
@@ -903,35 +1184,34 @@
 
         if (pct < 60) {
           badgeEl.className = "coach-badge";
-          badgeEl.innerText = state.lang === "km" ? "ល្អប្រសើរ 🌿" : "Great Pace 🌿";
-          quoteEl.innerHTML = state.lang === "km" 
-            ? `អ្នកបានប្រើប្រាស់ ${pct.toFixed(0)}% នៃថវិកាប្រចាំខែរបស់អ្នក។` 
+          badgeEl.innerText = isKm ? i18n.badge_ontrack.km : i18n.badge_ontrack.en;
+          quoteEl.innerText = isKm 
+            ? `អ្នកបានប្រើប្រាស់អស់ ${pct.toFixed(0)}% នៃថវិកាប្រចាំខែ។ ល្អណាស់!` 
             : `You've used ${pct.toFixed(0)}% of your monthly budget. Looking healthy!`;
         } else if (pct <= 90) {
           badgeEl.className = "coach-badge warning";
-          badgeEl.innerText = state.lang === "km" ? "ប្រយ័ត្ន 📊" : "Careful 📊";
-          quoteEl.innerHTML = state.lang === "km"
-            ? `អ្នកបានចំណាយ ${pct.toFixed(0)}% នៃថវិការួចហើយ។`
+          badgeEl.innerText = isKm ? i18n.badge_careful.km : i18n.badge_careful.en;
+          quoteEl.innerText = isKm 
+            ? `អ្នកបានប្រើប្រាស់អស់ ${pct.toFixed(0)}% នៃថវិកា។ សូមប្រុងប្រយ័ត្នក្នុងការចាយ!` 
             : `You've reached ${pct.toFixed(0)}% of your budget. Spend wisely!`;
         } else {
           badgeEl.className = "coach-badge over";
-          badgeEl.innerText = state.lang === "km" ? "លើសកម្រិត ⚠️" : "Over Limit ⚠️";
-          const diff = fmt(fromUSD(monthUSD - state.monthlyBudgetUSD, state.displayCurrency));
-          quoteEl.innerHTML = state.lang === "km"
-            ? `អ្នកបានចំណាយលើសថវិកាចំនួន <span class="over-limit-amount">${diff}</span>!`
-            : `Budget exceeded by <span class="over-limit-amount">${diff}</span>!`;
+          badgeEl.innerText = isKm ? i18n.badge_over.km : i18n.badge_over.en;
+          const overAmt = fromUSD(monthUSD - state.monthlyBudgetUSD, state.displayCurrency);
+          quoteEl.innerHTML = isKm 
+            ? `ចំណាយលើសកម្រិតចំនួន <span style="color:var(--danger); font-weight:800;">${fmt(overAmt)}</span>!` 
+            : `Budget exceeded by <span style="color:var(--danger); font-weight:800;">${fmt(overAmt)}</span>!`;
         }
       } else {
-        progressEl.style.width = "25%";
+        progressEl.style.width = "20%";
         badgeEl.className = "coach-badge";
-        badgeEl.innerText = state.lang === "km" ? "ដំណើរការ ✨" : "Active ✨";
-        quoteEl.innerHTML = state.lang === "km"
-          ? "ការកត់ត្រាចំណាយប្រចាំថ្ងៃ ជួយឱ្យការគ្រប់គ្រងហិរញ្ញវត្ថុកាន់តែច្បាស់លាស់!"
+        badgeEl.innerText = isKm ? i18n.badge_active.km : i18n.badge_active.en;
+        quoteEl.innerText = isKm 
+          ? "ការកត់ត្រាចំណាយរាល់ថ្ងៃ ជួយអ្នកគ្រប់គ្រងលុយកាក់បានល្អ!" 
           : "Logging expenses daily keeps your finances crystal clear!";
       }
     }
 
-    // Weekly Chart with day clicks[span_8](start_span)[span_8](end_span)
     function renderWeeklyChart() {
       const container = document.getElementById("barChart");
       container.innerHTML = "";
@@ -947,7 +1227,7 @@
         const sumUSD = state.entries
           .filter(e => e.date.startsWith(dStr))
           .reduce((acc, e) => acc + toUSD(e.amount, e.currency), 0);
-        return { date: d, amount: fromUSD(sumUSD, state.displayCurrency) };
+        return { date: d, dateStr: dStr, amount: fromUSD(sumUSD, state.displayCurrency) };
       });
 
       const maxVal = Math.max(...totals.map(d => d.amount), 1);
@@ -964,58 +1244,44 @@
           </div>
           <div class="chart-day">${dayName}</div>
         `;
-
-        col.onclick = () => {
-          const dStr = item.date.toISOString().split("T")[0];
-          const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
-          const formattedDate = item.date.toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", options);
-          openDayDetailModal(dStr, formattedDate);
-        };
+        col.onclick = () => openDayBreakdown(item.dateStr, dayName);
         container.appendChild(col);
       });
     }
 
-    function openDayDetailModal(dStr, formattedDate) {
-      const dayEntries = state.entries.filter(e => e.date.startsWith(dStr));
-      const totalUSD = dayEntries.reduce((acc, e) => acc + toUSD(e.amount, e.currency), 0);
+    function openDayBreakdown(dateStr, dayLabel) {
+      const modal = document.getElementById("dayBreakdownModal");
+      const title = document.getElementById("dayModalTitle");
+      const listContainer = document.getElementById("dayEntriesList");
 
-      document.getElementById("dayDetailTitle").innerText = formattedDate;
-      document.getElementById("dayDetailSubtitle").innerText = `${state.lang === 'km' ? 'សរុប' : 'Total'}: ${fmt(fromUSD(totalUSD, state.displayCurrency))}`;
+      title.innerText = `${dayLabel} (${dateStr})`;
+      listContainer.innerHTML = "";
 
-      const container = document.getElementById("dayDetailList");
-      container.innerHTML = "";
-
-      if (dayEntries.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state" style="padding: 24px 0;">
-            <div class="empty-emoji">☕</div>
-            <div class="empty-title">${state.lang === 'km' ? 'គ្មានចំណាយសម្រាប់ថ្ងៃនេះទេ' : 'No expenses on this day'}</div>
-          </div>
-        `;
+      const dayItems = state.entries.filter(e => e.date === dateStr);
+      if (dayItems.length === 0) {
+        listContainer.innerHTML = `<div style="text-align:center; padding: 20px; color:var(--secondary); font-size:14px;">${state.lang === 'km' ? i18n.no_exp_day.km : i18n.no_exp_day.en}</div>`;
       } else {
-        dayEntries.forEach(e => {
+        dayItems.forEach(e => {
           const cat = categories.find(c => c.id === e.categoryId) || { emoji: "📦", labelEn: e.categoryId, labelKm: e.categoryId, color: "#999" };
-          const name = state.lang === "km" ? cat.labelKm : cat.labelEn;
+          const name = state.lang === "km" ? (cat.labelKm || cat.labelEn) : cat.labelEn;
           const row = document.createElement("div");
           row.className = "expense-item";
           row.innerHTML = `
             <div class="cat-avatar" style="background:${cat.color}1A; color:${cat.color}">${cat.emoji}</div>
             <div class="expense-details">
               <div class="expense-name">${name}</div>
-              <div class="expense-meta">${e.note ? e.note : name}</div>
-              ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">📎 ${state.lang === 'km' ? 'មើលបង្កាន់ដៃ' : 'View Receipt'}</div>` : ""}
+              <div class="expense-meta">${e.note || ""}</div>
             </div>
             <div class="expense-cost">${fmt(e.amount, e.currency)}</div>
           `;
-          container.appendChild(row);
+          listContainer.appendChild(row);
         });
       }
-
-      document.getElementById("dayDetailModal").style.display = "flex";
+      modal.style.display = "flex";
     }
 
-    function closeDayDetailModal() {
-      document.getElementById("dayDetailModal").style.display = "none";
+    function closeDayBreakdownModal() {
+      document.getElementById("dayBreakdownModal").style.display = "none";
     }
 
     function renderCategoryList(catMap, monthUSD) {
@@ -1024,7 +1290,7 @@
       const sortedKeys = Object.keys(catMap).sort((a, b) => catMap[b] - catMap[a]);
 
       if (sortedKeys.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div class="empty-emoji">☕</div><div class="empty-title">No spending yet this month</div><div style="font-size:12px;">Tap the + button to add your first expense!</div></div>`;
+        container.innerHTML = `<div class="empty-state"><div class="empty-emoji">☕</div><div class="empty-title">${state.lang === 'km' ? i18n.no_spending_month.km : i18n.no_spending_month.en}</div><div style="font-size:12px;">${state.lang === 'km' ? i18n.tap_plus_hint.km : i18n.tap_plus_hint.en}</div></div>`;
         return;
       }
 
@@ -1032,7 +1298,7 @@
         const cat = categories.find(c => c.id === catId) || { emoji: "📦", labelEn: catId, labelKm: catId, color: "#999" };
         const amt = fromUSD(catMap[catId], state.displayCurrency);
         const pct = monthUSD > 0 ? ((catMap[catId] / monthUSD) * 100).toFixed(0) : 0;
-        const name = state.lang === "km" ? cat.labelKm : cat.labelEn;
+        const name = state.lang === "km" ? (cat.labelKm || cat.labelEn) : cat.labelEn;
 
         const row = document.createElement("div");
         row.className = "expense-item";
@@ -1040,7 +1306,7 @@
           <div class="cat-avatar" style="background:${cat.color}1A; color:${cat.color}">${cat.emoji}</div>
           <div class="expense-details">
             <div class="expense-name">${name}</div>
-            <div class="expense-meta">${pct}% of this month</div>
+            <div class="expense-meta">${pct}% ${state.lang === 'km' ? 'នៃខែនេះ' : 'of this month'}</div>
           </div>
           <div class="expense-cost">${fmt(amt)}</div>
         `;
@@ -1054,13 +1320,13 @@
       const list = filtered || [...state.entries].sort((a, b) => new Date(b.date) - new Date(a.date));
 
       if (list.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><div class="empty-title">No expenses found</div><div style="font-size:12px;">Your transactions will appear right here.</div></div>`;
+        container.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><div class="empty-title">${state.lang === 'km' ? i18n.no_entries_found.km : i18n.no_entries_found.en}</div><div style="font-size:12px;">${state.lang === 'km' ? i18n.trans_appear_here.km : i18n.trans_appear_here.en}</div></div>`;
         return;
       }
 
       list.forEach(e => {
         const cat = categories.find(c => c.id === e.categoryId) || { emoji: "📦", labelEn: e.categoryId, labelKm: e.categoryId, color: "#999" };
-        const name = state.lang === "km" ? cat.labelKm : cat.labelEn;
+        const name = state.lang === "km" ? (cat.labelKm || cat.labelEn) : cat.labelEn;
         const row = document.createElement("div");
         row.className = "expense-item";
         row.innerHTML = `
@@ -1068,7 +1334,7 @@
           <div class="expense-details">
             <div class="expense-name">${name}</div>
             <div class="expense-meta">${e.date} ${e.note ? "• " + e.note : ""}</div>
-            ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">📎 View Receipt</div>` : ""}
+            ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">${state.lang === 'km' ? i18n.view_receipt.km : i18n.view_receipt.en}</div>` : ""}
           </div>
           <div class="expense-cost">${fmt(e.amount, e.currency)}</div>
           <button class="btn-delete" onclick="deleteEntry('${e.id}')">✕</button>
@@ -1081,28 +1347,11 @@
       const q = document.getElementById("searchBar").value.toLowerCase();
       const filtered = state.entries.filter(e => {
         const cat = categories.find(c => c.id === e.categoryId);
-        const name = (cat?.labelEn + " " + cat?.labelKm).toLowerCase();
+        const name = ((cat?.labelEn || "") + " " + (cat?.labelKm || "")).toLowerCase();
         const note = (e.note || "").toLowerCase();
         return name.includes(q) || note.includes(q);
       });
       renderEntriesList(filtered);
-    }
-
-    function buildCategoryGrid() {
-      const grid = document.getElementById("categoryGrid");
-      grid.innerHTML = "";
-      categories.forEach(c => {
-        const card = document.createElement("div");
-        card.className = "category-card" + (state.selectedCat === c.id ? " selected" : "");
-        card.onclick = () => {
-          document.querySelectorAll(".category-card").forEach(el => el.classList.remove("selected"));
-          card.classList.add("selected");
-          state.selectedCat = c.id;
-        };
-        const name = state.lang === "km" ? c.labelKm : c.labelEn;
-        card.innerHTML = `<span class="category-emoji">${c.emoji}</span><span class="category-title">${name}</span>`;
-        grid.appendChild(card);
-      });
     }
 
     function updateQuickChips() {
@@ -1127,13 +1376,13 @@
     function openAddModal() {
       document.getElementById("inpAmount").value = "";
       document.getElementById("inpNote").value = "";
-      document.getElementById("inpReceipt").value = "";
-      document.getElementById("receiptPreviewIndicator").style.display = "none";
+      clearChosenFile();
       selectDatePill("today");
-      
-      // Default to the synchronized display currency
       state.activeFormCur = state.displayCurrency;
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
+      isManagingCategories = false;
+      document.getElementById("btnManageCat").innerText = state.lang === "km" ? i18n.manage_cat.km : i18n.manage_cat.en;
+      buildCategoryGrid();
       updateQuickChips();
       document.getElementById("addModal").style.display = "flex";
     }
@@ -1177,27 +1426,22 @@
           img.src = event.target.result;
           img.onload = () => {
             const canvas = document.createElement("canvas");
-            const MAX_WIDTH = 800;
-            const MAX_HEIGHT = 800;
-            let width = img.width;
-            let height = img.height;
+            const MAX_DIM = 800;
+            let w = img.width;
+            let h = img.height;
 
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height = Math.round((height * MAX_WIDTH) / width);
-                width = MAX_WIDTH;
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width = Math.round((width * MAX_HEIGHT) / height);
-                height = MAX_HEIGHT;
-              }
+            if (w > h && w > MAX_DIM) {
+              h = Math.round((h * MAX_DIM) / w);
+              w = MAX_DIM;
+            } else if (h > MAX_DIM) {
+              w = Math.round((w * MAX_DIM) / h);
+              h = MAX_DIM;
             }
 
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = w;
+            canvas.height = h;
             const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, width, height);
+            ctx.drawImage(img, 0, 0, w, h);
             resolve(canvas.toDataURL("image/jpeg", 0.65));
           };
           img.onerror = () => resolve(null);
@@ -1208,11 +1452,13 @@
 
     async function saveExpense() {
       const amt = parseFloat(document.getElementById("inpAmount").value);
-      if (!amt || amt <= 0) return alert("Please enter a valid expense amount.");
+      if (!amt || amt <= 0) {
+        alert(state.lang === "km" ? "សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រឹមត្រូវ!" : "Please enter a valid expense amount.");
+        return;
+      }
 
       const fileInput = document.getElementById("inpReceipt");
       let receiptData = null;
-
       if (fileInput.files.length > 0) {
         receiptData = await compressImageFile(fileInput.files[0]);
       }
@@ -1245,7 +1491,8 @@
     }
 
     function deleteEntry(id) {
-      if (confirm("Remove this entry?")) {
+      const msg = state.lang === "km" ? i18n.confirm_del.km : i18n.confirm_del.en;
+      if (confirm(msg)) {
         state.entries = state.entries.filter(e => e.id !== id);
         saveState();
       }
@@ -1268,7 +1515,7 @@
 
       if (u === state.adminUser && p === state.adminPass) {
         localStorage.clear();
-        alert("All data cleared successfully.");
+        alert(state.lang === "km" ? "ទិន្នន័យត្រូវបានលុបដោយជោគជ័យ!" : "All data cleared successfully.");
         location.reload();
       } else {
         document.getElementById("authErrorMsg").style.display = "block";
@@ -1285,53 +1532,82 @@
       }
     }
 
-    // Linked Toggle: English switches to USD, Khmer switches to KHR
-    function toggleLanguageAndCurrency() {
-      if (state.lang === "en") {
-        state.lang = "km";
-        state.displayCurrency = "KHR";
-      } else {
-        state.lang = "en";
-        state.displayCurrency = "USD";
-      }
-      state.activeFormCur = state.displayCurrency;
-
+    function toggleLanguage() {
+      state.lang = state.lang === "en" ? "km" : "en";
       applyLanguage();
       buildCategoryGrid();
-      updateLiveDate();
       saveState();
     }
 
     function applyLanguage() {
       const t = (k) => i18n[k]?.[state.lang] || k;
-      
-      // Header button shows current mode & next toggle action
-      document.getElementById("langCurBtn").innerText = state.lang === "en" ? "🇺🇸 USD ($)" : "🇰🇭 KHR (៛)";
-      document.getElementById("headerTitle").innerText = state.lang === "km" ? "សៀវភៅចំណាយ" : "Daily Expenses";
-      document.getElementById("lblMonth").innerText = t("spent_this_month");
+      document.getElementById("langBtn").innerText = state.lang === "en" ? "🇰🇭 ភាសាខ្មែរ" : "🇺🇸 English";
+      document.getElementById("headerTitle").innerText = t("app_title");
+      document.getElementById("coachGreeting").innerText = t("status");
       document.getElementById("lblToday").innerText = t("spent_today");
+      document.getElementById("lblMonth").innerText = t("spent_this_month");
       document.getElementById("lblLast7Days").innerText = t("last_7_days");
-      document.getElementById("lblChartHint").innerText = t("tap_hint");
+      document.getElementById("lblChartHint").innerText = t("chart_hint");
       document.getElementById("lblCategories").innerText = t("categories");
       document.getElementById("lblData").innerText = t("data");
+      document.getElementById("btnExportCSV").innerText = t("export_csv");
+      document.getElementById("searchBar").placeholder = t("search_placeholder");
       document.getElementById("tabNameDash").innerText = t("dashboard");
       document.getElementById("tabNameEntries").innerText = t("entries");
       document.getElementById("tabNameSettings").innerText = t("settings");
       document.getElementById("lblSettings").innerText = t("settings");
       document.getElementById("lblExRate").innerText = t("ex_rate");
       document.getElementById("lblBudgetSet").innerText = t("budget");
+      document.getElementById("lblSecurityTitle").innerText = t("security_title");
+      document.getElementById("lblAdminUser").innerText = t("admin_user");
+      document.getElementById("lblAdminPass").innerText = t("admin_pass");
+      document.getElementById("lblAdminHelp").innerText = t("admin_help");
+      document.getElementById("btnResetData").innerText = t("reset_data");
       document.getElementById("lblAddTitle").innerText = t("add_title");
       document.getElementById("lblAmount").innerText = t("amount");
       document.getElementById("lblCategory").innerText = t("category");
+      document.getElementById("btnManageCat").innerText = isManagingCategories ? t("done_cat") : t("manage_cat");
       document.getElementById("lblDate").innerText = t("date");
-      document.getElementById("lblNote").innerText = t("note");
-      document.getElementById("btnSave").innerText = t("save");
-      document.getElementById("btnCancel").innerText = t("cancel");
       document.getElementById("pillToday").innerText = t("today");
       document.getElementById("pillYesterday").innerText = t("yesterday");
       document.getElementById("pillCustom").innerText = t("custom");
+      document.getElementById("lblNote").innerText = t("note");
+      document.getElementById("inpNote").placeholder = t("note_ph");
+      document.getElementById("lblChooseFileBtn").innerText = t("choose_file");
+      
+      const fileInput = document.getElementById("inpReceipt");
+      if (!fileInput.files || fileInput.files.length === 0) {
+        document.getElementById("fileChosenText").innerText = t("no_file_chosen");
+      }
+      
+      document.getElementById("receiptPreviewIndicator").innerText = t("photo_ready");
+      document.getElementById("btnSave").innerText = t("save");
+      document.getElementById("btnCancel").innerText = t("cancel");
+      document.getElementById("lblNewCatTitle").innerText = t("new_cat_title");
+      document.getElementById("lblNewCatEmoji").innerText = t("new_cat_emoji");
+      document.getElementById("lblNewCatName").innerText = t("new_cat_name");
+      document.getElementById("inpCustomCatName").placeholder = t("new_cat_name_ph");
+      document.getElementById("btnSaveCategory").innerText = t("save_category");
+      document.getElementById("btnCancelCategory").innerText = t("cancel");
+      document.getElementById("lblReceiptModalTitle").innerText = t("receipt_modal_title");
+      document.getElementById("btnReceiptDone").innerText = t("done");
+      document.getElementById("btnDayModalClose").innerText = t("done");
+      document.getElementById("lblResetAuthTitle").innerText = t("auth_reset_title");
+      document.getElementById("lblResetAuthDesc").innerText = t("auth_reset_desc");
+      document.getElementById("lblAuthUser").innerText = t("admin_user");
+      document.getElementById("lblAuthPass").innerText = t("admin_pass");
+      document.getElementById("authErrorMsg").innerText = t("auth_err");
+      document.getElementById("btnConfirmReset").innerText = t("verify_wipe");
+      document.getElementById("btnCancelReset").innerText = t("cancel");
+
+      updateLiveDate();
+      updateMonthDisplay();
     }
 
+    function toggleCurrency() {
+      state.displayCurrency = state.displayCurrency === "USD" ? "KHR" : "USD";
+      saveState();
+    }
     function updateRate(v) {
       if (v > 0) { state.exchangeRate = parseFloat(v); saveState(); }
     }
@@ -1350,19 +1626,39 @@
       document.getElementById("navSettings").className = "nav-tab " + (tab === "settings" ? "active" : "");
     }
 
-    function exportCSV() {
+    // Modern CSV Export & Native Sharing
+    async function exportCSV() {
       let csv = "Date,Category,Amount,Currency,Note\n";
       state.entries.forEach(e => {
         csv += `"${e.date}","${e.categoryId}","${e.amount}","${e.currency}","${e.note || ''}"\n`;
       });
-      downloadBlob(csv, `expenses_${new Date().toISOString().split("T")[0]}.csv`, "text/csv");
+
+      const fileName = `expenses_${new Date().toISOString().split("T")[0]}.csv`;
+      const blob = new Blob([csv], { type: "text/csv" });
+      const file = new File([blob], fileName, { type: "text/csv" });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: fileName,
+            text: "Daily Expenses export"
+          });
+          return;
+        } catch (err) {
+          if (err.name !== "AbortError") {
+            downloadCSVBlob(blob, fileName);
+          }
+        }
+      } else {
+        downloadCSVBlob(blob, fileName);
+      }
     }
 
-    function downloadBlob(content, filename, mime) {
-      const blob = new Blob([content], { type: mime });
+    function downloadCSVBlob(blob, fileName) {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = filename;
+      a.download = fileName;
       a.click();
     }
   </script>
