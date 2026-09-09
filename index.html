@@ -161,7 +161,7 @@
       letter-spacing: -0.2px;
     }
 
-    /* Personality & Budget Card */
+    /* Personality & Budget Card with 1-Click Toggle */
     .personality-card {
       background: linear-gradient(135deg, var(--card-bg) 0%, var(--pine-subtle) 100%);
       border-radius: 22px;
@@ -175,7 +175,7 @@
       cursor: pointer;
       transition: transform 0.15s ease;
     }
-    .personality-card:active { transform: scale(0.99); }
+    .personality-card:active { transform: scale(0.98); }
     .coach-header { display: flex; justify-content: space-between; align-items: center; }
     .coach-greeting { font-size: 12px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
     .coach-badge {
@@ -391,7 +391,7 @@
     }
     .fab:active { transform: translateX(-50%) scale(0.92); background: var(--pine-dark); }
 
-    /* Tab Bar */
+    /* Bottom Navigation Bar with Perfectly Centered Tabs */
     nav {
       position: fixed;
       bottom: 0;
@@ -401,7 +401,7 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       display: flex;
-      justify-content: space-around;
+      align-items: center;
       padding: 10px 0 calc(env(safe-area-inset-bottom) + 8px) 0;
       border-top: 0.5px solid var(--border);
       z-index: 25;
@@ -410,6 +410,8 @@
       nav { background: rgba(18, 18, 20, 0.88); }
     }
     .nav-tab {
+      flex: 1;
+      width: 0;
       background: none;
       border: none;
       color: var(--secondary);
@@ -417,9 +419,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 3px;
       cursor: pointer;
       transition: color 0.15s ease;
+      text-align: center;
     }
     .nav-tab.active { color: var(--pine); font-weight: 700; }
     .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
@@ -504,7 +508,7 @@
     }
     .chip:active { transform: scale(0.94); }
 
-    /* Segmented Selection Control */
+    /* Segmented Controls */
     .seg-row {
       display: flex;
       gap: 8px;
@@ -682,7 +686,7 @@
 </head>
 <body>
 
-  <!-- Top Header with Separate Linked Buttons -->
+  <!-- Top Header with Linked Buttons -->
   <header>
     <div>
       <h1 id="headerTitle">Daily Expenses</h1>
@@ -697,7 +701,7 @@
   <div class="container">
     <!-- Tab 1: Dashboard -->
     <div id="tabDashboard">
-      <!-- Animated Typewriter Greeting -->
+      <!-- Animated Typewriter Greeting with Personalized Name -->
       <div class="greeting-banner">
         <span class="greeting-text" id="greetingText"></span><span class="typing-cursor">|</span>
       </div>
@@ -709,14 +713,14 @@
         <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
       </div>
 
-      <!-- Status Card with Double-Click Support -->
-      <div class="personality-card" id="statusCard" ondblclick="toggleStatusRemaining()" onclick="handleStatusTap(event)">
+      <!-- Status Card: 1-Click Smooth Toggle -->
+      <div class="personality-card" id="statusCard" onclick="toggleStatusRemaining()">
         <div class="coach-header">
           <span class="coach-greeting" id="coachGreeting">STATUS</span>
           <span class="coach-badge" id="coachBadge">On Track 🌿</span>
         </div>
         <p class="coach-quote" id="coachQuote">Your finances are looking healthy today!</p>
-        <div class="coach-hint" id="lblStatusHint">Double-click to view remaining</div>
+        <div class="coach-hint" id="lblStatusHint">Tap to toggle remaining</div>
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" id="budgetProgress" style="width: 0%;"></div>
         </div>
@@ -745,11 +749,6 @@
         <div class="card-title" id="lblCategories">Top Spending Categories</div>
         <div id="categoryBreakdown"></div>
       </div>
-
-      <div class="content-card">
-        <div class="card-title" id="lblData">Data & Tools</div>
-        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px;" onclick="openExportModal()" id="btnOpenExport">📄 Export (PDF & CSV)</button>
-      </div>
     </div>
 
     <!-- Tab 2: Entries -->
@@ -766,6 +765,16 @@
 
     <!-- Tab 3: Settings -->
     <div id="tabSettings" style="display: none;">
+      <!-- Profile Card (User Name for Greeting) -->
+      <div class="content-card">
+        <div class="card-title" id="lblProfileTitle">User Profile</div>
+        <div class="form-group">
+          <label id="lblUserName">Your Name</label>
+          <input type="text" id="settingUserName" class="search-input" placeholder="e.g. Alex / Sokha" oninput="updateUserName(this.value)" />
+        </div>
+      </div>
+
+      <!-- General Settings -->
       <div class="content-card">
         <div class="card-title" id="lblSettings">Settings</div>
         <div class="form-group">
@@ -778,20 +787,11 @@
         </div>
       </div>
 
-      <!-- Security Settings Card -->
+      <!-- Data & Tools Card (Moved to Settings) -->
       <div class="content-card">
-        <div class="card-title" id="lblSecurityTitle">Reset Security Credentials</div>
-        <div class="form-group">
-          <label id="lblAdminUser">Admin Username</label>
-          <input type="text" id="settingAdminUser" class="search-input" value="admin" onchange="updateCredentials()" />
-        </div>
-        <div class="form-group">
-          <label id="lblAdminPass">Admin Password</label>
-          <input type="password" id="settingAdminPass" class="search-input" value="1234" onchange="updateCredentials()" />
-        </div>
-        <p style="font-size: 12px; color: var(--secondary); margin-top:-6px;" id="lblAdminHelp">These credentials are required whenever you request to reset all data.</p>
-        
-        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle); margin-top: 10px;" onclick="promptResetAuth()" id="btnResetData">Reset All Data</button>
+        <div class="card-title" id="lblData">Data & Tools</div>
+        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px; margin-bottom: 12px;" onclick="openExportModal()" id="btnOpenExport">📄 Export (PDF & CSV)</button>
+        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle);" onclick="resetAllDataDirect()" id="btnResetData">Reset All Data</button>
       </div>
     </div>
   </div>
@@ -799,7 +799,7 @@
   <!-- Centered Floating Add Button -->
   <button class="fab" onclick="openAddModal()">+</button>
 
-  <!-- Bottom Navigation -->
+  <!-- Bottom Navigation with Perfectly Centered "Entries" Tab -->
   <nav>
     <button class="nav-tab active" onclick="switchTab('dashboard')" id="navDash">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -826,7 +826,6 @@
       <div class="form-group">
         <label id="lblAmount">Amount</label>
         <div class="amount-wrapper">
-          <!-- Standalone currency toggle for inputs only -->
           <button type="button" class="cur-pill" id="btnModalCur" onclick="toggleFormCurrency()">USD ($)</button>
           <input type="number" id="inpAmount" class="amount-input" placeholder="0.00" step="any" inputmode="decimal" />
         </div>
@@ -951,28 +950,6 @@
     </div>
   </div>
 
-  <!-- Reset Security Modal -->
-  <div class="modal" id="resetAuthModal">
-    <div class="modal-content">
-      <h2 style="margin-top:0; color: var(--danger);" id="lblResetAuthTitle">Authorize Data Reset</h2>
-      <p style="font-size: 13px; color: var(--secondary);" id="lblResetAuthDesc">Enter your administrator username and password to wipe all transactions.</p>
-      
-      <div class="form-group">
-        <label id="lblAuthUser">Username</label>
-        <input type="text" id="authInputUser" class="search-input" placeholder="Username" autocomplete="off" />
-      </div>
-      <div class="form-group">
-        <label id="lblAuthPass">Password</label>
-        <input type="password" id="authInputPass" class="search-input" placeholder="Password" />
-      </div>
-      
-      <div id="authErrorMsg" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-bottom: 10px; display: none;">Invalid username or password!</div>
-      
-      <button class="btn-action" style="background: var(--danger);" onclick="executeDataReset()" id="btnConfirmReset">Verify & Wipe All</button>
-      <button class="btn-secondary" onclick="closeResetModal()" id="btnCancelReset">Cancel</button>
-    </div>
-  </div>
-
   <script>
     const defaultCategories = [
       { id: "food", emoji: "🍜", labelEn: "Food", labelKm: "អាហារ", color: "#B8862B" },
@@ -997,7 +974,7 @@
       badge_careful: { en: "Careful 📊", km: "ប្រុងប្រយ័ត្ន 📊" },
       badge_over: { en: "Over Limit ⚠️", km: "លើសកម្រិត ⚠️" },
       badge_active: { en: "Active ✨", km: "សកម្ម ✨" },
-      status_hint: { en: "Double-click to view remaining", km: "ចុចពីរដងដើម្បីមើលចំនួនដែលនៅសល់" },
+      status_hint: { en: "Tap to toggle remaining", km: "ចុចដើម្បីមើលចំនួននៅសល់" },
       spent_today: { en: "TODAY", km: "ថ្ងៃនេះ" },
       spent_this_month: { en: "SELECTED MONTH", km: "ខែដែលបានជ្រើស" },
       last_7_days: { en: "Last 7 Days", km: "៧ ថ្ងៃចុងក្រោយ" },
@@ -1008,10 +985,6 @@
       search_placeholder: { en: "🔍 Search by note or category...", km: "🔍 ស្វែងរកតាមចំណាំ ឬប្រភេទ..." },
       ex_rate: { en: "Exchange Rate (1 USD = ? KHR)", km: "អត្រាប្តូរប្រាក់ (1 USD = ? ៛)" },
       budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" },
-      security_title: { en: "Reset Security Credentials", km: "ពាក្យសម្ងាត់សម្រាប់កំណត់ឡើងវិញ" },
-      admin_user: { en: "Admin Username", km: "ឈ្មោះអ្នកគ្រប់គ្រង" },
-      admin_pass: { en: "Admin Password", km: "លេខកូដសម្ងាត់" },
-      admin_help: { en: "These credentials are required whenever you request to reset all data.", km: "ត្រូវបញ្ចូលឈ្មោះ និងលេខកូដនេះ នៅពេលចង់លុបទិន្នន័យទាំងអស់ឡើងវិញ។" },
       reset_data: { en: "Reset All Data", km: "កំណត់ទិន្នន័យឡើងវិញទាំងអស់" },
       add_title: { en: "Add Expense", km: "បន្ថែមចំណាយ" },
       amount: { en: "Amount", km: "ចំនួនទឹកប្រាក់" },
@@ -1037,10 +1010,6 @@
       view_receipt: { en: "📎 View Receipt", km: "📎 មើលបង្កាន់ដៃ" },
       receipt_modal_title: { en: "Receipt Photo", km: "រូបថតបង្កាន់ដៃ" },
       done: { en: "Done", km: "រួចរាល់" },
-      auth_reset_title: { en: "Authorize Data Reset", km: "ផ្ទៀងផ្ទាត់ការលុបទិន្នន័យ" },
-      auth_reset_desc: { en: "Enter your administrator username and password to wipe all transactions.", km: "សូមបញ្ចូលឈ្មោះ និងលេខសម្ងាត់អ្នកគ្រប់គ្រង ដើម្បីលុបប្រតិបត្តិការទាំងអស់។" },
-      verify_wipe: { en: "Verify & Wipe All", km: "ផ្ទៀងផ្ទាត់ & លុបទាំងអស់" },
-      auth_err: { en: "Invalid username or password!", km: "ឈ្មោះ ឬលេខសម្ងាត់មិនត្រឹមត្រូវទេ!" },
       no_spending_month: { en: "No spending in this month", km: "មិនទាន់មានចំណាយក្នុងខែនេះទេ" },
       tap_plus_hint: { en: "Tap the + button to add an expense!", km: "ចុចលើសញ្ញា + ដើម្បីកត់ត្រាចំណាយរបស់អ្នក!" },
       no_entries_found: { en: "No expenses found", km: "រកមិនឃើញការចំណាយទេ" },
@@ -1058,7 +1027,10 @@
       btn_confirm_export: { en: "Download / Print", km: "ទាញយក / បោះពុម្ព" },
       showing_today: { en: "Showing: Today Only", km: "បង្ហាញ: តែថ្ងៃនេះប៉ុណ្ណោះ" },
       showing_month: { en: "Showing: Selected Month", km: "បង្ហាញ: តែខែដែលបានជ្រើស" },
-      clear_filter: { en: "✕ Show All", km: "✕ បង្ហាញទាំងអស់" }
+      clear_filter: { en: "✕ Show All", km: "✕ បង្ហាញទាំងអស់" },
+      profile_title: { en: "User Profile", km: "ព័ត៌មានអ្នកប្រើប្រាស់" },
+      user_name: { en: "Your Name", km: "ឈ្មោះរបស់អ្នក" },
+      user_name_ph: { en: "e.g. Alex / Sokha", km: "ឧ. សុខា / Alex" }
     };
 
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
@@ -1071,37 +1043,43 @@
       lang: savedLang,
       displayCurrency: savedLang === "km" ? "KHR" : "USD",
       monthlyBudgetUSD: parseFloat(localStorage.getItem("ledger_budget") || "0"),
-      adminUser: localStorage.getItem("ledger_admin_user") || "admin",
-      adminPass: localStorage.getItem("ledger_admin_pass") || "1234",
-      activeFormCur: savedLang === "km" ? "KHR" : "USD", // Local to Add modal only
+      userName: localStorage.getItem("ledger_username") || "",
+      activeFormCur: savedLang === "km" ? "KHR" : "USD",
       selectedCat: categories[0]?.id || "food",
       viewYear: new Date().getFullYear(),
       viewMonth: new Date().getMonth(),
       showRemaining: false,
-      activeFilter: null // { type: 'today' | 'month', dateStr: 'YYYY-MM-DD' }
+      activeFilter: null
     };
 
-    // Export Modal State
     let exportConfig = {
       format: "CSV",
       currency: state.displayCurrency,
       range: "month"
     };
 
-    /* Typewriter Writing Animation */
+    /* Typewriter Animated Greeting with Username */
     let typewriterTimer = null;
     function getPeriodGreeting() {
       const hour = new Date().getHours();
       const isKm = state.lang === "km";
+      const name = (state.userName || "").trim();
+      
+      let greeting = "";
       if (hour >= 5 && hour < 12) {
-        return isKm ? "អរុណសួស្ដី 🌅" : "Good Morning ☀️";
+        if (isKm) greeting = name ? `អរុណសួស្ដី ${name} 🌅` : "អរុណសួស្ដី 🌅";
+        else greeting = name ? `Good Morning, ${name} ☀️` : "Good Morning ☀️";
       } else if (hour >= 12 && hour < 17) {
-        return isKm ? "ទិវាសួស្ដី 🌤️" : "Good Afternoon 🌤️";
+        if (isKm) greeting = name ? `ទិវាសួស្ដី ${name} 🌤️` : "ទិវាសួស្ដី 🌤️";
+        else greeting = name ? `Good Afternoon, ${name} 🌤️` : "Good Afternoon 🌤️";
       } else if (hour >= 17 && hour < 21) {
-        return isKm ? "សាយណ្ហសួស្ដី 🌆" : "Good Evening 🌇";
+        if (isKm) greeting = name ? `សាយណ្ហសួស្ដី ${name} 🌆` : "សាយណ្ហសួស្ដី 🌆";
+        else greeting = name ? `Good Evening, ${name} 🌇` : "Good Evening 🌇";
       } else {
-        return isKm ? "រាត្រីសួស្ដី 🌙" : "Good Night 🌙";
+        if (isKm) greeting = name ? `រាត្រីសួស្ដី ${name} 🌙` : "រាត្រីសួស្ដី 🌙";
+        else greeting = name ? `Good Night, ${name} 🌙` : "Good Night 🌙";
       }
+      return greeting;
     }
 
     function playTypewriterGreeting() {
@@ -1122,17 +1100,7 @@
       typeChar();
     }
 
-    /* Mobile Double-Tap Support for Status Card */
-    let lastStatusTap = 0;
-    function handleStatusTap(e) {
-      const now = Date.now();
-      if (now - lastStatusTap < 350 && now - lastStatusTap > 0) {
-        toggleStatusRemaining();
-        e.preventDefault();
-      }
-      lastStatusTap = now;
-    }
-
+    /* 1-Click Status Card Toggle */
     function toggleStatusRemaining() {
       state.showRemaining = !state.showRemaining;
       render();
@@ -1154,8 +1122,7 @@
         localStorage.setItem("ledger_cur", state.displayCurrency);
         localStorage.setItem("ledger_budget", state.monthlyBudgetUSD);
         localStorage.setItem("ledger_lang", state.lang);
-        localStorage.setItem("ledger_admin_user", state.adminUser);
-        localStorage.setItem("ledger_admin_pass", state.adminPass);
+        localStorage.setItem("ledger_username", state.userName);
         localStorage.setItem("ledger_categories", JSON.stringify(categories));
       } catch (err) {
         alert(state.lang === "km" ? "ទំហំផ្ទុកទូរស័ព្ទពេញហើយ!" : "Device storage full!");
@@ -1200,7 +1167,7 @@
       document.getElementById("lblMonthNav").innerText = `${mName} ${state.viewYear}`;
     }
 
-    /* Filter Shortcuts from Dashboard Cards */
+    /* Filter Shortcuts */
     function filterByToday() {
       const todayStr = new Date().toISOString().split("T")[0];
       state.activeFilter = { type: "today", dateStr: todayStr };
@@ -1353,7 +1320,7 @@
       closeNewCatModal();
     }
 
-    /* Strict App-Wide Language & Currency Pairing */
+    /* Linked Toggle: English is always USD ($), Khmer is always KHR (៛) */
     function toggleLanguageAndCurrency() {
       if (state.lang === "en") {
         state.lang = "km";
@@ -1370,11 +1337,17 @@
       saveState();
     }
 
-    /* Independent Currency Toggle strictly inside Add Expense Modal */
+    /* Independent Currency Toggle in Add Modal */
     function toggleFormCurrency() {
       state.activeFormCur = state.activeFormCur === "USD" ? "KHR" : "USD";
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
       updateQuickChips();
+    }
+
+    function updateUserName(name) {
+      state.userName = name;
+      saveState();
+      playTypewriterGreeting();
     }
 
     function render() {
@@ -1408,10 +1381,9 @@
       document.getElementById("langBtn").innerText = state.lang === "en" ? "🇺🇸 English" : "🇰🇭 ភាសាខ្មែរ";
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
 
+      document.getElementById("settingUserName").value = state.userName || "";
       document.getElementById("settingRate").value = state.exchangeRate;
       document.getElementById("settingBudget").value = state.monthlyBudgetUSD || "";
-      document.getElementById("settingAdminUser").value = state.adminUser;
-      document.getElementById("settingAdminPass").value = state.adminPass;
     }
 
     function updatePersonalityCard(monthUSD) {
@@ -1447,7 +1419,7 @@
           return;
         }
 
-        // Standard Display
+        // Standard Status View
         if (pct < 60) {
           badgeEl.className = "coach-badge";
           badgeEl.innerText = isKm ? i18n.badge_ontrack.km : i18n.badge_ontrack.en;
@@ -1582,7 +1554,6 @@
       });
     }
 
-    /* Filtered Entries List (Supporting Today, Selected Month, or All) */
     function renderFilteredEntriesList() {
       const filterBar = document.getElementById("activeFilterBar");
       const filterLabel = document.getElementById("activeFilterLabel");
@@ -1841,7 +1812,7 @@
       selectExportRange(exportConfig.range);
     }
 
-    /* Execute Export with Total Amount and Custom Currency */
+    /* Execute Export */
     function executeExport() {
       let targetList = [...state.entries];
       if (exportConfig.range === "month") {
@@ -1884,7 +1855,6 @@
       rows.forEach(r => {
         csv += `"${r.date}","${r.category}","${r.note}","${r.amount.toFixed(cur === 'KHR' ? 0 : 2)}","${cur}"\n`;
       });
-      // Grand Total Row
       csv += `\n"TOTAL","","","${total.toFixed(cur === 'KHR' ? 0 : 2)}","${cur}"\n`;
 
       const fileName = `expenses_${exportConfig.range}_${cur}_${new Date().toISOString().split("T")[0]}.csv`;
@@ -1927,9 +1897,7 @@
             th, td { border-bottom: 1px solid #E5E5EA; padding: 10px 8px; font-size: 13px; text-align: left; }
             th { font-size: 11px; text-transform: uppercase; color: #6E6E73; letter-spacing: 0.5px; }
             .total-row td { border-top: 2px solid #2F5D50; border-bottom: 2px solid #2F5D50; font-size: 16px; font-weight: 800; }
-            @media print {
-              body { padding: 0; }
-            }
+            @media print { body { padding: 0; } }
           </style>
         </head>
         <body>
@@ -1957,42 +1925,17 @@
       `);
       printWindow.document.close();
       printWindow.focus();
-      setTimeout(() => {
-        printWindow.print();
-      }, 350);
+      setTimeout(() => { printWindow.print(); }, 350);
     }
 
-    function promptResetAuth() {
-      document.getElementById("authInputUser").value = "";
-      document.getElementById("authInputPass").value = "";
-      document.getElementById("authErrorMsg").style.display = "none";
-      document.getElementById("resetAuthModal").style.display = "flex";
-    }
-
-    function closeResetModal() {
-      document.getElementById("resetAuthModal").style.display = "none";
-    }
-
-    function executeDataReset() {
-      const u = document.getElementById("authInputUser").value.trim();
-      const p = document.getElementById("authInputPass").value.trim();
-
-      if (u === state.adminUser && p === state.adminPass) {
+    /* Direct Reset without credentials */
+    function resetAllDataDirect() {
+      const msg = state.lang === "km" 
+        ? "តើអ្នកពិតជាចង់លុបទិន្នន័យទាំងអស់មែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។" 
+        : "Are you sure you want to reset all data? This action cannot be undone.";
+      if (confirm(msg)) {
         localStorage.clear();
-        alert(state.lang === "km" ? "ទិន្នន័យត្រូវបានលុបដោយជោគជ័យ!" : "All data cleared successfully.");
         location.reload();
-      } else {
-        document.getElementById("authErrorMsg").style.display = "block";
-      }
-    }
-
-    function updateCredentials() {
-      const u = document.getElementById("settingAdminUser").value.trim();
-      const p = document.getElementById("settingAdminPass").value.trim();
-      if (u && p) {
-        state.adminUser = u;
-        state.adminPass = p;
-        saveState();
       }
     }
 
@@ -2014,10 +1957,6 @@
       document.getElementById("lblSettings").innerText = t("settings");
       document.getElementById("lblExRate").innerText = t("ex_rate");
       document.getElementById("lblBudgetSet").innerText = t("budget");
-      document.getElementById("lblSecurityTitle").innerText = t("security_title");
-      document.getElementById("lblAdminUser").innerText = t("admin_user");
-      document.getElementById("lblAdminPass").innerText = t("admin_pass");
-      document.getElementById("lblAdminHelp").innerText = t("admin_help");
       document.getElementById("btnResetData").innerText = t("reset_data");
       document.getElementById("lblAddTitle").innerText = t("add_title");
       document.getElementById("lblAmount").innerText = t("amount");
@@ -2031,7 +1970,10 @@
       document.getElementById("inpNote").placeholder = t("note_ph");
       document.getElementById("lblChooseFileBtn").innerText = t("choose_file");
       document.getElementById("lblStatusHint").innerText = t("status_hint");
-      
+      document.getElementById("lblProfileTitle").innerText = t("profile_title");
+      document.getElementById("lblUserName").innerText = t("user_name");
+      document.getElementById("settingUserName").placeholder = t("user_name_ph");
+
       const fileInput = document.getElementById("inpReceipt");
       if (!fileInput.files || fileInput.files.length === 0) {
         document.getElementById("fileChosenText").innerText = t("no_file_chosen");
@@ -2049,15 +1991,7 @@
       document.getElementById("lblReceiptModalTitle").innerText = t("receipt_modal_title");
       document.getElementById("btnReceiptDone").innerText = t("done");
       document.getElementById("btnDayModalClose").innerText = t("done");
-      document.getElementById("lblResetAuthTitle").innerText = t("auth_reset_title");
-      document.getElementById("lblResetAuthDesc").innerText = t("auth_reset_desc");
-      document.getElementById("lblAuthUser").innerText = t("admin_user");
-      document.getElementById("lblAuthPass").innerText = t("admin_pass");
-      document.getElementById("authErrorMsg").innerText = t("auth_err");
-      document.getElementById("btnConfirmReset").innerText = t("verify_wipe");
-      document.getElementById("btnCancelReset").innerText = t("cancel");
 
-      // Export Modal Texts
       document.getElementById("lblExportModalTitle").innerText = t("export_title");
       document.getElementById("lblExportFormat").innerText = t("export_fmt");
       document.getElementById("lblExportCur").innerText = t("export_cur");
