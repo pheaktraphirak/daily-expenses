@@ -99,7 +99,7 @@
       margin: 0 auto;
     }
 
-    /* Typewriter Animated Greeting Banner */
+    /* Typewriter Animated Greeting */
     .greeting-banner {
       display: flex;
       align-items: center;
@@ -172,7 +172,10 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
     }
+    .personality-card:active { transform: scale(0.99); }
     .coach-header { display: flex; justify-content: space-between; align-items: center; }
     .coach-greeting { font-size: 12px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
     .coach-badge {
@@ -186,6 +189,7 @@
     .coach-badge.warning { background: rgba(255, 149, 0, 0.15); color: var(--warning); }
     .coach-badge.over { background: var(--danger-subtle); color: var(--danger); }
     .coach-quote { font-size: 15px; font-weight: 600; line-height: 1.4; margin: 0; }
+    .coach-hint { font-size: 10px; color: var(--secondary); margin-top: 2px; text-align: right; }
     .progress-bar-bg {
       height: 8px;
       background: rgba(0, 0, 0, 0.06);
@@ -247,7 +251,31 @@
       align-items: center;
     }
 
-    /* Interactive Chart */
+    /* Active Filter Pill */
+    .active-filter-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--pine-subtle);
+      border: 1px solid var(--pine);
+      padding: 8px 12px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--pine);
+    }
+    .clear-filter-btn {
+      background: var(--pine);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* Chart */
     .chart-box {
       display: flex;
       align-items: flex-end;
@@ -476,6 +504,33 @@
     }
     .chip:active { transform: scale(0.94); }
 
+    /* Segmented Selection Control */
+    .seg-row {
+      display: flex;
+      gap: 8px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    .seg-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--secondary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .seg-btn.active {
+      background: var(--pine);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(47, 93, 80, 0.2);
+    }
+
     /* Category Grid & Deletion */
     .category-grid {
       display: grid;
@@ -627,7 +682,7 @@
 </head>
 <body>
 
-  <!-- Top Header with Separate Buttons Linked Together -->
+  <!-- Top Header with Separate Linked Buttons -->
   <header>
     <div>
       <h1 id="headerTitle">Daily Expenses</h1>
@@ -654,23 +709,25 @@
         <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
       </div>
 
-      <div class="personality-card">
+      <!-- Status Card with Double-Click Support -->
+      <div class="personality-card" id="statusCard" ondblclick="toggleStatusRemaining()" onclick="handleStatusTap(event)">
         <div class="coach-header">
           <span class="coach-greeting" id="coachGreeting">STATUS</span>
           <span class="coach-badge" id="coachBadge">On Track 🌿</span>
         </div>
         <p class="coach-quote" id="coachQuote">Your finances are looking healthy today!</p>
+        <div class="coach-hint" id="lblStatusHint">Double-click to view remaining</div>
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" id="budgetProgress" style="width: 0%;"></div>
         </div>
       </div>
 
       <div class="summary-grid">
-        <div class="stat-card" onclick="switchTab('entries')">
+        <div class="stat-card" onclick="filterByToday()">
           <span class="stat-label" id="lblToday">TODAY</span>
           <span class="stat-value" id="valToday">$0.00</span>
         </div>
-        <div class="stat-card" onclick="switchTab('entries')">
+        <div class="stat-card" onclick="filterBySelectedMonth()">
           <span class="stat-label" id="lblMonth">SELECTED MONTH</span>
           <span class="stat-value" id="valMonth">$0.00</span>
         </div>
@@ -691,13 +748,17 @@
 
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
-        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px;" onclick="exportCSV()" id="btnExportCSV">📄 Export & Share CSV</button>
+        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px;" onclick="openExportModal()" id="btnOpenExport">📄 Export (PDF & CSV)</button>
       </div>
     </div>
 
     <!-- Tab 2: Entries -->
     <div id="tabEntries" style="display: none;">
       <div class="content-card">
+        <div id="activeFilterBar" class="active-filter-bar">
+          <span id="activeFilterLabel">Filtered</span>
+          <button class="clear-filter-btn" onclick="clearActiveFilter()" id="btnClearFilter">✕ Show All</button>
+        </div>
         <input type="search" class="search-input" id="searchBar" placeholder="🔍 Search by note or category..." oninput="filterEntries()" />
         <div id="entriesList"></div>
       </div>
@@ -765,7 +826,8 @@
       <div class="form-group">
         <label id="lblAmount">Amount</label>
         <div class="amount-wrapper">
-          <button type="button" class="cur-pill" id="btnModalCur" onclick="toggleLanguageAndCurrency()">USD ($)</button>
+          <!-- Standalone currency toggle for inputs only -->
+          <button type="button" class="cur-pill" id="btnModalCur" onclick="toggleFormCurrency()">USD ($)</button>
           <input type="number" id="inpAmount" class="amount-input" placeholder="0.00" step="any" inputmode="decimal" />
         </div>
         <div class="chip-row" id="quickChips"></div>
@@ -807,6 +869,43 @@
     </div>
   </div>
 
+  <!-- Export Modal (PDF and CSV with Currency Selection & Grand Total) -->
+  <div class="modal" id="exportModal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="lblExportModalTitle">Export Expenses</h2>
+        <button onclick="closeExportModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label id="lblExportFormat">Export Format</label>
+        <div class="seg-row">
+          <button type="button" class="seg-btn active" id="btnFmtCSV" onclick="selectExportFormat('CSV')">CSV (Excel)</button>
+          <button type="button" class="seg-btn" id="btnFmtPDF" onclick="selectExportFormat('PDF')">PDF Document</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="lblExportCur">Convert All Amounts To</label>
+        <div class="seg-row">
+          <button type="button" class="seg-btn active" id="btnExpUSD" onclick="selectExportCur('USD')">USD ($)</button>
+          <button type="button" class="seg-btn" id="btnExpKHR" onclick="selectExportCur('KHR')">KHR (៛)</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="lblExportRange">Range</label>
+        <div class="seg-row">
+          <button type="button" class="seg-btn active" id="btnRangeMonth" onclick="selectExportRange('month')">Selected Month</button>
+          <button type="button" class="seg-btn" id="btnRangeAll" onclick="selectExportRange('all')">All Time</button>
+        </div>
+      </div>
+
+      <button class="btn-action" onclick="executeExport()" id="btnConfirmExport">Download / Print</button>
+      <button class="btn-secondary" onclick="closeExportModal()" id="btnCancelExport">Cancel</button>
+    </div>
+  </div>
+
   <!-- Create Custom Category Modal -->
   <div class="modal" id="newCatModal" style="z-index: 50;">
     <div class="modal-content">
@@ -831,7 +930,7 @@
     </div>
   </div>
 
-  <!-- In-App Day Breakdown Modal -->
+  <!-- Day Breakdown Modal -->
   <div class="modal" id="dayBreakdownModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
@@ -843,7 +942,7 @@
     </div>
   </div>
 
-  <!-- In-App Receipt Photo Modal -->
+  <!-- Receipt Photo Modal -->
   <div class="modal" id="receiptViewerModal">
     <div class="modal-content" style="text-align: center;">
       <h3 style="margin-top: 0;" id="lblReceiptModalTitle">Receipt Photo</h3>
@@ -852,7 +951,7 @@
     </div>
   </div>
 
-  <!-- Reset Security Authentication Modal -->
+  <!-- Reset Security Modal -->
   <div class="modal" id="resetAuthModal">
     <div class="modal-content">
       <h2 style="margin-top:0; color: var(--danger);" id="lblResetAuthTitle">Authorize Data Reset</h2>
@@ -898,13 +997,14 @@
       badge_careful: { en: "Careful 📊", km: "ប្រុងប្រយ័ត្ន 📊" },
       badge_over: { en: "Over Limit ⚠️", km: "លើសកម្រិត ⚠️" },
       badge_active: { en: "Active ✨", km: "សកម្ម ✨" },
+      status_hint: { en: "Double-click to view remaining", km: "ចុចពីរដងដើម្បីមើលចំនួនដែលនៅសល់" },
       spent_today: { en: "TODAY", km: "ថ្ងៃនេះ" },
       spent_this_month: { en: "SELECTED MONTH", km: "ខែដែលបានជ្រើស" },
       last_7_days: { en: "Last 7 Days", km: "៧ ថ្ងៃចុងក្រោយ" },
       chart_hint: { en: "Tap bars to view", km: "ចុចលើរបារដើម្បីមើល" },
       categories: { en: "Top Spending Categories", km: "ប្រភេទចំណាយច្រើនបំផុត" },
       data: { en: "Data & Tools", km: "ទិន្នន័យ & ឧបករណ៍" },
-      export_csv: { en: "📄 Export & Share CSV", km: "📄 ទាញយក & ចែករំលែក CSV" },
+      open_export: { en: "📄 Export (PDF & CSV)", km: "📄 ទាញយក (PDF & CSV)" },
       search_placeholder: { en: "🔍 Search by note or category...", km: "🔍 ស្វែងរកតាមចំណាំ ឬប្រភេទ..." },
       ex_rate: { en: "Exchange Rate (1 USD = ? KHR)", km: "អត្រាប្តូរប្រាក់ (1 USD = ? ៛)" },
       budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" },
@@ -948,7 +1048,17 @@
       confirm_del: { en: "Remove this entry?", km: "តើអ្នកពិតជាចង់លុបចំណាយនេះមែនទេ?" },
       confirm_del_cat: { en: "Are you sure you want to remove this category?", km: "តើអ្នកពិតជាចង់លុបប្រភេទចំណាយនេះមែនទេ?" },
       keep_one_cat: { en: "You must keep at least one category!", km: "អ្នកត្រូវទុកប្រភេទចំណាយយ៉ាងហោចណាស់មួយ!" },
-      no_exp_day: { en: "No expenses logged on this day.", km: "គ្មានចំណាយនៅក្នុងថ្ងៃនេះទេ។" }
+      no_exp_day: { en: "No expenses logged on this day.", km: "គ្មានចំណាយនៅក្នុងថ្ងៃនេះទេ។" },
+      export_title: { en: "Export Expenses", km: "ទាញយកទិន្នន័យចំណាយ" },
+      export_fmt: { en: "Export Format", km: "ទម្រង់ឯកសារ" },
+      export_cur: { en: "Convert All Amounts To", km: "បំលែងទឹកប្រាក់ទាំងអស់ជា" },
+      export_range: { en: "Range", km: "ចន្លោះពេល" },
+      range_month: { en: "Selected Month", km: "ខែដែលបានជ្រើស" },
+      range_all: { en: "All Time", km: "ទាំងអស់" },
+      btn_confirm_export: { en: "Download / Print", km: "ទាញយក / បោះពុម្ព" },
+      showing_today: { en: "Showing: Today Only", km: "បង្ហាញ: តែថ្ងៃនេះប៉ុណ្ណោះ" },
+      showing_month: { en: "Showing: Selected Month", km: "បង្ហាញ: តែខែដែលបានជ្រើស" },
+      clear_filter: { en: "✕ Show All", km: "✕ បង្ហាញទាំងអស់" }
     };
 
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
@@ -963,15 +1073,23 @@
       monthlyBudgetUSD: parseFloat(localStorage.getItem("ledger_budget") || "0"),
       adminUser: localStorage.getItem("ledger_admin_user") || "admin",
       adminPass: localStorage.getItem("ledger_admin_pass") || "1234",
-      activeFormCur: savedLang === "km" ? "KHR" : "USD",
+      activeFormCur: savedLang === "km" ? "KHR" : "USD", // Local to Add modal only
       selectedCat: categories[0]?.id || "food",
       viewYear: new Date().getFullYear(),
-      viewMonth: new Date().getMonth()
+      viewMonth: new Date().getMonth(),
+      showRemaining: false,
+      activeFilter: null // { type: 'today' | 'month', dateStr: 'YYYY-MM-DD' }
     };
 
-    /* Typewriter Writing Animation Engine */
-    let typewriterTimer = null;
+    // Export Modal State
+    let exportConfig = {
+      format: "CSV",
+      currency: state.displayCurrency,
+      range: "month"
+    };
 
+    /* Typewriter Writing Animation */
+    let typewriterTimer = null;
     function getPeriodGreeting() {
       const hour = new Date().getHours();
       const isKm = state.lang === "km";
@@ -1002,6 +1120,22 @@
         }
       }
       typeChar();
+    }
+
+    /* Mobile Double-Tap Support for Status Card */
+    let lastStatusTap = 0;
+    function handleStatusTap(e) {
+      const now = Date.now();
+      if (now - lastStatusTap < 350 && now - lastStatusTap > 0) {
+        toggleStatusRemaining();
+        e.preventDefault();
+      }
+      lastStatusTap = now;
+    }
+
+    function toggleStatusRemaining() {
+      state.showRemaining = !state.showRemaining;
+      render();
     }
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -1064,6 +1198,25 @@
     function updateMonthDisplay() {
       const mName = state.lang === "km" ? khmerMonths[state.viewMonth] : englishMonths[state.viewMonth];
       document.getElementById("lblMonthNav").innerText = `${mName} ${state.viewYear}`;
+    }
+
+    /* Filter Shortcuts from Dashboard Cards */
+    function filterByToday() {
+      const todayStr = new Date().toISOString().split("T")[0];
+      state.activeFilter = { type: "today", dateStr: todayStr };
+      switchTab("entries");
+      render();
+    }
+
+    function filterBySelectedMonth() {
+      state.activeFilter = { type: "month", year: state.viewYear, month: state.viewMonth };
+      switchTab("entries");
+      render();
+    }
+
+    function clearActiveFilter() {
+      state.activeFilter = null;
+      render();
     }
 
     function handleFileChange(input) {
@@ -1200,7 +1353,7 @@
       closeNewCatModal();
     }
 
-    /* 100% Linked Toggle: English is always USD ($), Khmer is always KHR (៛) */
+    /* Strict App-Wide Language & Currency Pairing */
     function toggleLanguageAndCurrency() {
       if (state.lang === "en") {
         state.lang = "km";
@@ -1209,12 +1362,19 @@
         state.lang = "en";
         state.displayCurrency = "USD";
       }
-      state.activeFormCur = state.displayCurrency;
+      exportConfig.currency = state.displayCurrency;
 
       applyLanguage();
       buildCategoryGrid();
       playTypewriterGreeting();
       saveState();
+    }
+
+    /* Independent Currency Toggle strictly inside Add Expense Modal */
+    function toggleFormCurrency() {
+      state.activeFormCur = state.activeFormCur === "USD" ? "KHR" : "USD";
+      document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
+      updateQuickChips();
     }
 
     function render() {
@@ -1243,7 +1403,7 @@
       updatePersonalityCard(monthUSD);
       renderWeeklyChart();
       renderCategoryList(catMap, monthUSD);
-      renderEntriesList();
+      renderFilteredEntriesList();
 
       document.getElementById("langBtn").innerText = state.lang === "en" ? "🇺🇸 English" : "🇰🇭 ភាសាខ្មែរ";
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
@@ -1258,12 +1418,36 @@
       const progressEl = document.getElementById("budgetProgress");
       const badgeEl = document.getElementById("coachBadge");
       const quoteEl = document.getElementById("coachQuote");
+      const hintEl = document.getElementById("lblStatusHint");
       const isKm = state.lang === "km";
+
+      hintEl.innerText = isKm ? i18n.status_hint.km : i18n.status_hint.en;
 
       if (state.monthlyBudgetUSD > 0) {
         const pct = Math.min((monthUSD / state.monthlyBudgetUSD) * 100, 100);
         progressEl.style.width = pct + "%";
 
+        const remainingUSD = state.monthlyBudgetUSD - monthUSD;
+        const remainingConverted = fromUSD(Math.abs(remainingUSD), state.displayCurrency);
+
+        if (state.showRemaining) {
+          if (remainingUSD >= 0) {
+            badgeEl.className = "coach-badge";
+            badgeEl.innerText = isKm ? "ថវិកានៅសល់" : "Remaining";
+            quoteEl.innerHTML = isKm 
+              ? `នៅសល់: <span style="color:var(--pine); font-weight:800;">${fmt(remainingConverted)}</span> សម្រាប់ខែនេះ` 
+              : `Remaining: <span style="color:var(--pine); font-weight:800;">${fmt(remainingConverted)}</span> this month`;
+          } else {
+            badgeEl.className = "coach-badge over";
+            badgeEl.innerText = isKm ? "លើសកម្រិត ⚠️" : "Over Budget ⚠️";
+            quoteEl.innerHTML = isKm 
+              ? `លើសថវិកាចំនួន: <span style="color:var(--danger); font-weight:800;">${fmt(remainingConverted)}</span>!` 
+              : `Over budget by: <span style="color:var(--danger); font-weight:800;">${fmt(remainingConverted)}</span>!`;
+          }
+          return;
+        }
+
+        // Standard Display
         if (pct < 60) {
           badgeEl.className = "coach-badge";
           badgeEl.innerText = isKm ? i18n.badge_ontrack.km : i18n.badge_ontrack.en;
@@ -1398,10 +1582,63 @@
       });
     }
 
-    function renderEntriesList(filtered = null) {
+    /* Filtered Entries List (Supporting Today, Selected Month, or All) */
+    function renderFilteredEntriesList() {
+      const filterBar = document.getElementById("activeFilterBar");
+      const filterLabel = document.getElementById("activeFilterLabel");
+      const isKm = state.lang === "km";
+
+      let baseList = [...state.entries];
+
+      if (state.activeFilter) {
+        filterBar.style.display = "flex";
+        if (state.activeFilter.type === "today") {
+          filterLabel.innerText = isKm ? i18n.showing_today.km : i18n.showing_today.en;
+          baseList = baseList.filter(e => e.date === state.activeFilter.dateStr);
+        } else if (state.activeFilter.type === "month") {
+          const mName = isKm ? khmerMonths[state.activeFilter.month] : englishMonths[state.activeFilter.month];
+          filterLabel.innerText = `${isKm ? i18n.showing_month.km : i18n.showing_month.en} (${mName} ${state.activeFilter.year})`;
+          baseList = baseList.filter(e => {
+            const ed = new Date(e.date);
+            return ed.getFullYear() === state.activeFilter.year && ed.getMonth() === state.activeFilter.month;
+          });
+        }
+      } else {
+        filterBar.style.display = "none";
+      }
+
+      filterEntries(baseList);
+    }
+
+    function filterEntries(sourceList = null) {
+      const q = document.getElementById("searchBar").value.toLowerCase();
+      let list = sourceList || [...state.entries];
+
+      if (state.activeFilter && !sourceList) {
+        if (state.activeFilter.type === "today") {
+          list = list.filter(e => e.date === state.activeFilter.dateStr);
+        } else if (state.activeFilter.type === "month") {
+          list = list.filter(e => {
+            const ed = new Date(e.date);
+            return ed.getFullYear() === state.activeFilter.year && ed.getMonth() === state.activeFilter.month;
+          });
+        }
+      }
+
+      const filtered = list.filter(e => {
+        const cat = categories.find(c => c.id === e.categoryId);
+        const name = ((cat?.labelEn || "") + " " + (cat?.labelKm || "")).toLowerCase();
+        const note = (e.note || "").toLowerCase();
+        return name.includes(q) || note.includes(q);
+      });
+
+      renderEntriesDOM(filtered);
+    }
+
+    function renderEntriesDOM(list) {
       const container = document.getElementById("entriesList");
       container.innerHTML = "";
-      const list = filtered || [...state.entries].sort((a, b) => new Date(b.date) - new Date(a.date));
+      list.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       if (list.length === 0) {
         container.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><div class="empty-title">${state.lang === 'km' ? i18n.no_entries_found.km : i18n.no_entries_found.en}</div><div style="font-size:12px;">${state.lang === 'km' ? i18n.trans_appear_here.km : i18n.trans_appear_here.en}</div></div>`;
@@ -1429,21 +1666,10 @@
       });
     }
 
-    function filterEntries() {
-      const q = document.getElementById("searchBar").value.toLowerCase();
-      const filtered = state.entries.filter(e => {
-        const cat = categories.find(c => c.id === e.categoryId);
-        const name = ((cat?.labelEn || "") + " " + (cat?.labelKm || "")).toLowerCase();
-        const note = (e.note || "").toLowerCase();
-        return name.includes(q) || note.includes(q);
-      });
-      renderEntriesList(filtered);
-    }
-
     function updateQuickChips() {
       const container = document.getElementById("quickChips");
       container.innerHTML = "";
-      const isUSD = state.displayCurrency === "USD";
+      const isUSD = state.activeFormCur === "USD";
       const values = isUSD ? [1, 2, 5, 10, 20] : [2000, 5000, 10000, 20000, 50000];
 
       values.forEach(v => {
@@ -1465,7 +1691,7 @@
       clearChosenFile();
       selectDatePill("today");
       state.activeFormCur = state.displayCurrency;
-      document.getElementById("btnModalCur").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
+      document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
       isManagingCategories = false;
       document.getElementById("btnManageCat").innerText = state.lang === "km" ? i18n.manage_cat.km : i18n.manage_cat.en;
       buildCategoryGrid();
@@ -1546,7 +1772,7 @@
       const item = {
         id: "exp_" + Date.now(),
         amount: amt,
-        currency: state.displayCurrency,
+        currency: state.activeFormCur,
         categoryId: state.selectedCat,
         date: document.getElementById("inpDate").value || new Date().toISOString().split("T")[0],
         note: document.getElementById("inpNote").value.trim(),
@@ -1576,6 +1802,164 @@
         state.entries = state.entries.filter(e => e.id !== id);
         saveState();
       }
+    }
+
+    /* Export Config Modal Logic */
+    function openExportModal() {
+      exportConfig.currency = state.displayCurrency;
+      exportConfig.format = "CSV";
+      exportConfig.range = "month";
+      updateExportModalUI();
+      document.getElementById("exportModal").style.display = "flex";
+    }
+
+    function closeExportModal() {
+      document.getElementById("exportModal").style.display = "none";
+    }
+
+    function selectExportFormat(fmtType) {
+      exportConfig.format = fmtType;
+      document.getElementById("btnFmtCSV").className = "seg-btn " + (fmtType === "CSV" ? "active" : "");
+      document.getElementById("btnFmtPDF").className = "seg-btn " + (fmtType === "PDF" ? "active" : "");
+    }
+
+    function selectExportCur(cur) {
+      exportConfig.currency = cur;
+      document.getElementById("btnExpUSD").className = "seg-btn " + (cur === "USD" ? "active" : "");
+      document.getElementById("btnExpKHR").className = "seg-btn " + (cur === "KHR" ? "active" : "");
+    }
+
+    function selectExportRange(r) {
+      exportConfig.range = r;
+      document.getElementById("btnRangeMonth").className = "seg-btn " + (r === "month" ? "active" : "");
+      document.getElementById("btnRangeAll").className = "seg-btn " + (r === "all" ? "active" : "");
+    }
+
+    function updateExportModalUI() {
+      selectExportFormat(exportConfig.format);
+      selectExportCur(exportConfig.currency);
+      selectExportRange(exportConfig.range);
+    }
+
+    /* Execute Export with Total Amount and Custom Currency */
+    function executeExport() {
+      let targetList = [...state.entries];
+      if (exportConfig.range === "month") {
+        targetList = targetList.filter(e => {
+          const ed = new Date(e.date);
+          return ed.getFullYear() === state.viewYear && ed.getMonth() === state.viewMonth;
+        });
+      }
+      targetList.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      const cur = exportConfig.currency;
+      let grandTotal = 0;
+
+      const convertedRows = targetList.map(e => {
+        const amtUSD = toUSD(e.amount, e.currency);
+        const convAmt = fromUSD(amtUSD, cur);
+        grandTotal += convAmt;
+
+        const cat = categories.find(c => c.id === e.categoryId);
+        const catName = state.lang === "km" ? (cat?.labelKm || cat?.labelEn) : (cat?.labelEn || cat?.labelKm);
+        return {
+          date: e.date,
+          category: catName || e.categoryId,
+          note: e.note || "",
+          amount: convAmt,
+          amountFormatted: fmt(convAmt, cur)
+        };
+      });
+
+      if (exportConfig.format === "CSV") {
+        generateCSVExport(convertedRows, grandTotal, cur);
+      } else {
+        generatePDFExport(convertedRows, grandTotal, cur);
+      }
+      closeExportModal();
+    }
+
+    function generateCSVExport(rows, total, cur) {
+      let csv = "Date,Category,Note,Amount,Currency\n";
+      rows.forEach(r => {
+        csv += `"${r.date}","${r.category}","${r.note}","${r.amount.toFixed(cur === 'KHR' ? 0 : 2)}","${cur}"\n`;
+      });
+      // Grand Total Row
+      csv += `\n"TOTAL","","","${total.toFixed(cur === 'KHR' ? 0 : 2)}","${cur}"\n`;
+
+      const fileName = `expenses_${exportConfig.range}_${cur}_${new Date().toISOString().split("T")[0]}.csv`;
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+    }
+
+    function generatePDFExport(rows, total, cur) {
+      const isKm = state.lang === "km";
+      const mName = isKm ? khmerMonths[state.viewMonth] : englishMonths[state.viewMonth];
+      const titleRange = exportConfig.range === "month" ? `${mName} ${state.viewYear}` : (isKm ? "ទាំងអស់" : "All Time");
+      const title = `${isKm ? "របាយការណ៍ចំណាយ" : "Expenses Report"} - ${titleRange}`;
+
+      let rowsHtml = "";
+      rows.forEach(r => {
+        rowsHtml += `
+          <tr>
+            <td>${r.date}</td>
+            <td>${r.category}</td>
+            <td>${r.note}</td>
+            <td style="text-align: right; font-family: monospace; font-weight: bold;">${r.amountFormatted}</td>
+          </tr>
+        `;
+      });
+
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${title}</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Kantumruy Pro", sans-serif; padding: 24px; color: #1C1C1E; }
+            h1 { font-size: 20px; margin-bottom: 4px; color: #2F5D50; }
+            .meta { font-size: 13px; color: #6E6E73; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border-bottom: 1px solid #E5E5EA; padding: 10px 8px; font-size: 13px; text-align: left; }
+            th { font-size: 11px; text-transform: uppercase; color: #6E6E73; letter-spacing: 0.5px; }
+            .total-row td { border-top: 2px solid #2F5D50; border-bottom: 2px solid #2F5D50; font-size: 16px; font-weight: 800; }
+            @media print {
+              body { padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>${title}</h1>
+          <div class="meta">Exported Currency: <b>${cur}</b> | Date: ${new Date().toLocaleDateString()}</div>
+          <table>
+            <thead>
+              <tr>
+                <th>${isKm ? "កាលបរិច្ឆេទ" : "Date"}</th>
+                <th>${isKm ? "ប្រភេទ" : "Category"}</th>
+                <th>${isKm ? "ចំណាំ" : "Note"}</th>
+                <th style="text-align: right;">${isKm ? "ចំនួនទឹកប្រាក់" : "Amount"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+              <tr class="total-row">
+                <td colspan="3" style="text-align: right; color: #2F5D50;">${isKm ? "សរុបរួម (TOTAL):" : "GRAND TOTAL:"}</td>
+                <td style="text-align: right; color: #2F5D50; font-family: monospace;">${fmt(total, cur)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+      }, 350);
     }
 
     function promptResetAuth() {
@@ -1622,7 +2006,7 @@
       document.getElementById("lblChartHint").innerText = t("chart_hint");
       document.getElementById("lblCategories").innerText = t("categories");
       document.getElementById("lblData").innerText = t("data");
-      document.getElementById("btnExportCSV").innerText = t("export_csv");
+      document.getElementById("btnOpenExport").innerText = t("open_export");
       document.getElementById("searchBar").placeholder = t("search_placeholder");
       document.getElementById("tabNameDash").innerText = t("dashboard");
       document.getElementById("tabNameEntries").innerText = t("entries");
@@ -1646,6 +2030,7 @@
       document.getElementById("lblNote").innerText = t("note");
       document.getElementById("inpNote").placeholder = t("note_ph");
       document.getElementById("lblChooseFileBtn").innerText = t("choose_file");
+      document.getElementById("lblStatusHint").innerText = t("status_hint");
       
       const fileInput = document.getElementById("inpReceipt");
       if (!fileInput.files || fileInput.files.length === 0) {
@@ -1672,6 +2057,17 @@
       document.getElementById("btnConfirmReset").innerText = t("verify_wipe");
       document.getElementById("btnCancelReset").innerText = t("cancel");
 
+      // Export Modal Texts
+      document.getElementById("lblExportModalTitle").innerText = t("export_title");
+      document.getElementById("lblExportFormat").innerText = t("export_fmt");
+      document.getElementById("lblExportCur").innerText = t("export_cur");
+      document.getElementById("lblExportRange").innerText = t("export_range");
+      document.getElementById("btnRangeMonth").innerText = t("range_month");
+      document.getElementById("btnRangeAll").innerText = t("range_all");
+      document.getElementById("btnConfirmExport").innerText = t("btn_confirm_export");
+      document.getElementById("btnCancelExport").innerText = t("cancel");
+      document.getElementById("btnClearFilter").innerText = t("clear_filter");
+
       updateLiveDate();
       updateMonthDisplay();
     }
@@ -1696,41 +2092,6 @@
       if (tab === "dashboard") {
         playTypewriterGreeting();
       }
-    }
-
-    async function exportCSV() {
-      let csv = "Date,Category,Amount,Currency,Note\n";
-      state.entries.forEach(e => {
-        csv += `"${e.date}","${e.categoryId}","${e.amount}","${e.currency}","${e.note || ''}"\n`;
-      });
-
-      const fileName = `expenses_${new Date().toISOString().split("T")[0]}.csv`;
-      const blob = new Blob([csv], { type: "text/csv" });
-      const file = new File([blob], fileName, { type: "text/csv" });
-
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: fileName,
-            text: "Daily Expenses export"
-          });
-          return;
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            downloadCSVBlob(blob, fileName);
-          }
-        }
-      } else {
-        downloadCSVBlob(blob, fileName);
-      }
-    }
-
-    function downloadCSVBlob(blob, fileName) {
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = fileName;
-      a.click();
     }
   </script>
 </body>
