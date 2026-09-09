@@ -391,7 +391,7 @@
     }
     .fab:active { transform: translateX(-50%) scale(0.92); background: var(--pine-dark); }
 
-    /* Bottom Navigation Bar with Perfectly Centered Tabs */
+    /* Bottom Navigation Bar with Centered Tabs */
     nav {
       position: fixed;
       bottom: 0;
@@ -787,11 +787,10 @@
         </div>
       </div>
 
-      <!-- Data & Tools Card (Moved to Settings) -->
+      <!-- Data & Tools Card (Cleaned without Reset Button) -->
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
-        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px; margin-bottom: 12px;" onclick="openExportModal()" id="btnOpenExport">📄 Export (PDF & CSV)</button>
-        <button class="btn-action" style="background: var(--danger); box-shadow: 0 4px 14px var(--danger-subtle);" onclick="resetAllDataDirect()" id="btnResetData">Reset All Data</button>
+        <button class="pill-btn" style="width:100%; justify-content:center; padding:14px;" onclick="openExportModal()" id="btnOpenExport">📄 Export (PDF & CSV)</button>
       </div>
     </div>
   </div>
@@ -799,7 +798,7 @@
   <!-- Centered Floating Add Button -->
   <button class="fab" onclick="openAddModal()">+</button>
 
-  <!-- Bottom Navigation with Perfectly Centered "Entries" Tab -->
+  <!-- Bottom Navigation with Centered "Entries" Tab -->
   <nav>
     <button class="nav-tab active" onclick="switchTab('dashboard')" id="navDash">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -985,7 +984,6 @@
       search_placeholder: { en: "🔍 Search by note or category...", km: "🔍 ស្វែងរកតាមចំណាំ ឬប្រភេទ..." },
       ex_rate: { en: "Exchange Rate (1 USD = ? KHR)", km: "អត្រាប្តូរប្រាក់ (1 USD = ? ៛)" },
       budget: { en: "Monthly Budget (USD)", km: "ថវិកាប្រចាំខែ (USD)" },
-      reset_data: { en: "Reset All Data", km: "កំណត់ទិន្នន័យឡើងវិញទាំងអស់" },
       add_title: { en: "Add Expense", km: "បន្ថែមចំណាយ" },
       amount: { en: "Amount", km: "ចំនួនទឹកប្រាក់" },
       category: { en: "Select Category", km: "ជ្រើសរើសប្រភេទ" },
@@ -1928,17 +1926,6 @@
       setTimeout(() => { printWindow.print(); }, 350);
     }
 
-    /* Direct Reset without credentials */
-    function resetAllDataDirect() {
-      const msg = state.lang === "km" 
-        ? "តើអ្នកពិតជាចង់លុបទិន្នន័យទាំងអស់មែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។" 
-        : "Are you sure you want to reset all data? This action cannot be undone.";
-      if (confirm(msg)) {
-        localStorage.clear();
-        location.reload();
-      }
-    }
-
     function applyLanguage() {
       const t = (k) => i18n[k]?.[state.lang] || k;
       document.getElementById("headerTitle").innerText = t("app_title");
@@ -1957,7 +1944,6 @@
       document.getElementById("lblSettings").innerText = t("settings");
       document.getElementById("lblExRate").innerText = t("ex_rate");
       document.getElementById("lblBudgetSet").innerText = t("budget");
-      document.getElementById("btnResetData").innerText = t("reset_data");
       document.getElementById("lblAddTitle").innerText = t("add_title");
       document.getElementById("lblAmount").innerText = t("amount");
       document.getElementById("lblCategory").innerText = t("category");
