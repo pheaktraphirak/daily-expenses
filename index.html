@@ -161,7 +161,7 @@
       letter-spacing: -0.2px;
     }
 
-    /* Personality & Budget Card with 1-Click Toggle */
+    /* Personality & Budget Card */
     .personality-card {
       background: linear-gradient(135deg, var(--card-bg) 0%, var(--pine-subtle) 100%);
       border-radius: 22px;
@@ -251,7 +251,20 @@
       align-items: center;
     }
 
-    /* Active Filter Pill */
+    /* Alert / Filter Banners */
+    .alert-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 149, 0, 0.12);
+      border: 1px solid var(--warning);
+      padding: 10px 14px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #B36B00;
+    }
     .active-filter-bar {
       display: none;
       align-items: center;
@@ -367,6 +380,30 @@
     }
     .btn-delete:active { background: var(--danger-subtle); }
 
+    /* Planning Row Specifics */
+    .plan-badge-due {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      background: var(--danger-subtle);
+      color: var(--danger);
+      margin-left: 6px;
+    }
+    .btn-buy-now {
+      background: var(--pine);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    .btn-buy-now:active { transform: scale(0.94); }
+
     /* Centered Floating Action Button */
     .fab {
       position: fixed;
@@ -391,7 +428,7 @@
     }
     .fab:active { transform: translateX(-50%) scale(0.92); background: var(--pine-dark); }
 
-    /* Bottom Navigation Bar with Centered Tabs */
+    /* Bottom Navigation with Plans Option Next to Dashboard */
     nav {
       position: fixed;
       bottom: 0;
@@ -410,6 +447,7 @@
       nav { background: rgba(18, 18, 20, 0.88); }
     }
     .nav-tab {
+      position: relative;
       flex: 1;
       width: 0;
       background: none;
@@ -427,6 +465,23 @@
     }
     .nav-tab.active { color: var(--pine); font-weight: 700; }
     .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
+
+    .nav-alert-badge {
+      position: absolute;
+      top: -2px;
+      right: calc(50% - 16px);
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--card-bg);
+    }
 
     /* Modal Sheets */
     .modal {
@@ -701,9 +756,15 @@
   <div class="container">
     <!-- Tab 1: Dashboard -->
     <div id="tabDashboard">
-      <!-- Animated Typewriter Greeting with Personalized Name -->
+      <!-- Animated Typewriter Greeting -->
       <div class="greeting-banner">
         <span class="greeting-text" id="greetingText"></span><span class="typing-cursor">|</span>
+      </div>
+
+      <!-- Overdue / Due Alert Banner for Plans -->
+      <div id="planAlertBanner" class="alert-banner" onclick="switchTab('plans')">
+        <span id="planAlertText">⚠️ Planned items due today!</span>
+        <button class="clear-filter-btn" style="background:#B36B00;">View Plans</button>
       </div>
 
       <!-- Month Archive Navigator -->
@@ -751,7 +812,28 @@
       </div>
     </div>
 
-    <!-- Tab 2: Entries -->
+    <!-- Tab 2: Purchase Plans (Near Dashboard Button) -->
+    <div id="tabPlans" style="display: none;">
+      <div class="content-card">
+        <div class="card-title">
+          <span id="lblPlansTitle">Shopping & Purchase Plans</span>
+          <button class="pill-btn" onclick="openAddPlanModal()" style="font-size: 12px; padding: 4px 10px;" id="btnAddPlanTop">➕ Add Plan</button>
+        </div>
+        
+        <!-- Notification Permission Card -->
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+          <div>
+            <div style="font-size: 13px; font-weight: 700;" id="lblNotifTitle">Alert Notifications</div>
+            <div style="font-size: 11px; color: var(--secondary);" id="lblNotifSubtitle">Receive alerts on scheduled dates</div>
+          </div>
+          <button class="pill-btn" onclick="requestNotificationPermission()" id="btnNotifToggle">🔔 Enable Alerts</button>
+        </div>
+
+        <div id="plansList"></div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Entries -->
     <div id="tabEntries" style="display: none;">
       <div class="content-card">
         <div id="activeFilterBar" class="active-filter-bar">
@@ -763,9 +845,8 @@
       </div>
     </div>
 
-    <!-- Tab 3: Settings -->
+    <!-- Tab 4: Settings -->
     <div id="tabSettings" style="display: none;">
-      <!-- Profile Card (User Name for Greeting) -->
       <div class="content-card">
         <div class="card-title" id="lblProfileTitle">User Profile</div>
         <div class="form-group">
@@ -774,7 +855,6 @@
         </div>
       </div>
 
-      <!-- General Settings -->
       <div class="content-card">
         <div class="card-title" id="lblSettings">Settings</div>
         <div class="form-group">
@@ -787,7 +867,6 @@
         </div>
       </div>
 
-      <!-- Data & Tools Card (Cleaned without Reset Button) -->
       <div class="content-card">
         <div class="card-title" id="lblData">Data & Tools</div>
         <button class="pill-btn" style="width:100%; justify-content:center; padding:14px;" onclick="openExportModal()" id="btnOpenExport">📄 Export (PDF & CSV)</button>
@@ -795,14 +874,19 @@
     </div>
   </div>
 
-  <!-- Centered Floating Add Button -->
+  <!-- Centered Floating Add Expense Button -->
   <button class="fab" onclick="openAddModal()">+</button>
 
-  <!-- Bottom Navigation with Centered "Entries" Tab -->
+  <!-- Bottom Navigation: Dashboard, Plans (near dashboard), Entries, Settings -->
   <nav>
     <button class="nav-tab active" onclick="switchTab('dashboard')" id="navDash">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
       <span id="tabNameDash">Dashboard</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('plans')" id="navPlans">
+      <div class="nav-alert-badge" id="planNavBadge">0</div>
+      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      <span id="tabNamePlans">Plans</span>
     </button>
     <button class="nav-tab" onclick="switchTab('entries')" id="navEntries">
       <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
@@ -867,7 +951,43 @@
     </div>
   </div>
 
-  <!-- Export Modal (PDF and CSV with Currency Selection & Grand Total) -->
+  <!-- Add Purchase Plan Modal -->
+  <div class="modal" id="addPlanModal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="lblPlanModalTitle">Plan Purchase</h2>
+        <button onclick="closeAddPlanModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label id="lblPlanItemName">Item to Buy</label>
+        <input type="text" id="inpPlanTitle" class="search-input" placeholder="e.g. New Running Shoes, Headphones" />
+      </div>
+
+      <div class="form-group">
+        <label id="lblPlanEstimatedCost">Estimated Cost</label>
+        <div class="amount-wrapper">
+          <button type="button" class="cur-pill" id="btnPlanCur" onclick="togglePlanCurrency()">USD ($)</button>
+          <input type="number" id="inpPlanAmount" class="amount-input" placeholder="0.00" step="any" inputmode="decimal" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="lblPlanAlertDate">Alert / Target Date</label>
+        <input type="date" id="inpPlanDate" class="search-input" />
+      </div>
+
+      <div class="form-group">
+        <label id="lblPlanNotes">Notes (Optional)</label>
+        <input type="text" id="inpPlanNote" class="search-input" placeholder="e.g. Wait for promotion or payday" />
+      </div>
+
+      <button class="btn-action" onclick="savePurchasePlan()" id="btnSavePlan">Save Plan</button>
+      <button class="btn-secondary" onclick="closeAddPlanModal()" id="btnCancelPlan">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Export Modal (PDF and CSV) -->
   <div class="modal" id="exportModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -966,6 +1086,7 @@
     const i18n = {
       app_title: { en: "Daily Expenses", km: "សៀវភៅចំណាយ" },
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
+      plans: { en: "Plans", km: "គម្រោង" },
       entries: { en: "Entries", km: "ចំណាយទាំងអស់" },
       settings: { en: "Settings", km: "ការកំណត់" },
       status: { en: "STATUS", km: "ស្ថានភាព" },
@@ -1028,7 +1149,25 @@
       clear_filter: { en: "✕ Show All", km: "✕ បង្ហាញទាំងអស់" },
       profile_title: { en: "User Profile", km: "ព័ត៌មានអ្នកប្រើប្រាស់" },
       user_name: { en: "Your Name", km: "ឈ្មោះរបស់អ្នក" },
-      user_name_ph: { en: "e.g. Alex / Sokha", km: "ឧ. សុខា / Alex" }
+      user_name_ph: { en: "e.g. Alex / Sokha", km: "ឧ. សុខា / Alex" },
+      // Plans Translations
+      plans_title: { en: "Shopping & Purchase Plans", km: "គម្រោងទិញទំនិញ" },
+      add_plan_top: { en: "➕ Add Plan", km: "➕ បន្ថែមគម្រោង" },
+      plan_modal_title: { en: "Plan Purchase", km: "គ្រោងទិញទំនិញ" },
+      plan_item_name: { en: "Item to Buy", km: "ទំនិញដែលចង់ទិញ" },
+      plan_estimated_cost: { en: "Estimated Cost", km: "តម្លៃប៉ាន់ស្មាន" },
+      plan_alert_date: { en: "Alert / Target Date", km: "កាលបរិច្ឆេទជូនដំណឹង" },
+      plan_notes: { en: "Notes (Optional)", km: "កំណត់ចំណាំ (មិនបង្ខំ)" },
+      save_plan: { en: "Save Plan", km: "រក្សាទុកគម្រោង" },
+      notif_title: { en: "Alert Notifications", km: "ការជូនដំណឹងក្រើនរំលឹក" },
+      notif_sub: { en: "Receive alerts on scheduled dates", km: "ទទួលការក្រើនរំលឹកតាមកាលបរិច្ឆេទ" },
+      notif_btn: { en: "🔔 Enable Alerts", km: "🔔 បើកការជូនដំណឹង" },
+      notif_enabled: { en: "Alerts Enabled ✓", km: "បានបើក ✓" },
+      buy_now: { en: "Buy Now", km: "ទិញឥឡូវនេះ" },
+      plan_done: { en: "Bought ✓", km: "បានទិញរួច ✓" },
+      no_plans: { en: "No planned purchases yet", km: "មិនទាន់មានគម្រោងទិញទំនិញនៅឡើយទេ" },
+      due_today_badge: { en: "DUE TODAY", km: "ដល់ថ្ងៃទិញ" },
+      plan_alert_banner_text: { en: "⚠️ You have planned purchases scheduled for today!", km: "⚠️ អ្នកមានគម្រោងទិញទំនិញដែលត្រូវទិញនៅថ្ងៃនេះ!" }
     };
 
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
@@ -1037,12 +1176,14 @@
     let savedLang = localStorage.getItem("ledger_lang") || "en";
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
+      plans: JSON.parse(localStorage.getItem("ledger_plans") || "[]"),
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
       lang: savedLang,
       displayCurrency: savedLang === "km" ? "KHR" : "USD",
       monthlyBudgetUSD: parseFloat(localStorage.getItem("ledger_budget") || "0"),
       userName: localStorage.getItem("ledger_username") || "",
       activeFormCur: savedLang === "km" ? "KHR" : "USD",
+      activePlanCur: savedLang === "km" ? "KHR" : "USD",
       selectedCat: categories[0]?.id || "food",
       viewYear: new Date().getFullYear(),
       viewMonth: new Date().getMonth(),
@@ -1056,7 +1197,7 @@
       range: "month"
     };
 
-    /* Typewriter Animated Greeting with Username */
+    /* Typewriter Animated Greeting */
     let typewriterTimer = null;
     function getPeriodGreeting() {
       const hour = new Date().getHours();
@@ -1098,7 +1239,6 @@
       typeChar();
     }
 
-    /* 1-Click Status Card Toggle */
     function toggleStatusRemaining() {
       state.showRemaining = !state.showRemaining;
       render();
@@ -1111,11 +1251,13 @@
       applyLanguage();
       render();
       playTypewriterGreeting();
+      checkPlanAlerts();
     });
 
     function saveState() {
       try {
         localStorage.setItem("ledger_entries", JSON.stringify(state.entries));
+        localStorage.setItem("ledger_plans", JSON.stringify(state.plans));
         localStorage.setItem("ledger_rate", state.exchangeRate);
         localStorage.setItem("ledger_cur", state.displayCurrency);
         localStorage.setItem("ledger_budget", state.monthlyBudgetUSD);
@@ -1126,6 +1268,7 @@
         alert(state.lang === "km" ? "ទំហំផ្ទុកទូរស័ព្ទពេញហើយ!" : "Device storage full!");
       }
       render();
+      checkPlanAlerts();
     }
 
     function toUSD(val, cur) {
@@ -1342,10 +1485,196 @@
       updateQuickChips();
     }
 
+    /* Independent Currency Toggle in Add Plan Modal */
+    function togglePlanCurrency() {
+      state.activePlanCur = state.activePlanCur === "USD" ? "KHR" : "USD";
+      document.getElementById("btnPlanCur").innerText = state.activePlanCur === "USD" ? "USD ($)" : "KHR (៛)";
+    }
+
     function updateUserName(name) {
       state.userName = name;
       saveState();
       playTypewriterGreeting();
+    }
+
+    /* Notification & Purchase Alert Engine */
+    function requestNotificationPermission() {
+      if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+          updateNotificationButton();
+          checkPlanAlerts();
+        });
+      } else {
+        alert(state.lang === "km" ? "ឧបករណ៍នេះមិនគាំទ្រការជូនដំណឹង browser ទេ" : "Web Notifications not supported on this browser.");
+      }
+    }
+
+    function updateNotificationButton() {
+      const btn = document.getElementById("btnNotifToggle");
+      if ("Notification" in window && Notification.permission === "granted") {
+        btn.innerText = state.lang === "km" ? i18n.notif_enabled.km : i18n.notif_enabled.en;
+        btn.style.color = "var(--success)";
+      } else {
+        btn.innerText = state.lang === "km" ? i18n.notif_btn.km : i18n.notif_btn.en;
+        btn.style.color = "var(--pine)";
+      }
+    }
+
+    function checkPlanAlerts() {
+      const todayStr = new Date().toISOString().split("T")[0];
+      let dueCount = 0;
+
+      state.plans.forEach(plan => {
+        if (!plan.completed && plan.targetDate <= todayStr) {
+          dueCount++;
+          if (!plan.notified && "Notification" in window && Notification.permission === "granted") {
+            try {
+              new Notification(state.lang === "km" ? "គម្រោងទិញទំនិញ • ដល់ថ្ងៃទិញ!" : "Purchase Reminder!", {
+                body: `${plan.title} - ${fmt(fromUSD(toUSD(plan.amount, plan.currency), state.displayCurrency))}`,
+                icon: "https://img.icons8.com/color/180/wallet--v1.png"
+              });
+              plan.notified = true;
+            } catch (err) {}
+          }
+        }
+      });
+
+      // Update badge on Nav Tab
+      const badge = document.getElementById("planNavBadge");
+      if (badge) {
+        badge.style.display = dueCount > 0 ? "flex" : "none";
+        badge.innerText = dueCount;
+      }
+
+      // Update Dashboard Alert Banner
+      const banner = document.getElementById("planAlertBanner");
+      if (banner) {
+        banner.style.display = dueCount > 0 ? "flex" : "none";
+      }
+    }
+
+    function renderPlansList() {
+      const container = document.getElementById("plansList");
+      container.innerHTML = "";
+      const isKm = state.lang === "km";
+      const todayStr = new Date().toISOString().split("T")[0];
+
+      if (state.plans.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-emoji">🎯</div>
+            <div class="empty-title">${isKm ? i18n.no_plans.km : i18n.no_plans.en}</div>
+            <div style="font-size:12px;">${isKm ? 'ចុចលើ "បន្ថែមគម្រោង" ដើម្បីកត់ត្រាទំនិញដែលអ្នកចង់ទិញ!' : 'Tap "Add Plan" to schedule your upcoming purchases!'}</div>
+          </div>
+        `;
+        return;
+      }
+
+      state.plans.sort((a, b) => new Date(a.targetDate) - new Date(b.targetDate));
+
+      state.plans.forEach(p => {
+        const isDue = !p.completed && p.targetDate <= todayStr;
+        const convertedAmt = fromUSD(toUSD(p.amount, p.currency), state.displayCurrency);
+        const row = document.createElement("div");
+        row.className = "expense-item";
+        row.innerHTML = `
+          <div class="cat-avatar" style="background:${p.completed ? 'rgba(52, 199, 89, 0.15)' : 'rgba(47, 93, 80, 0.1)'}; color:${p.completed ? 'var(--success)' : 'var(--pine)'}">
+            ${p.completed ? '✓' : '🛒'}
+          </div>
+          <div class="expense-details">
+            <div class="expense-name" style="${p.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+              ${p.title}
+              ${isDue ? `<span class="plan-badge-due">${isKm ? i18n.due_today_badge.km : i18n.due_today_badge.en}</span>` : ''}
+            </div>
+            <div class="expense-meta">
+              📅 ${p.targetDate} ${p.note ? '• ' + p.note : ''}
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div class="expense-cost" style="${p.completed ? 'opacity: 0.6;' : ''}">${fmt(convertedAmt, state.displayCurrency)}</div>
+            ${!p.completed ? `<button class="btn-buy-now" onclick="markPlanAsBought('${p.id}')">${isKm ? i18n.buy_now.km : i18n.buy_now.en}</button>` : `<span style="font-size:11px; color:var(--success); font-weight:700;">${isKm ? i18n.plan_done.km : i18n.plan_done.en}</span>`}
+          </div>
+          <button class="btn-delete" onclick="deletePlan('${p.id}')">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function openAddPlanModal() {
+      document.getElementById("inpPlanTitle").value = "";
+      document.getElementById("inpPlanAmount").value = "";
+      document.getElementById("inpPlanNote").value = "";
+      document.getElementById("inpPlanDate").value = new Date().toISOString().split("T")[0];
+      state.activePlanCur = state.displayCurrency;
+      document.getElementById("btnPlanCur").innerText = state.activePlanCur === "USD" ? "USD ($)" : "KHR (៛)";
+      document.getElementById("addPlanModal").style.display = "flex";
+    }
+
+    function closeAddPlanModal() {
+      document.getElementById("addPlanModal").style.display = "none";
+    }
+
+    function savePurchasePlan() {
+      const title = document.getElementById("inpPlanTitle").value.trim();
+      const amt = parseFloat(document.getElementById("inpPlanAmount").value);
+      const date = document.getElementById("inpPlanDate").value || new Date().toISOString().split("T")[0];
+      const note = document.getElementById("inpPlanNote").value.trim();
+
+      if (!title) {
+        alert(state.lang === "km" ? "សូមបញ្ចូលឈ្មោះទំនិញដែលចង់ទិញ!" : "Please enter the item name!");
+        return;
+      }
+      if (!amt || amt <= 0) {
+        alert(state.lang === "km" ? "សូមបញ្ចូលតម្លៃប៉ាន់ស្មានត្រឹមត្រូវ!" : "Please enter a valid estimated cost!");
+        return;
+      }
+
+      const newPlan = {
+        id: "plan_" + Date.now(),
+        title: title,
+        amount: amt,
+        currency: state.activePlanCur,
+        targetDate: date,
+        note: note,
+        completed: false,
+        notified: false
+      };
+
+      state.plans.unshift(newPlan);
+      saveState();
+      closeAddPlanModal();
+      renderPlansList();
+    }
+
+    function markPlanAsBought(id) {
+      const plan = state.plans.find(p => p.id === id);
+      if (!plan) return;
+
+      // Automatically convert plan into an actual expense
+      const item = {
+        id: "exp_" + Date.now(),
+        amount: plan.amount,
+        currency: plan.currency,
+        categoryId: "shopping",
+        date: new Date().toISOString().split("T")[0],
+        note: `${plan.title} ${plan.note ? '(' + plan.note + ')' : ''}`.trim(),
+        receipt: null
+      };
+
+      state.entries.unshift(item);
+      plan.completed = true;
+      saveState();
+      render();
+      renderPlansList();
+      alert(state.lang === "km" ? "បានបញ្ចូលទៅក្នុងបញ្ជីចំណាយរួចរាល់!" : "Purchase added to your expenses!");
+    }
+
+    function deletePlan(id) {
+      if (confirm(state.lang === "km" ? "តើអ្នកចង់លុបគម្រោងនេះមែនទេ?" : "Remove this purchase plan?")) {
+        state.plans = state.plans.filter(p => p.id !== id);
+        saveState();
+        renderPlansList();
+      }
     }
 
     function render() {
@@ -1375,6 +1704,8 @@
       renderWeeklyChart();
       renderCategoryList(catMap, monthUSD);
       renderFilteredEntriesList();
+      renderPlansList();
+      updateNotificationButton();
 
       document.getElementById("langBtn").innerText = state.lang === "en" ? "🇺🇸 English" : "🇰🇭 ភាសាខ្មែរ";
       document.getElementById("curBtn").innerText = state.displayCurrency === "USD" ? "USD ($)" : "KHR (៛)";
@@ -1417,7 +1748,6 @@
           return;
         }
 
-        // Standard Status View
         if (pct < 60) {
           badgeEl.className = "coach-badge";
           badgeEl.innerText = isKm ? i18n.badge_ontrack.km : i18n.badge_ontrack.en;
@@ -1773,7 +2103,7 @@
       }
     }
 
-    /* Export Config Modal Logic */
+    /* Export Modal Logic */
     function openExportModal() {
       exportConfig.currency = state.displayCurrency;
       exportConfig.format = "CSV";
@@ -1810,7 +2140,6 @@
       selectExportRange(exportConfig.range);
     }
 
-    /* Execute Export */
     function executeExport() {
       let targetList = [...state.entries];
       if (exportConfig.range === "month") {
@@ -1939,6 +2268,7 @@
       document.getElementById("btnOpenExport").innerText = t("open_export");
       document.getElementById("searchBar").placeholder = t("search_placeholder");
       document.getElementById("tabNameDash").innerText = t("dashboard");
+      document.getElementById("tabNamePlans").innerText = t("plans");
       document.getElementById("tabNameEntries").innerText = t("entries");
       document.getElementById("tabNameSettings").innerText = t("settings");
       document.getElementById("lblSettings").innerText = t("settings");
@@ -1959,6 +2289,20 @@
       document.getElementById("lblProfileTitle").innerText = t("profile_title");
       document.getElementById("lblUserName").innerText = t("user_name");
       document.getElementById("settingUserName").placeholder = t("user_name_ph");
+
+      // Plans Labels
+      document.getElementById("lblPlansTitle").innerText = t("plans_title");
+      document.getElementById("btnAddPlanTop").innerText = t("add_plan_top");
+      document.getElementById("lblPlanModalTitle").innerText = t("plan_modal_title");
+      document.getElementById("lblPlanItemName").innerText = t("plan_item_name");
+      document.getElementById("lblPlanEstimatedCost").innerText = t("plan_estimated_cost");
+      document.getElementById("lblPlanAlertDate").innerText = t("plan_alert_date");
+      document.getElementById("lblPlanNotes").innerText = t("plan_notes");
+      document.getElementById("btnSavePlan").innerText = t("save_plan");
+      document.getElementById("btnCancelPlan").innerText = t("cancel");
+      document.getElementById("lblNotifTitle").innerText = t("notif_title");
+      document.getElementById("lblNotifSubtitle").innerText = t("notif_sub");
+      document.getElementById("planAlertText").innerText = t("plan_alert_banner_text");
 
       const fileInput = document.getElementById("inpReceipt");
       if (!fileInput.files || fileInput.files.length === 0) {
@@ -1990,6 +2334,7 @@
 
       updateLiveDate();
       updateMonthDisplay();
+      updateNotificationButton();
     }
 
     function updateRate(v) {
@@ -2002,15 +2347,19 @@
 
     function switchTab(tab) {
       document.getElementById("tabDashboard").style.display = tab === "dashboard" ? "block" : "none";
+      document.getElementById("tabPlans").style.display = tab === "plans" ? "block" : "none";
       document.getElementById("tabEntries").style.display = tab === "entries" ? "block" : "none";
       document.getElementById("tabSettings").style.display = tab === "settings" ? "block" : "none";
 
       document.getElementById("navDash").className = "nav-tab " + (tab === "dashboard" ? "active" : "");
+      document.getElementById("navPlans").className = "nav-tab " + (tab === "plans" ? "active" : "");
       document.getElementById("navEntries").className = "nav-tab " + (tab === "entries" ? "active" : "");
       document.getElementById("navSettings").className = "nav-tab " + (tab === "settings" ? "active" : "");
 
       if (tab === "dashboard") {
         playTypewriterGreeting();
+      } else if (tab === "plans") {
+        renderPlansList();
       }
     }
   </script>
