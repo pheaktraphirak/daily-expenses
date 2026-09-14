@@ -45,7 +45,6 @@
     
     html, body {
       min-height: 100%;
-      height: 100%;
       overflow-x: hidden;
     }
 
@@ -54,7 +53,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Kantumruy Pro", "Khmer OS Battambang", sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: 120px;
+      padding-bottom: 110px;
       user-select: none;
       -webkit-font-smoothing: antialiased;
     }
@@ -410,7 +409,7 @@
     }
     .btn-buy-now:active { transform: scale(0.94); }
 
-    /* Notes Feature Elements */
+    /* Notes Feature Elements (Clean Text Only) */
     .note-card {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -421,62 +420,16 @@
       transition: transform 0.15s ease;
     }
     .note-card:active { transform: scale(0.98); }
-    .note-card-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; color: var(--text); }
-    .note-card-snippet { font-size: 13px; color: var(--secondary); margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .note-drawing-thumb {
-      width: 100%;
-      height: 120px;
-      object-fit: contain;
-      background: #fff;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 8px;
-    }
+    .note-card-title { font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+    .note-card-snippet { font-size: 13px; color: var(--secondary); margin-bottom: 10px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .note-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--secondary); }
 
-    /* Canvas Drawing Pad */
-    .drawing-box {
-      background: #FFFFFF;
-      border: 1.5px solid var(--border);
-      border-radius: 16px;
-      position: relative;
-      touch-action: none;
-      overflow: hidden;
-      margin-top: 6px;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
-    }
-    #drawCanvas {
-      display: block;
-      width: 100%;
-      height: 220px;
-      cursor: crosshair;
-    }
-    .draw-tools {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 8px 10px;
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-    }
-    .color-dot {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-    .color-dot.active { border-color: var(--pine); transform: scale(1.15); }
-
-    /* Centered Fixed Floating Action Button (Zero Jumping) */
+    /* Centered Fixed Floating Action Button (Restored Standard Bottom Offset) */
     .fab {
       position: fixed;
       left: 50%;
-      transform: translate3d(-50%, 0, 0);
-      -webkit-transform: translate3d(-50%, 0, 0);
-      bottom: calc(env(safe-area-inset-bottom) + 68px);
+      transform: translateX(-50%);
+      bottom: calc(env(safe-area-inset-bottom) + 72px);
       width: 60px;
       height: 60px;
       border-radius: 30px;
@@ -491,36 +444,28 @@
       border: none;
       cursor: pointer;
       z-index: 30;
-      will-change: transform;
       transition: transform 0.15s ease, background-color 0.2s;
     }
     .fab:active {
-      transform: translate3d(-50%, 0, 0) scale(0.92);
-      -webkit-transform: translate3d(-50%, 0, 0) scale(0.92);
+      transform: translateX(-50%) scale(0.92);
       background: var(--pine-dark);
     }
 
-    /* Fixed Bottom Navigation (Zero Jumping, Rock Solid) */
+    /* Fixed Bottom Navigation (Restored Standard Anchored Bottom Bar) */
     nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(env(safe-area-inset-bottom) + 58px);
-      min-height: calc(env(safe-area-inset-bottom) + 58px);
-      max-height: calc(env(safe-area-inset-bottom) + 58px);
       background: rgba(248, 249, 250, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
-      padding: 4px 0 env(safe-area-inset-bottom) 0;
+      justify-content: space-around;
+      padding: 8px 0 calc(env(safe-area-inset-bottom) + 6px) 0;
       border-top: 0.5px solid var(--border);
       z-index: 25;
-      transform: translate3d(0, 0, 0);
-      -webkit-transform: translate3d(0, 0, 0);
-      box-sizing: border-box;
-      will-change: transform;
     }
     @media (prefers-color-scheme: dark) {
       nav { background: rgba(18, 18, 20, 0.94); }
@@ -529,7 +474,6 @@
       position: relative;
       flex: 1;
       width: 0;
-      height: 100%;
       background: none;
       border: none;
       color: var(--secondary);
@@ -537,29 +481,26 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 3px;
       cursor: pointer;
       transition: color 0.15s ease;
       text-align: center;
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      white-space: nowrap;
-      overflow: hidden;
+      padding: 2px 0;
     }
     .nav-tab span {
       font-size: 10px;
+      line-height: 1.1;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
-      line-height: 1.1;
+      white-space: nowrap;
     }
     .nav-tab.active { color: var(--pine); font-weight: 700; }
     .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
 
     .nav-alert-badge {
       position: absolute;
-      top: 2px;
+      top: 0px;
       right: calc(50% - 16px);
       background: var(--danger);
       color: #fff;
@@ -899,7 +840,7 @@
       </div>
     </div>
 
-    <!-- Tab 2: Purchase Plans (Near Dashboard) -->
+    <!-- Tab 2: Purchase Plans -->
     <div id="tabPlans" style="display: none;">
       <div class="content-card">
         <div class="card-title">
@@ -919,7 +860,7 @@
       </div>
     </div>
 
-    <!-- Tab 3: Notes & Drawing Pad (Near Plans) -->
+    <!-- Tab 3: Notes (Clean Text Only) -->
     <div id="tabNotes" style="display: none;">
       <!-- Password Lock Screen View -->
       <div id="notesLockScreen" class="content-card" style="text-align: center; padding: 36px 20px; display: none;">
@@ -936,7 +877,7 @@
       <!-- Main Notes Dashboard View -->
       <div id="notesMainScreen" class="content-card" style="display: none;">
         <div class="card-title">
-          <span id="lblNotesTitle">Notes & Sketches</span>
+          <span id="lblNotesTitle">Notes</span>
           <div style="display: flex; gap: 6px;">
             <button class="pill-btn" onclick="openNoteEditor()" style="font-size: 11px; padding: 4px 10px;" id="btnNewNote">➕ New Note</button>
             <button class="pill-btn" onclick="openNotePassModal()" style="font-size: 11px; padding: 4px 8px;" id="btnSetNotePass">🔑 Password</button>
@@ -988,7 +929,7 @@
     </div>
   </div>
 
-  <!-- Centered Floating Add Button (Rock Solid, Zero Jumping) -->
+  <!-- Centered Floating Add Button (Fixed Anchored) -->
   <button class="fab" onclick="openAddModal()">+</button>
 
   <!-- Bottom Navigation: Dashboard | Plans | Notes | Entries | Settings -->
@@ -1069,7 +1010,7 @@
     </div>
   </div>
 
-  <!-- Note Editor Modal (With Drawing Pad + Freeform Text) -->
+  <!-- Note Editor Modal (Text Only, No Draw) -->
   <div class="modal" id="noteEditorModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -1084,27 +1025,7 @@
 
       <div class="form-group">
         <label id="lblNoteBody">Write Anything</label>
-        <textarea id="inpNoteDocBody" class="search-input" style="height: 90px; resize: vertical; padding: 12px;" placeholder="Write anything here..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label id="lblNoteSketch">Draw / Sketch</label>
-        <div class="drawing-box">
-          <canvas id="drawCanvas" width="500" height="220"></canvas>
-          <div class="draw-tools">
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <div class="color-dot active" style="background:#1C1C1E;" onclick="selectDrawColor('#1C1C1E', this)"></div>
-              <div class="color-dot" style="background:#2F5D50;" onclick="selectDrawColor('#2F5D50', this)"></div>
-              <div class="color-dot" style="background:#FF3B30;" onclick="selectDrawColor('#FF3B30', this)"></div>
-              <div class="color-dot" style="background:#007AFF;" onclick="selectDrawColor('#007AFF', this)"></div>
-              <div class="color-dot" style="background:#FFCC00;" onclick="selectDrawColor('#FFCC00', this)"></div>
-            </div>
-            <div style="display: flex; gap: 6px;">
-              <button type="button" class="pill-btn" style="font-size: 11px; padding: 4px 8px;" id="btnEraser" onclick="toggleEraser()">🧼 Eraser</button>
-              <button type="button" class="pill-btn" style="font-size: 11px; padding: 4px 8px;" id="btnClearCanvas" onclick="clearCanvasDrawing()">🗑️ Clear</button>
-            </div>
-          </div>
-        </div>
+        <textarea id="inpNoteDocBody" class="search-input" style="height: 180px; resize: vertical; padding: 14px; font-size: 15px; line-height: 1.5;" placeholder="Write your notes, ideas, or lists here..."></textarea>
       </div>
 
       <button class="btn-action" onclick="saveNoteDocument()" id="btnSaveNoteDoc">Save Note</button>
@@ -1347,8 +1268,7 @@
       no_plans: { en: "No planned purchases yet", km: "មិនទាន់មានគម្រោងទិញទំនិញនៅឡើយទេ" },
       due_today_badge: { en: "DUE TODAY", km: "ដល់ថ្ងៃទិញ" },
       plan_alert_banner_text: { en: "⚠️ You have planned purchases scheduled for today!", km: "⚠️ អ្នកមានគម្រោងទិញទំនិញដែលត្រូវទិញនៅថ្ងៃនេះ!" },
-      // Notes & Drawing Feature
-      notes_title: { en: "Notes & Sketches", km: "កំណត់ចំណាំ & គំនូរព្រាង" },
+      notes_title: { en: "Notes", km: "កំណត់ចំណាំ" },
       new_note: { en: "➕ New Note", km: "➕ កត់ត្រាថ្មី" },
       lock_screen_title: { en: "Notes are Locked", km: "កំណត់ចំណាំត្រូវបានចាក់សោ" },
       lock_screen_sub: { en: "Enter your security password to view notes.", km: "សូមបញ្ចូលលេខកូដសម្ងាត់ដើម្បីមើលកំណត់ចំណាំ។" },
@@ -1359,15 +1279,12 @@
       create_note_title: { en: "Create Note", km: "បង្កើតកំណត់ចំណាំ" },
       note_doc_title: { en: "Title", km: "ចំណងជើង" },
       note_doc_body: { en: "Write Anything", km: "សរសេរអ្វីៗនៅទីនេះ" },
-      note_doc_sketch: { en: "Draw / Sketch", km: "គូររូប / គំនូរព្រាង" },
-      eraser_btn: { en: "🧼 Eraser", km: "🧼 ជ័រលុប" },
-      clear_btn: { en: "🗑️ Clear", km: "🗑️ លុប" },
       save_note_doc: { en: "Save Note", km: "រក្សាទុកកំណត់ចំណាំ" },
       pass_modal_title: { en: "Note Password", km: "លេខកូដសម្ងាត់កំណត់ចំណាំ" },
       new_pass_lbl: { en: "New Password", km: "លេខកូដថ្មី" },
       save_pass_btn: { en: "Save Password", km: "រក្សាទុកលេខកូដ" },
       no_notes_empty: { en: "No notes yet", km: "មិនទាន់មានកំណត់ចំណាំនៅឡើយទេ" },
-      no_notes_hint: { en: "Tap '+ New Note' to draw or write anything!", km: "ចុច '+ កត់ត្រាថ្មី' ដើម្បីសរសេរ ឬគូររូប!" }
+      no_notes_hint: { en: "Tap '+ New Note' to write anything!", km: "ចុច '+ កត់ត្រាថ្មី' ដើម្បីសរសេរកំណត់ចំណាំ!" }
     };
 
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
@@ -1456,7 +1373,6 @@
       render();
       playTypewriterGreeting();
       checkPlanAlerts();
-      initCanvasEvents();
     });
 
     function saveState() {
@@ -1702,7 +1618,7 @@
       playTypewriterGreeting();
     }
 
-    /* Notifications & Alert Engine */
+    /* Notifications Engine */
     function requestNotificationPermission() {
       if ("Notification" in window) {
         Notification.requestPermission().then(() => {
@@ -1881,93 +1797,12 @@
     }
 
     /* =========================================================
-       NOTES & DRAWING PAD FEATURE WITH PASSWORD LOCK
+       NOTES FEATURE (CLEAN TEXT-ONLY WITH PASSWORD PROTECTION)
     ========================================================= */
-    let drawCanvas, drawCtx;
-    let isDrawing = false;
-    let drawColor = "#1C1C1E";
-    let isEraserActive = false;
-    let canvasDirty = false;
-
-    function initCanvasEvents() {
-      drawCanvas = document.getElementById("drawCanvas");
-      if (!drawCanvas) return;
-      drawCtx = drawCanvas.getContext("2d");
-
-      function startDraw(e) {
-        isDrawing = true;
-        canvasDirty = true;
-        const pt = getCanvasPointer(e);
-        drawCtx.beginPath();
-        drawCtx.moveTo(pt.x, pt.y);
-        e.preventDefault();
-      }
-
-      function moveDraw(e) {
-        if (!isDrawing) return;
-        const pt = getCanvasPointer(e);
-        drawCtx.lineTo(pt.x, pt.y);
-        drawCtx.strokeStyle = isEraserActive ? "#FFFFFF" : drawColor;
-        drawCtx.lineWidth = isEraserActive ? 18 : 3.5;
-        drawCtx.lineCap = "round";
-        drawCtx.lineJoin = "round";
-        drawCtx.stroke();
-        e.preventDefault();
-      }
-
-      function endDraw(e) {
-        if (isDrawing) {
-          drawCtx.closePath();
-          isDrawing = false;
-        }
-      }
-
-      drawCanvas.addEventListener("mousedown", startDraw);
-      drawCanvas.addEventListener("mousemove", moveDraw);
-      window.addEventListener("mouseup", endDraw);
-
-      drawCanvas.addEventListener("touchstart", startDraw, { passive: false });
-      drawCanvas.addEventListener("touchmove", moveDraw, { passive: false });
-      window.addEventListener("touchend", endDraw);
-    }
-
-    function getCanvasPointer(e) {
-      const rect = drawCanvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: (clientX - rect.left) * (drawCanvas.width / rect.width),
-        y: (clientY - rect.top) * (drawCanvas.height / rect.height)
-      };
-    }
-
-    function selectDrawColor(color, el) {
-      isEraserActive = false;
-      drawColor = color;
-      document.querySelectorAll(".color-dot").forEach(d => d.classList.remove("active"));
-      el.classList.add("active");
-      document.getElementById("btnEraser").style.background = "";
-    }
-
-    function toggleEraser() {
-      isEraserActive = !isEraserActive;
-      const btn = document.getElementById("btnEraser");
-      btn.style.background = isEraserActive ? "var(--pine)" : "";
-      btn.style.color = isEraserActive ? "#fff" : "";
-    }
-
-    function clearCanvasDrawing() {
-      if (drawCtx) {
-        drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-        canvasDirty = false;
-      }
-    }
-
     function renderNotesTab() {
       const lockScreen = document.getElementById("notesLockScreen");
       const mainScreen = document.getElementById("notesMainScreen");
 
-      // Password Lock Protection
       if (state.notePass && !state.notesUnlocked) {
         lockScreen.style.display = "block";
         mainScreen.style.display = "none";
@@ -2016,13 +1851,7 @@
         card.className = "note-card";
         card.onclick = () => openNoteEditor(note.id);
 
-        let sketchThumb = "";
-        if (note.drawing) {
-          sketchThumb = `<img src="${note.drawing}" class="note-drawing-thumb" alt="Sketch" />`;
-        }
-
         card.innerHTML = `
-          ${sketchThumb}
           <div class="note-card-title">${note.title || (isKm ? "គ្មានចំណងជើង" : "Untitled Note")}</div>
           ${note.body ? `<div class="note-card-snippet">${note.body}</div>` : ""}
           <div class="note-footer">
@@ -2036,20 +1865,11 @@
 
     function openNoteEditor(noteId = null) {
       state.editingNoteId = noteId;
-      clearCanvasDrawing();
 
       if (noteId) {
         const note = state.notes.find(n => n.id === noteId);
         document.getElementById("inpNoteDocTitle").value = note.title || "";
         document.getElementById("inpNoteDocBody").value = note.body || "";
-        if (note.drawing) {
-          const img = new Image();
-          img.onload = () => {
-            drawCtx.drawImage(img, 0, 0);
-            canvasDirty = true;
-          };
-          img.src = note.drawing;
-        }
       } else {
         document.getElementById("inpNoteDocTitle").value = "";
         document.getElementById("inpNoteDocBody").value = "";
@@ -2066,10 +1886,9 @@
     function saveNoteDocument() {
       const title = document.getElementById("inpNoteDocTitle").value.trim();
       const body = document.getElementById("inpNoteDocBody").value.trim();
-      const drawingData = canvasDirty ? drawCanvas.toDataURL("image/png") : null;
 
-      if (!title && !body && !drawingData) {
-        alert(state.lang === "km" ? "សូមបញ្ចូលខ្លឹមសារ ឬគូរអ្វីមួយ!" : "Please write something or make a sketch!");
+      if (!title && !body) {
+        alert(state.lang === "km" ? "សូមសរសេរចំណងជើង ឬខ្លឹមសារកំណត់ចំណាំ!" : "Please write a title or note content!");
         return;
       }
 
@@ -2080,7 +1899,6 @@
         if (note) {
           note.title = title;
           note.body = body;
-          note.drawing = drawingData;
           note.updatedAt = nowStr;
         }
       } else {
@@ -2088,7 +1906,6 @@
           id: "note_" + Date.now(),
           title: title,
           body: body,
-          drawing: drawingData,
           createdAt: nowStr,
           updatedAt: nowStr
         });
@@ -2720,7 +2537,7 @@
       document.getElementById("btnOpenExport").innerText = t("open_export");
       document.getElementById("searchBar").placeholder = t("search_placeholder");
       
-      // Bottom Bar Tabs
+      // Navigation Tabs
       document.getElementById("tabNameDash").innerText = t("dashboard");
       document.getElementById("tabNamePlans").innerText = t("plans");
       document.getElementById("tabNameNotes").innerText = t("notes");
@@ -2772,9 +2589,6 @@
       document.getElementById("lblNoteModalTitle").innerText = t("create_note_title");
       document.getElementById("lblNoteTitle").innerText = t("note_doc_title");
       document.getElementById("lblNoteBody").innerText = t("note_doc_body");
-      document.getElementById("lblNoteSketch").innerText = t("note_doc_sketch");
-      document.getElementById("btnEraser").innerText = t("eraser_btn");
-      document.getElementById("btnClearCanvas").innerText = t("clear_btn");
       document.getElementById("btnSaveNoteDoc").innerText = t("save_note_doc");
       document.getElementById("btnCancelNoteDoc").innerText = t("cancel");
       document.getElementById("lblPassModalTitle").innerText = t("pass_modal_title");
