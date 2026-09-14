@@ -43,19 +43,23 @@
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    html, body {
-      min-height: 100%;
+    html {
+      height: -webkit-fill-available;
       overflow-x: hidden;
     }
 
     body {
       margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      min-height: -webkit-fill-available;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Kantumruy Pro", "Khmer OS Battambang", sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: 110px;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 96px);
       user-select: none;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     /* Top Header */
@@ -103,6 +107,7 @@
       padding: 16px 18px;
       max-width: 520px;
       margin: 0 auto;
+      min-height: calc(100dvh - 180px);
     }
 
     /* Typewriter Animated Greeting */
@@ -409,7 +414,7 @@
     }
     .btn-buy-now:active { transform: scale(0.94); }
 
-    /* Notes Feature Elements (Clean Text Only) */
+    /* Notes Feature Elements */
     .note-card {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -421,59 +426,46 @@
     }
     .note-card:active { transform: scale(0.98); }
     .note-card-title { font-size: 15px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
-    .note-card-snippet { font-size: 13px; color: var(--secondary); margin-bottom: 10px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .note-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--secondary); }
-
-    /* Centered Fixed Floating Action Button (Restored Standard Bottom Offset) */
-    .fab {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(env(safe-area-inset-bottom) + 72px);
-      width: 60px;
-      height: 60px;
-      border-radius: 30px;
-      background: var(--pine);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      font-weight: 300;
-      box-shadow: 0 8px 24px var(--pine-glow);
-      border: none;
-      cursor: pointer;
-      z-index: 30;
-      transition: transform 0.15s ease, background-color 0.2s;
+    .note-card-snippet { font-size: 13px; color: var(--secondary); margin-bottom: 8px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .note-file-thumb {
+      width: 100%;
+      height: 130px;
+      object-fit: contain;
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
     }
-    .fab:active {
-      transform: translateX(-50%) scale(0.92);
-      background: var(--pine-dark);
-    }
+    .note-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--secondary); margin-top: 4px; }
 
-    /* Fixed Bottom Navigation (Restored Standard Anchored Bottom Bar) */
+    /* Anchored Fixed Bottom Navigation & FAB (Never Shifts / Never Jumps) */
     nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(248, 249, 250, 0.94);
+      background: rgba(248, 249, 250, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      padding: 8px 0 calc(env(safe-area-inset-bottom) + 6px) 0;
+      height: calc(env(safe-area-inset-bottom) + 60px);
+      padding-bottom: env(safe-area-inset-bottom);
       border-top: 0.5px solid var(--border);
       z-index: 25;
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+      box-sizing: border-box;
     }
     @media (prefers-color-scheme: dark) {
-      nav { background: rgba(18, 18, 20, 0.94); }
+      nav { background: rgba(18, 18, 20, 0.95); }
     }
     .nav-tab {
       position: relative;
       flex: 1;
       width: 0;
+      height: 100%;
       background: none;
       border: none;
       color: var(--secondary);
@@ -485,7 +477,7 @@
       cursor: pointer;
       transition: color 0.15s ease;
       text-align: center;
-      padding: 2px 0;
+      padding: 0;
     }
     .nav-tab span {
       font-size: 10px;
@@ -500,7 +492,7 @@
 
     .nav-alert-badge {
       position: absolute;
-      top: 0px;
+      top: 4px;
       right: calc(50% - 16px);
       background: var(--danger);
       color: #fff;
@@ -513,6 +505,35 @@
       align-items: center;
       justify-content: center;
       border: 1.5px solid var(--card-bg);
+    }
+
+    .fab {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom) + 72px);
+      transform: translate3d(-50%, 0, 0);
+      -webkit-transform: translate3d(-50%, 0, 0);
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--pine);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 300;
+      box-shadow: 0 8px 24px var(--pine-glow);
+      border: none;
+      cursor: pointer;
+      z-index: 30;
+      will-change: transform;
+      transition: transform 0.15s ease, background-color 0.2s;
+    }
+    .fab:active {
+      transform: translate3d(-50%, 0, 0) scale(0.92);
+      -webkit-transform: translate3d(-50%, 0, 0) scale(0.92);
+      background: var(--pine-dark);
     }
 
     /* Modal Sheets */
@@ -542,7 +563,7 @@
       to { transform: translateY(0); }
     }
 
-    /* Form Elements */
+    /* Form Inputs */
     .form-group { margin-bottom: 16px; }
     label { font-size: 12px; font-weight: 700; color: var(--secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .amount-wrapper {
@@ -860,9 +881,9 @@
       </div>
     </div>
 
-    <!-- Tab 3: Notes (Clean Text Only) -->
+    <!-- Tab 3: Notes -->
     <div id="tabNotes" style="display: none;">
-      <!-- Password Lock Screen View -->
+      <!-- Password Lock Screen -->
       <div id="notesLockScreen" class="content-card" style="text-align: center; padding: 36px 20px; display: none;">
         <div style="font-size: 48px; margin-bottom: 10px;">🔒</div>
         <h2 style="margin: 0 0 6px 0;" id="lblLockScreenTitle">Notes are Locked</h2>
@@ -874,7 +895,7 @@
         <button class="btn-action" style="max-width: 260px; margin: 0 auto;" onclick="unlockNotesWithPass()" id="btnUnlockNotes">Unlock</button>
       </div>
 
-      <!-- Main Notes Dashboard View -->
+      <!-- Main Notes View -->
       <div id="notesMainScreen" class="content-card" style="display: none;">
         <div class="card-title">
           <span id="lblNotesTitle">Notes</span>
@@ -929,10 +950,10 @@
     </div>
   </div>
 
-  <!-- Centered Floating Add Button (Fixed Anchored) -->
+  <!-- Centered Floating Add Button (Rock Solid, Zero Jumping) -->
   <button class="fab" onclick="openAddModal()">+</button>
 
-  <!-- Bottom Navigation: Dashboard | Plans | Notes | Entries | Settings -->
+  <!-- Bottom Navigation: Fixed & Anchored -->
   <nav>
     <button class="nav-tab active" onclick="switchTab('dashboard')" id="navDash">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -1010,7 +1031,7 @@
     </div>
   </div>
 
-  <!-- Note Editor Modal (Text Only, No Draw) -->
+  <!-- Note Editor Modal (With File / Photo Attachment Support) -->
   <div class="modal" id="noteEditorModal">
     <div class="modal-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -1025,7 +1046,19 @@
 
       <div class="form-group">
         <label id="lblNoteBody">Write Anything</label>
-        <textarea id="inpNoteDocBody" class="search-input" style="height: 180px; resize: vertical; padding: 14px; font-size: 15px; line-height: 1.5;" placeholder="Write your notes, ideas, or lists here..."></textarea>
+        <textarea id="inpNoteDocBody" class="search-input" style="height: 140px; resize: vertical; padding: 14px; font-size: 15px; line-height: 1.5;" placeholder="Write your notes, ideas, or lists here..."></textarea>
+      </div>
+
+      <!-- Notes File / Photo Attachment -->
+      <div class="form-group">
+        <label id="lblNoteAttach">Attach Photo or File</label>
+        <div class="custom-file-row">
+          <label for="inpNoteAttachment" class="custom-file-btn" id="lblChooseNoteAttachBtn">📎 Choose File</label>
+          <input type="file" id="inpNoteAttachment" accept="image/*" style="display: none;" onchange="handleNoteFileChange(this)" />
+          <span class="custom-file-label" id="noteAttachChosenText">No file chosen</span>
+          <button type="button" id="btnClearNoteAttach" class="btn-clear-file" style="display: none;" onclick="clearChosenNoteFile()">✕</button>
+        </div>
+        <div id="noteAttachPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ File ready to attach</div>
       </div>
 
       <button class="btn-action" onclick="saveNoteDocument()" id="btnSaveNoteDoc">Save Note</button>
@@ -1160,11 +1193,11 @@
     </div>
   </div>
 
-  <!-- Receipt Photo Modal -->
+  <!-- Universal In-App Image/Attachment Viewer Modal -->
   <div class="modal" id="receiptViewerModal">
     <div class="modal-content" style="text-align: center;">
-      <h3 style="margin-top: 0;" id="lblReceiptModalTitle">Receipt Photo</h3>
-      <img id="viewerImage" src="" alt="Receipt" />
+      <h3 style="margin-top: 0;" id="lblReceiptModalTitle">Attached Photo</h3>
+      <img id="viewerImage" src="" alt="Attachment" />
       <button class="btn-action" onclick="closeReceiptModal()" id="btnReceiptDone">Done</button>
     </div>
   </div>
@@ -1228,7 +1261,7 @@
       new_cat_name_ph: { en: "e.g. Gym, Pet, Gifts", km: "ឧ. កន្លែងហាត់ប្រាណ, សត្វចិញ្ចឹម, កាដូ" },
       save_category: { en: "Add Category", km: "រក្សាទុកប្រភេទថ្មី" },
       view_receipt: { en: "📎 View Receipt", km: "📎 មើលបង្កាន់ដៃ" },
-      receipt_modal_title: { en: "Receipt Photo", km: "រូបថតបង្កាន់ដៃ" },
+      receipt_modal_title: { en: "Attached Photo", km: "រូបថតដែលបានភ្ជាប់" },
       done: { en: "Done", km: "រួចរាល់" },
       no_spending_month: { en: "No spending in this month", km: "មិនទាន់មានចំណាយក្នុងខែនេះទេ" },
       tap_plus_hint: { en: "Tap the + button to add an expense!", km: "ចុចលើសញ្ញា + ដើម្បីកត់ត្រាចំណាយរបស់អ្នក!" },
@@ -1279,12 +1312,14 @@
       create_note_title: { en: "Create Note", km: "បង្កើតកំណត់ចំណាំ" },
       note_doc_title: { en: "Title", km: "ចំណងជើង" },
       note_doc_body: { en: "Write Anything", km: "សរសេរអ្វីៗនៅទីនេះ" },
+      note_doc_attach: { en: "Attach Photo or File", km: "ភ្ជាប់រូបថត ឬឯកសារ" },
       save_note_doc: { en: "Save Note", km: "រក្សាទុកកំណត់ចំណាំ" },
       pass_modal_title: { en: "Note Password", km: "លេខកូដសម្ងាត់កំណត់ចំណាំ" },
       new_pass_lbl: { en: "New Password", km: "លេខកូដថ្មី" },
       save_pass_btn: { en: "Save Password", km: "រក្សាទុកលេខកូដ" },
       no_notes_empty: { en: "No notes yet", km: "មិនទាន់មានកំណត់ចំណាំនៅឡើយទេ" },
-      no_notes_hint: { en: "Tap '+ New Note' to write anything!", km: "ចុច '+ កត់ត្រាថ្មី' ដើម្បីសរសេរកំណត់ចំណាំ!" }
+      no_notes_hint: { en: "Tap '+ New Note' to write anything!", km: "ចុច '+ កត់ត្រាថ្មី' ដើម្បីសរសេរកំណត់ចំណាំ!" },
+      view_attachment: { en: "📎 View Attachment", km: "📎 មើលឯកសារភ្ជាប់" }
     };
 
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
@@ -1309,7 +1344,8 @@
       viewMonth: new Date().getMonth(),
       showRemaining: false,
       activeFilter: null,
-      editingNoteId: null
+      editingNoteId: null,
+      tempNoteAttachment: null
     };
 
     let exportConfig = {
@@ -1431,7 +1467,6 @@
       document.getElementById("lblMonthNav").innerText = `${mName} ${state.viewYear}`;
     }
 
-    /* Filter Shortcuts */
     function filterByToday() {
       const todayStr = new Date().toISOString().split("T")[0];
       state.activeFilter = { type: "today", dateStr: todayStr };
@@ -1797,8 +1832,34 @@
     }
 
     /* =========================================================
-       NOTES FEATURE (CLEAN TEXT-ONLY WITH PASSWORD PROTECTION)
+       NOTES FEATURE WITH ATTACHMENT & PASSWORD PROTECTION
     ========================================================= */
+    async function handleNoteFileChange(input) {
+      const textEl = document.getElementById("noteAttachChosenText");
+      const clearBtn = document.getElementById("btnClearNoteAttach");
+      const preview = document.getElementById("noteAttachPreviewIndicator");
+
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        textEl.innerText = file.name;
+        clearBtn.style.display = "block";
+        preview.style.display = "block";
+        state.tempNoteAttachment = await compressImageFile(file);
+      } else {
+        textEl.innerText = state.lang === "km" ? i18n.no_file_chosen.km : i18n.no_file_chosen.en;
+        clearBtn.style.display = "none";
+        preview.style.display = "none";
+        state.tempNoteAttachment = null;
+      }
+    }
+
+    function clearChosenNoteFile() {
+      const input = document.getElementById("inpNoteAttachment");
+      input.value = "";
+      state.tempNoteAttachment = null;
+      handleNoteFileChange(input);
+    }
+
     function renderNotesTab() {
       const lockScreen = document.getElementById("notesLockScreen");
       const mainScreen = document.getElementById("notesMainScreen");
@@ -1851,7 +1912,13 @@
         card.className = "note-card";
         card.onclick = () => openNoteEditor(note.id);
 
+        let filePreview = "";
+        if (note.attachment) {
+          filePreview = `<img src="${note.attachment}" class="note-file-thumb" alt="Attachment" onclick="event.stopPropagation(); openImageModal('${note.attachment}')" />`;
+        }
+
         card.innerHTML = `
+          ${filePreview}
           <div class="note-card-title">${note.title || (isKm ? "គ្មានចំណងជើង" : "Untitled Note")}</div>
           ${note.body ? `<div class="note-card-snippet">${note.body}</div>` : ""}
           <div class="note-footer">
@@ -1865,11 +1932,19 @@
 
     function openNoteEditor(noteId = null) {
       state.editingNoteId = noteId;
+      state.tempNoteAttachment = null;
+      clearChosenNoteFile();
 
       if (noteId) {
         const note = state.notes.find(n => n.id === noteId);
         document.getElementById("inpNoteDocTitle").value = note.title || "";
         document.getElementById("inpNoteDocBody").value = note.body || "";
+        if (note.attachment) {
+          state.tempNoteAttachment = note.attachment;
+          document.getElementById("noteAttachChosenText").innerText = state.lang === "km" ? "រូបថតដែលបានភ្ជាប់រួច" : "Attached photo";
+          document.getElementById("btnClearNoteAttach").style.display = "block";
+          document.getElementById("noteAttachPreviewIndicator").style.display = "block";
+        }
       } else {
         document.getElementById("inpNoteDocTitle").value = "";
         document.getElementById("inpNoteDocBody").value = "";
@@ -1881,14 +1956,16 @@
     function closeNoteEditor() {
       document.getElementById("noteEditorModal").style.display = "none";
       state.editingNoteId = null;
+      state.tempNoteAttachment = null;
     }
 
     function saveNoteDocument() {
       const title = document.getElementById("inpNoteDocTitle").value.trim();
       const body = document.getElementById("inpNoteDocBody").value.trim();
+      const attachment = state.tempNoteAttachment;
 
-      if (!title && !body) {
-        alert(state.lang === "km" ? "សូមសរសេរចំណងជើង ឬខ្លឹមសារកំណត់ចំណាំ!" : "Please write a title or note content!");
+      if (!title && !body && !attachment) {
+        alert(state.lang === "km" ? "សូមសរសេរចំណងជើង ខ្លឹមសារ ឬភ្ជាប់ឯកសារ!" : "Please write a title, content, or attach a photo!");
         return;
       }
 
@@ -1899,6 +1976,7 @@
         if (note) {
           note.title = title;
           note.body = body;
+          note.attachment = attachment;
           note.updatedAt = nowStr;
         }
       } else {
@@ -1906,6 +1984,7 @@
           id: "note_" + Date.now(),
           title: title,
           body: body,
+          attachment: attachment,
           createdAt: nowStr,
           updatedAt: nowStr
         });
@@ -1942,6 +2021,13 @@
       closeNotePassModal();
       renderNotesTab();
       alert(state.lang === "km" ? "លេខកូដត្រូវបានរក្សាទុក!" : "Note password updated!");
+    }
+
+    function openImageModal(imgSrc) {
+      if (imgSrc) {
+        document.getElementById("viewerImage").src = imgSrc;
+        document.getElementById("receiptViewerModal").style.display = "flex";
+      }
     }
 
     /* Core Render Engine */
@@ -2225,7 +2311,7 @@
           <div class="expense-details">
             <div class="expense-name">${name}</div>
             <div class="expense-meta">${e.date} ${e.note ? "• " + e.note : ""}</div>
-            ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">${state.lang === 'km' ? i18n.view_receipt.km : i18n.view_receipt.en}</div>` : ""}
+            ${e.receipt ? `<div class="receipt-pill" onclick="openImageModal('${e.receipt}')">${state.lang === 'km' ? i18n.view_receipt.km : i18n.view_receipt.en}</div>` : ""}
           </div>
           <div class="expense-cost">${fmt(convertedAmt, state.displayCurrency)}</div>
           <button class="btn-delete" onclick="deleteEntry('${e.id}')">✕</button>
@@ -2350,14 +2436,6 @@
       state.entries.unshift(item);
       saveState();
       closeAddModal();
-    }
-
-    function openReceiptModal(id) {
-      const item = state.entries.find(e => e.id === id);
-      if (item && item.receipt) {
-        document.getElementById("viewerImage").src = item.receipt;
-        document.getElementById("receiptViewerModal").style.display = "flex";
-      }
     }
 
     function closeReceiptModal() {
@@ -2589,6 +2667,8 @@
       document.getElementById("lblNoteModalTitle").innerText = t("create_note_title");
       document.getElementById("lblNoteTitle").innerText = t("note_doc_title");
       document.getElementById("lblNoteBody").innerText = t("note_doc_body");
+      document.getElementById("lblNoteAttach").innerText = t("note_doc_attach");
+      document.getElementById("lblChooseNoteAttachBtn").innerText = t("choose_file");
       document.getElementById("btnSaveNoteDoc").innerText = t("save_note_doc");
       document.getElementById("btnCancelNoteDoc").innerText = t("cancel");
       document.getElementById("lblPassModalTitle").innerText = t("pass_modal_title");
@@ -2601,7 +2681,15 @@
         document.getElementById("fileChosenText").innerText = t("no_file_chosen");
       }
       
+      const noteFileInput = document.getElementById("inpNoteAttachment");
+      if (!noteFileInput.files || noteFileInput.files.length === 0) {
+        if (!state.tempNoteAttachment) {
+          document.getElementById("noteAttachChosenText").innerText = t("no_file_chosen");
+        }
+      }
+
       document.getElementById("receiptPreviewIndicator").innerText = t("photo_ready");
+      document.getElementById("noteAttachPreviewIndicator").innerText = t("photo_ready");
       document.getElementById("btnSave").innerText = t("save");
       document.getElementById("btnCancel").innerText = t("cancel");
       document.getElementById("lblNewCatTitle").innerText = t("new_cat_title");
