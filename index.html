@@ -42,16 +42,14 @@
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Kantumruy Pro", "Khmer OS Battambang", sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: 110px;
+      padding-bottom: 100px;
       user-select: none;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
 
     /* Top Header */
@@ -354,7 +352,7 @@
       margin-right: 14px;
       flex-shrink: 0;
     }
-    .expense-details { flex: 1; min-width: 0; }
+    .expense-details { flex: 1; }
     .expense-name { font-weight: 700; font-size: 15px; }
     .expense-meta { font-size: 12px; color: var(--secondary); margin-top: 2px; }
     .expense-cost { font-size: 16px; font-weight: 800; font-family: monospace; text-align: right; }
@@ -382,6 +380,7 @@
     }
     .btn-delete:active { background: var(--danger-subtle); }
 
+    /* Planning Row Specifics */
     .plan-badge-due {
       display: inline-block;
       padding: 2px 8px;
@@ -405,83 +404,15 @@
     }
     .btn-buy-now:active { transform: scale(0.94); }
 
-    /* Rock-Solid Anchored Fixed Bottom Navigation & FAB (No Up/Down Jumping) */
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(248, 249, 250, 0.96);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      height: 64px;
-      padding-bottom: env(safe-area-inset-bottom);
-      border-top: 0.5px solid var(--border);
-      z-index: 25;
-      transform: translate3d(0, 0, 0);
-      -webkit-transform: translate3d(0, 0, 0);
-      box-sizing: border-box;
-    }
-    @media (prefers-color-scheme: dark) {
-      nav { background: rgba(18, 18, 20, 0.96); }
-    }
-    .nav-tab {
-      position: relative;
-      flex: 1;
-      height: 100%;
-      background: none;
-      border: none;
-      color: var(--secondary);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      cursor: pointer;
-      transition: color 0.15s ease;
-      text-align: center;
-      padding: 0;
-    }
-    .nav-tab span {
-      font-size: 10px;
-      line-height: 1.1;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .nav-tab.active { color: var(--pine); font-weight: 700; }
-    .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
-
-    .nav-alert-badge {
-      position: absolute;
-      top: 4px;
-      right: calc(50% - 16px);
-      background: var(--danger);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 800;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      border: 1.5px solid var(--card-bg);
-    }
-
+    /* Centered Floating Action Button */
     .fab {
       position: fixed;
       left: 50%;
-      bottom: calc(env(safe-area-inset-bottom) + 74px);
       transform: translateX(-50%);
-      -webkit-transform: translateX(-50%);
-      width: 58px;
-      height: 58px;
-      border-radius: 29px;
+      bottom: 84px;
+      width: 62px;
+      height: 62px;
+      border-radius: 31px;
       background: var(--pine);
       color: #fff;
       display: flex;
@@ -495,10 +426,61 @@
       z-index: 30;
       transition: transform 0.15s ease, background-color 0.2s;
     }
-    .fab:active {
-      transform: translateX(-50%) scale(0.92);
-      -webkit-transform: translateX(-50%) scale(0.92);
-      background: var(--pine-dark);
+    .fab:active { transform: translateX(-50%) scale(0.92); background: var(--pine-dark); }
+
+    /* Bottom Navigation with Plans Option Next to Dashboard */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(248, 249, 250, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      padding: 10px 0 calc(env(safe-area-inset-bottom) + 8px) 0;
+      border-top: 0.5px solid var(--border);
+      z-index: 25;
+    }
+    @media (prefers-color-scheme: dark) {
+      nav { background: rgba(18, 18, 20, 0.88); }
+    }
+    .nav-tab {
+      position: relative;
+      flex: 1;
+      width: 0;
+      background: none;
+      border: none;
+      color: var(--secondary);
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      transition: color 0.15s ease;
+      text-align: center;
+    }
+    .nav-tab.active { color: var(--pine); font-weight: 700; }
+    .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
+
+    .nav-alert-badge {
+      position: absolute;
+      top: -2px;
+      right: calc(50% - 16px);
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--card-bg);
     }
 
     /* Modal Sheets */
@@ -528,7 +510,7 @@
       to { transform: translateY(0); }
     }
 
-    /* Form Inputs */
+    /* Modal Form Inputs */
     .form-group { margin-bottom: 16px; }
     label { font-size: 12px; font-weight: 700; color: var(--secondary); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .amount-wrapper {
@@ -608,7 +590,7 @@
       box-shadow: 0 2px 8px rgba(47, 93, 80, 0.2);
     }
 
-    /* Category Grid */
+    /* Category Grid & Deletion */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -774,21 +756,25 @@
   <div class="container">
     <!-- Tab 1: Dashboard -->
     <div id="tabDashboard">
+      <!-- Animated Typewriter Greeting -->
       <div class="greeting-banner">
         <span class="greeting-text" id="greetingText"></span><span class="typing-cursor">|</span>
       </div>
 
+      <!-- Overdue / Due Alert Banner for Plans -->
       <div id="planAlertBanner" class="alert-banner" onclick="switchTab('plans')">
         <span id="planAlertText">⚠️ Planned items due today!</span>
         <button class="clear-filter-btn" style="background:#B36B00;">View Plans</button>
       </div>
 
+      <!-- Month Archive Navigator -->
       <div class="month-bar">
         <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
         <div class="month-nav-title" id="lblMonthNav">September 2026</div>
         <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
       </div>
 
+      <!-- Status Card: 1-Click Smooth Toggle -->
       <div class="personality-card" id="statusCard" onclick="toggleStatusRemaining()">
         <div class="coach-header">
           <span class="coach-greeting" id="coachGreeting">STATUS</span>
@@ -826,7 +812,7 @@
       </div>
     </div>
 
-    <!-- Tab 2: Purchase Plans -->
+    <!-- Tab 2: Purchase Plans (Near Dashboard Button) -->
     <div id="tabPlans" style="display: none;">
       <div class="content-card">
         <div class="card-title">
@@ -834,6 +820,7 @@
           <button class="pill-btn" onclick="openAddPlanModal()" style="font-size: 12px; padding: 4px 10px;" id="btnAddPlanTop">➕ Add Plan</button>
         </div>
         
+        <!-- Notification Permission Card -->
         <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
           <div>
             <div style="font-size: 13px; font-weight: 700;" id="lblNotifTitle">Alert Notifications</div>
@@ -887,10 +874,10 @@
     </div>
   </div>
 
-  <!-- Centered Floating Add Button (Rock Solid, Zero Jumping) -->
+  <!-- Centered Floating Add Expense Button -->
   <button class="fab" onclick="openAddModal()">+</button>
 
-  <!-- Bottom Navigation: 4 Balanced Tabs (Dashboard | Plans | Entries | Settings) -->
+  <!-- Bottom Navigation: Dashboard, Plans (near dashboard), Entries, Settings -->
   <nav>
     <button class="nav-tab active" onclick="switchTab('dashboard')" id="navDash">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -1073,11 +1060,11 @@
     </div>
   </div>
 
-  <!-- Universal In-App Image/Attachment Viewer Modal -->
+  <!-- Receipt Photo Modal -->
   <div class="modal" id="receiptViewerModal">
     <div class="modal-content" style="text-align: center;">
-      <h3 style="margin-top: 0;" id="lblReceiptModalTitle">Attached Photo</h3>
-      <img id="viewerImage" src="" alt="Attachment" />
+      <h3 style="margin-top: 0;" id="lblReceiptModalTitle">Receipt Photo</h3>
+      <img id="viewerImage" src="" alt="Receipt" />
       <button class="btn-action" onclick="closeReceiptModal()" id="btnReceiptDone">Done</button>
     </div>
   </div>
@@ -1140,7 +1127,7 @@
       new_cat_name_ph: { en: "e.g. Gym, Pet, Gifts", km: "ឧ. កន្លែងហាត់ប្រាណ, សត្វចិញ្ចឹម, កាដូ" },
       save_category: { en: "Add Category", km: "រក្សាទុកប្រភេទថ្មី" },
       view_receipt: { en: "📎 View Receipt", km: "📎 មើលបង្កាន់ដៃ" },
-      receipt_modal_title: { en: "Attached Photo", km: "រូបថតដែលបានភ្ជាប់" },
+      receipt_modal_title: { en: "Receipt Photo", km: "រូបថតបង្កាន់ដៃ" },
       done: { en: "Done", km: "រួចរាល់" },
       no_spending_month: { en: "No spending in this month", km: "មិនទាន់មានចំណាយក្នុងខែនេះទេ" },
       tap_plus_hint: { en: "Tap the + button to add an expense!", km: "ចុចលើសញ្ញា + ដើម្បីកត់ត្រាចំណាយរបស់អ្នក!" },
@@ -1163,6 +1150,7 @@
       profile_title: { en: "User Profile", km: "ព័ត៌មានអ្នកប្រើប្រាស់" },
       user_name: { en: "Your Name", km: "ឈ្មោះរបស់អ្នក" },
       user_name_ph: { en: "e.g. Alex / Sokha", km: "ឧ. សុខា / Alex" },
+      // Plans Translations
       plans_title: { en: "Shopping & Purchase Plans", km: "គម្រោងទិញទំនិញ" },
       add_plan_top: { en: "➕ Add Plan", km: "➕ បន្ថែមគម្រោង" },
       plan_modal_title: { en: "Plan Purchase", km: "គ្រោងទិញទំនិញ" },
@@ -1320,6 +1308,7 @@
       document.getElementById("lblMonthNav").innerText = `${mName} ${state.viewYear}`;
     }
 
+    /* Filter Shortcuts */
     function filterByToday() {
       const todayStr = new Date().toISOString().split("T")[0];
       state.activeFilter = { type: "today", dateStr: todayStr };
@@ -1472,6 +1461,7 @@
       closeNewCatModal();
     }
 
+    /* Linked Toggle: English is always USD ($), Khmer is always KHR (៛) */
     function toggleLanguageAndCurrency() {
       if (state.lang === "en") {
         state.lang = "km";
@@ -1488,12 +1478,14 @@
       saveState();
     }
 
+    /* Independent Currency Toggle in Add Modal */
     function toggleFormCurrency() {
       state.activeFormCur = state.activeFormCur === "USD" ? "KHR" : "USD";
       document.getElementById("btnModalCur").innerText = state.activeFormCur === "USD" ? "USD ($)" : "KHR (៛)";
       updateQuickChips();
     }
 
+    /* Independent Currency Toggle in Add Plan Modal */
     function togglePlanCurrency() {
       state.activePlanCur = state.activePlanCur === "USD" ? "KHR" : "USD";
       document.getElementById("btnPlanCur").innerText = state.activePlanCur === "USD" ? "USD ($)" : "KHR (៛)";
@@ -1505,9 +1497,10 @@
       playTypewriterGreeting();
     }
 
+    /* Notification & Purchase Alert Engine */
     function requestNotificationPermission() {
       if ("Notification" in window) {
-        Notification.requestPermission().then(() => {
+        Notification.requestPermission().then(permission => {
           updateNotificationButton();
           checkPlanAlerts();
         });
@@ -1546,12 +1539,14 @@
         }
       });
 
+      // Update badge on Nav Tab
       const badge = document.getElementById("planNavBadge");
       if (badge) {
         badge.style.display = dueCount > 0 ? "flex" : "none";
         badge.innerText = dueCount;
       }
 
+      // Update Dashboard Alert Banner
       const banner = document.getElementById("planAlertBanner");
       if (banner) {
         banner.style.display = dueCount > 0 ? "flex" : "none";
@@ -1655,6 +1650,7 @@
       const plan = state.plans.find(p => p.id === id);
       if (!plan) return;
 
+      // Automatically convert plan into an actual expense
       const item = {
         id: "exp_" + Date.now(),
         amount: plan.amount,
@@ -1681,7 +1677,6 @@
       }
     }
 
-    /* Core Render Engine */
     function render() {
       const now = new Date();
       const todayStr = now.toISOString().split("T")[0];
@@ -1961,7 +1956,7 @@
           <div class="expense-details">
             <div class="expense-name">${name}</div>
             <div class="expense-meta">${e.date} ${e.note ? "• " + e.note : ""}</div>
-            ${e.receipt ? `<div class="receipt-pill" onclick="openImageModal('${e.receipt}')">${state.lang === 'km' ? i18n.view_receipt.km : i18n.view_receipt.en}</div>` : ""}
+            ${e.receipt ? `<div class="receipt-pill" onclick="openReceiptModal('${e.id}')">${state.lang === 'km' ? i18n.view_receipt.km : i18n.view_receipt.en}</div>` : ""}
           </div>
           <div class="expense-cost">${fmt(convertedAmt, state.displayCurrency)}</div>
           <button class="btn-delete" onclick="deleteEntry('${e.id}')">✕</button>
@@ -1974,7 +1969,7 @@
       const container = document.getElementById("quickChips");
       container.innerHTML = "";
       const isUSD = state.activeFormCur === "USD";
-      const values = isUSD ? : [2000, 5000, 10000, 20000, 50000];
+      const values = isUSD ? [1, 2, 5, 10, 20] : [2000, 5000, 10000, 20000, 50000];
 
       values.forEach(v => {
         const chip = document.createElement("button");
@@ -2088,9 +2083,10 @@
       closeAddModal();
     }
 
-    function openImageModal(imgSrc) {
-      if (imgSrc) {
-        document.getElementById("viewerImage").src = imgSrc;
+    function openReceiptModal(id) {
+      const item = state.entries.find(e => e.id === id);
+      if (item && item.receipt) {
+        document.getElementById("viewerImage").src = item.receipt;
         document.getElementById("receiptViewerModal").style.display = "flex";
       }
     }
@@ -2107,7 +2103,7 @@
       }
     }
 
-    /* Export Modal */
+    /* Export Modal Logic */
     function openExportModal() {
       exportConfig.currency = state.displayCurrency;
       exportConfig.format = "CSV";
@@ -2271,13 +2267,10 @@
       document.getElementById("lblData").innerText = t("data");
       document.getElementById("btnOpenExport").innerText = t("open_export");
       document.getElementById("searchBar").placeholder = t("search_placeholder");
-      
-      // 4-Tab Navigation
       document.getElementById("tabNameDash").innerText = t("dashboard");
       document.getElementById("tabNamePlans").innerText = t("plans");
       document.getElementById("tabNameEntries").innerText = t("entries");
       document.getElementById("tabNameSettings").innerText = t("settings");
-      
       document.getElementById("lblSettings").innerText = t("settings");
       document.getElementById("lblExRate").innerText = t("ex_rate");
       document.getElementById("lblBudgetSet").innerText = t("budget");
@@ -2297,7 +2290,7 @@
       document.getElementById("lblUserName").innerText = t("user_name");
       document.getElementById("settingUserName").placeholder = t("user_name_ph");
 
-      // Plans
+      // Plans Labels
       document.getElementById("lblPlansTitle").innerText = t("plans_title");
       document.getElementById("btnAddPlanTop").innerText = t("add_plan_top");
       document.getElementById("lblPlanModalTitle").innerText = t("plan_modal_title");
@@ -2315,7 +2308,7 @@
       if (!fileInput.files || fileInput.files.length === 0) {
         document.getElementById("fileChosenText").innerText = t("no_file_chosen");
       }
-
+      
       document.getElementById("receiptPreviewIndicator").innerText = t("photo_ready");
       document.getElementById("btnSave").innerText = t("save");
       document.getElementById("btnCancel").innerText = t("cancel");
