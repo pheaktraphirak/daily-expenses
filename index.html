@@ -846,7 +846,7 @@
       </div>
     </div>
 
-    <!-- Tab 3: Entries (4-tab layout now) -->
+    <!-- Tab 3: Entries -->
     <div id="tabEntries" style="display: none;">
       <div class="content-card">
         <div id="activeFilterBar" class="active-filter-bar">
@@ -2086,6 +2086,13 @@
       state.entries.unshift(item);
       saveState();
       closeAddModal();
+    }
+
+    function openImageModal(imgSrc) {
+      if (imgSrc) {
+        document.getElementById("viewerImage").src = imgSrc;
+        document.getElementById("receiptViewerModal").style.display = "flex";
+      }
     }
 
     function closeReceiptModal() {
