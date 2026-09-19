@@ -43,20 +43,12 @@
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    html {
-      height: -webkit-fill-available;
-      overflow-x: hidden;
-    }
-
     body {
       margin: 0;
-      min-height: 100vh;
-      min-height: 100dvh;
-      min-height: -webkit-fill-available;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Kantumruy Pro", "Khmer OS Battambang", sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: calc(env(safe-area-inset-bottom) + 96px);
+      padding-bottom: 110px;
       user-select: none;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
@@ -107,7 +99,6 @@
       padding: 16px 18px;
       max-width: 520px;
       margin: 0 auto;
-      min-height: calc(100dvh - 180px);
     }
 
     /* Typewriter Animated Greeting */
@@ -414,19 +405,19 @@
     }
     .btn-buy-now:active { transform: scale(0.94); }
 
-    /* Anchored Fixed Bottom Navigation & FAB */
+    /* Rock-Solid Anchored Fixed Bottom Navigation & FAB (No Up/Down Jumping) */
     nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(248, 249, 250, 0.95);
+      background: rgba(248, 249, 250, 0.96);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      height: calc(env(safe-area-inset-bottom) + 60px);
+      height: 64px;
       padding-bottom: env(safe-area-inset-bottom);
       border-top: 0.5px solid var(--border);
       z-index: 25;
@@ -435,12 +426,11 @@
       box-sizing: border-box;
     }
     @media (prefers-color-scheme: dark) {
-      nav { background: rgba(18, 18, 20, 0.95); }
+      nav { background: rgba(18, 18, 20, 0.96); }
     }
     .nav-tab {
       position: relative;
       flex: 1;
-      width: 0;
       height: 100%;
       background: none;
       border: none;
@@ -449,7 +439,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 2px;
       cursor: pointer;
       transition: color 0.15s ease;
       text-align: center;
@@ -486,12 +476,12 @@
     .fab {
       position: fixed;
       left: 50%;
-      bottom: calc(env(safe-area-inset-bottom) + 72px);
-      transform: translate3d(-50%, 0, 0);
-      -webkit-transform: translate3d(-50%, 0, 0);
-      width: 60px;
-      height: 60px;
-      border-radius: 30px;
+      bottom: calc(env(safe-area-inset-bottom) + 74px);
+      transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 29px;
       background: var(--pine);
       color: #fff;
       display: flex;
@@ -503,12 +493,11 @@
       border: none;
       cursor: pointer;
       z-index: 30;
-      will-change: transform;
       transition: transform 0.15s ease, background-color 0.2s;
     }
     .fab:active {
-      transform: translate3d(-50%, 0, 0) scale(0.92);
-      -webkit-transform: translate3d(-50%, 0, 0) scale(0.92);
+      transform: translateX(-50%) scale(0.92);
+      -webkit-transform: translateX(-50%) scale(0.92);
       background: var(--pine-dark);
     }
 
@@ -857,35 +846,7 @@
       </div>
     </div>
 
-    <!-- Tab 3: Notes -->
-    <div id="tabNotes" style="display: none;">
-      <!-- Password Lock Screen -->
-      <div id="notesLockScreen" class="content-card" style="text-align: center; padding: 36px 20px; display: none;">
-        <div style="font-size: 48px; margin-bottom: 10px;">🔒</div>
-        <h2 style="margin: 0 0 6px 0;" id="lblLockScreenTitle">Notes are Locked</h2>
-        <p style="font-size: 13px; color: var(--secondary); margin-bottom: 18px;" id="lblLockScreenSub">Enter your security password to view notes.</p>
-        
-        <input type="password" id="inpUnlockPass" class="search-input" placeholder="Password" style="text-align: center; max-width: 260px; margin: 0 auto 12px auto;" />
-        <div id="unlockErrMsg" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-bottom: 10px; display: none;">Incorrect password!</div>
-        
-        <button class="btn-action" style="max-width: 260px; margin: 0 auto;" onclick="unlockNotesWithPass()" id="btnUnlockNotes">Unlock</button>
-      </div>
-
-      <!-- Main Notes View -->
-      <div id="notesMainScreen" class="content-card" style="display: none;">
-        <div class="card-title">
-          <span id="lblNotesTitle">Notes</span>
-          <div style="display: flex; gap: 6px;">
-            <button class="pill-btn" onclick="openNoteEditor()" style="font-size: 11px; padding: 4px 10px;" id="btnNewNote">➕ New Note</button>
-            <button class="pill-btn" onclick="openNotePassModal()" style="font-size: 11px; padding: 4px 8px;" id="btnSetNotePass">🔑 Password</button>
-            <button class="pill-btn" onclick="lockNotesImmediately()" style="font-size: 11px; padding: 4px 8px;" id="btnLockNow">🔒 Lock</button>
-          </div>
-        </div>
-        <div id="notesCardsList"></div>
-      </div>
-    </div>
-
-    <!-- Tab 4: Entries -->
+    <!-- Tab 3: Entries (4-tab layout now) -->
     <div id="tabEntries" style="display: none;">
       <div class="content-card">
         <div id="activeFilterBar" class="active-filter-bar">
@@ -897,7 +858,7 @@
       </div>
     </div>
 
-    <!-- Tab 5: Settings -->
+    <!-- Tab 4: Settings -->
     <div id="tabSettings" style="display: none;">
       <div class="content-card">
         <div class="card-title" id="lblProfileTitle">User Profile</div>
@@ -929,7 +890,7 @@
   <!-- Centered Floating Add Button (Rock Solid, Zero Jumping) -->
   <button class="fab" onclick="openAddModal()">+</button>
 
-  <!-- Bottom Navigation: Fixed & Anchored -->
+  <!-- Bottom Navigation: 4 Balanced Tabs (Dashboard | Plans | Entries | Settings) -->
   <nav>
     <button class="nav-tab active" onclick="switchTab('dashboard')" id="navDash">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -939,10 +900,6 @@
       <div class="nav-alert-badge" id="planNavBadge">0</div>
       <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
       <span id="tabNamePlans">Plans</span>
-    </button>
-    <button class="nav-tab" onclick="switchTab('notes')" id="navNotes">
-      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-      <span id="tabNameNotes">Notes</span>
     </button>
     <button class="nav-tab" onclick="switchTab('entries')" id="navEntries">
       <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
@@ -1004,58 +961,6 @@
 
       <button class="btn-action" onclick="saveExpense()" id="btnSave">Save Expense</button>
       <button class="btn-secondary" onclick="closeAddModal()" id="btnCancel">Cancel</button>
-    </div>
-  </div>
-
-  <!-- Note Editor Modal -->
-  <div class="modal" id="noteEditorModal">
-    <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="lblNoteModalTitle">Create Note</h2>
-        <button onclick="closeNoteEditor()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
-      </div>
-
-      <div class="form-group">
-        <label id="lblNoteTitle">Title</label>
-        <input type="text" id="inpNoteDocTitle" class="search-input" placeholder="Note Title..." />
-      </div>
-
-      <div class="form-group">
-        <label id="lblNoteBody">Write Anything</label>
-        <textarea id="inpNoteDocBody" class="search-input" style="height: 140px; resize: vertical; padding: 14px; font-size: 15px; line-height: 1.5;" placeholder="Write your notes, ideas, or lists here..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label id="lblNoteAttach">Attach Photo or File</label>
-        <div class="custom-file-row">
-          <label for="inpNoteAttachment" class="custom-file-btn" id="lblChooseNoteAttachBtn">📎 Choose File</label>
-          <input type="file" id="inpNoteAttachment" accept="image/*" style="display: none;" onchange="handleNoteFileChange(this)" />
-          <span class="custom-file-label" id="noteAttachChosenText">No file chosen</span>
-          <button type="button" id="btnClearNoteAttach" class="btn-clear-file" style="display: none;" onclick="clearChosenNoteFile()">✕</button>
-        </div>
-        <div id="noteAttachPreviewIndicator" style="font-size: 11px; color: var(--pine); font-weight: 600; margin-top: 4px; display: none;">✓ File ready to attach</div>
-      </div>
-
-      <button class="btn-action" onclick="saveNoteDocument()" id="btnSaveNoteDoc">Save Note</button>
-      <button class="btn-secondary" onclick="closeNoteEditor()" id="btnCancelNoteDoc">Cancel</button>
-    </div>
-  </div>
-
-  <!-- Note Password Setup Modal -->
-  <div class="modal" id="notePassModal">
-    <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="lblPassModalTitle">Note Password</h2>
-        <button onclick="closeNotePassModal()" style="background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer;">✕</button>
-      </div>
-
-      <div class="form-group">
-        <label id="lblNewPass">New Password</label>
-        <input type="password" id="inpNewNotePass" class="search-input" placeholder="Leave empty to remove password" />
-      </div>
-
-      <button class="btn-action" onclick="saveNotePassword()" id="btnSaveNotePass">Save Password</button>
-      <button class="btn-secondary" onclick="closeNotePassModal()" id="btnCancelNotePass">Cancel</button>
     </div>
   </div>
 
@@ -1195,7 +1100,6 @@
       app_title: { en: "Daily Expenses", km: "សៀវភៅចំណាយ" },
       dashboard: { en: "Dashboard", km: "ផ្ទាំងគ្រប់គ្រង" },
       plans: { en: "Plans", km: "គម្រោង" },
-      notes: { en: "Notes", km: "កត់ត្រា" },
       entries: { en: "Entries", km: "ចំណាយទាំងអស់" },
       settings: { en: "Settings", km: "ការកំណត់" },
       status: { en: "STATUS", km: "ស្ថានភាព" },
@@ -1275,26 +1179,7 @@
       plan_done: { en: "Bought ✓", km: "បានទិញរួច ✓" },
       no_plans: { en: "No planned purchases yet", km: "មិនទាន់មានគម្រោងទិញទំនិញនៅឡើយទេ" },
       due_today_badge: { en: "DUE TODAY", km: "ដល់ថ្ងៃទិញ" },
-      plan_alert_banner_text: { en: "⚠️ You have planned purchases scheduled for today!", km: "⚠️ អ្នកមានគម្រោងទិញទំនិញដែលត្រូវទិញនៅថ្ងៃនេះ!" },
-      notes_title: { en: "Notes", km: "កំណត់ចំណាំ" },
-      new_note: { en: "➕ New Note", km: "➕ កត់ត្រាថ្មី" },
-      lock_screen_title: { en: "Notes are Locked", km: "កំណត់ចំណាំត្រូវបានចាក់សោ" },
-      lock_screen_sub: { en: "Enter your security password to view notes.", km: "សូមបញ្ចូលលេខកូដសម្ងាត់ដើម្បីមើលកំណត់ចំណាំ។" },
-      unlock_btn: { en: "Unlock", km: "ដោះសោ" },
-      unlock_err: { en: "Incorrect password!", km: "លេខកូដមិនត្រឹមត្រូវទេ!" },
-      lock_now: { en: "🔒 Lock", km: "🔒 ចាក់សោ" },
-      key_pass: { en: "🔑 Password", km: "🔑 លេខកូដ" },
-      create_note_title: { en: "Create Note", km: "បង្កើតកំណត់ចំណាំ" },
-      note_doc_title: { en: "Title", km: "ចំណងជើង" },
-      note_doc_body: { en: "Write Anything", km: "សរសេរអ្វីៗនៅទីនេះ" },
-      note_doc_attach: { en: "Attach Photo or File", km: "ភ្ជាប់រូបថត ឬឯកសារ" },
-      save_note_doc: { en: "Save Note", km: "រក្សាទុកកំណត់ចំណាំ" },
-      pass_modal_title: { en: "Note Password", km: "លេខកូដសម្ងាត់កំណត់ចំណាំ" },
-      new_pass_lbl: { en: "New Password", km: "លេខកូដថ្មី" },
-      save_pass_btn: { en: "Save Password", km: "រក្សាទុកលេខកូដ" },
-      no_notes_empty: { en: "No notes yet", km: "មិនទាន់មានកំណត់ចំណាំនៅឡើយទេ" },
-      no_notes_hint: { en: "Tap on the message bar above to write anything!", km: "ចុចលើប្រអប់សារខាងលើដើម្បីកត់ត្រាអ្វីៗ!" },
-      view_attachment: { en: "📎 View Attachment", km: "📎 មើលឯកសារភ្ជាប់" }
+      plan_alert_banner_text: { en: "⚠️ You have planned purchases scheduled for today!", km: "⚠️ អ្នកមានគម្រោងទិញទំនិញដែលត្រូវទិញនៅថ្ងៃនេះ!" }
     };
 
     const khmerMonths = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
@@ -1304,9 +1189,6 @@
     let state = {
       entries: JSON.parse(localStorage.getItem("ledger_entries") || "[]"),
       plans: JSON.parse(localStorage.getItem("ledger_plans") || "[]"),
-      notes: JSON.parse(localStorage.getItem("ledger_notes") || "[]"),
-      notePass: localStorage.getItem("ledger_note_pass") || "",
-      notesUnlocked: false,
       exchangeRate: parseFloat(localStorage.getItem("ledger_rate") || "4035"),
       lang: savedLang,
       displayCurrency: savedLang === "km" ? "KHR" : "USD",
@@ -1318,9 +1200,7 @@
       viewYear: new Date().getFullYear(),
       viewMonth: new Date().getMonth(),
       showRemaining: false,
-      activeFilter: null,
-      editingNoteId: null,
-      tempNoteAttachment: null
+      activeFilter: null
     };
 
     let exportConfig = {
@@ -1390,8 +1270,6 @@
       try {
         localStorage.setItem("ledger_entries", JSON.stringify(state.entries));
         localStorage.setItem("ledger_plans", JSON.stringify(state.plans));
-        localStorage.setItem("ledger_notes", JSON.stringify(state.notes));
-        localStorage.setItem("ledger_note_pass", state.notePass);
         localStorage.setItem("ledger_rate", state.exchangeRate);
         localStorage.setItem("ledger_cur", state.displayCurrency);
         localStorage.setItem("ledger_budget", state.monthlyBudgetUSD);
@@ -1594,7 +1472,6 @@
       closeNewCatModal();
     }
 
-    /* Linked Toggle */
     function toggleLanguageAndCurrency() {
       if (state.lang === "en") {
         state.lang = "km";
@@ -1628,7 +1505,6 @@
       playTypewriterGreeting();
     }
 
-    /* Notifications Engine */
     function requestNotificationPermission() {
       if ("Notification" in window) {
         Notification.requestPermission().then(() => {
@@ -1682,7 +1558,6 @@
       }
     }
 
-    /* Plans Management */
     function renderPlansList() {
       const container = document.getElementById("plansList");
       container.innerHTML = "";
@@ -1806,205 +1681,6 @@
       }
     }
 
-    /* =========================================================
-       NOTES FEATURE WITH FILE ATTACHMENT & PASSWORD PROTECTION
-    ========================================================= */
-    async function handleNoteFileChange(input) {
-      const textEl = document.getElementById("noteAttachChosenText");
-      const clearBtn = document.getElementById("btnClearNoteAttach");
-      const preview = document.getElementById("noteAttachPreviewIndicator");
-
-      if (input.files && input.files.length > 0) {
-        const file = input.files[0];
-        textEl.innerText = file.name;
-        clearBtn.style.display = "block";
-        preview.style.display = "block";
-        state.tempNoteAttachment = await compressImageFile(file);
-      } else {
-        textEl.innerText = state.lang === "km" ? i18n.no_file_chosen.km : i18n.no_file_chosen.en;
-        clearBtn.style.display = "none";
-        preview.style.display = "none";
-        state.tempNoteAttachment = null;
-      }
-    }
-
-    function clearChosenNoteFile() {
-      const input = document.getElementById("inpNoteAttachment");
-      input.value = "";
-      state.tempNoteAttachment = null;
-      handleNoteFileChange(input);
-    }
-
-    function renderNotesTab() {
-      const lockScreen = document.getElementById("notesLockScreen");
-      const mainScreen = document.getElementById("notesMainScreen");
-
-      if (state.notePass && !state.notesUnlocked) {
-        lockScreen.style.display = "block";
-        mainScreen.style.display = "none";
-        document.getElementById("inpUnlockPass").value = "";
-        document.getElementById("unlockErrMsg").style.display = "none";
-      } else {
-        lockScreen.style.display = "none";
-        mainScreen.style.display = "block";
-        renderNotesCards();
-      }
-    }
-
-    function unlockNotesWithPass() {
-      const pass = document.getElementById("inpUnlockPass").value;
-      if (pass === state.notePass) {
-        state.notesUnlocked = true;
-        renderNotesTab();
-      } else {
-        document.getElementById("unlockErrMsg").style.display = "block";
-      }
-    }
-
-    function lockNotesImmediately() {
-      state.notesUnlocked = false;
-      renderNotesTab();
-    }
-
-    function renderNotesCards() {
-      const list = document.getElementById("notesCardsList");
-      list.innerHTML = "";
-      const isKm = state.lang === "km";
-
-      if (state.notes.length === 0) {
-        list.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-emoji">📝</div>
-            <div class="empty-title">${isKm ? i18n.no_notes_empty.km : i18n.no_notes_empty.en}</div>
-            <div style="font-size:12px;">${isKm ? i18n.no_notes_hint.km : i18n.no_notes_hint.en}</div>
-          </div>
-        `;
-        return;
-      }
-
-      state.notes.forEach(note => {
-        const card = document.createElement("div");
-        card.className = "note-card";
-        card.onclick = () => openNoteEditor(note.id);
-
-        let filePreview = "";
-        if (note.attachment) {
-          filePreview = `<img src="${note.attachment}" class="note-file-thumb" alt="Attachment" onclick="event.stopPropagation(); openImageModal('${note.attachment}')" />`;
-        }
-
-        card.innerHTML = `
-          ${filePreview}
-          <div class="note-card-title">${note.title || (isKm ? "គ្មានចំណងជើង" : "Untitled Note")}</div>
-          ${note.body ? `<div class="note-card-snippet">${note.body}</div>` : ""}
-          <div class="note-footer">
-            <span>🕒 ${note.updatedAt || note.createdAt}</span>
-            <button class="btn-delete" onclick="deleteNoteDoc('${note.id}', event)">✕</button>
-          </div>
-        `;
-        list.appendChild(card);
-      });
-    }
-
-    function openNoteEditor(noteId = null) {
-      state.editingNoteId = noteId;
-      state.tempNoteAttachment = null;
-      clearChosenNoteFile();
-
-      if (noteId) {
-        const note = state.notes.find(n => n.id === noteId);
-        document.getElementById("inpNoteDocTitle").value = note.title || "";
-        document.getElementById("inpNoteDocBody").value = note.body || "";
-        if (note.attachment) {
-          state.tempNoteAttachment = note.attachment;
-          document.getElementById("noteAttachChosenText").innerText = state.lang === "km" ? "រូបថតដែលបានភ្ជាប់រួច" : "Attached photo";
-          document.getElementById("btnClearNoteAttach").style.display = "block";
-          document.getElementById("noteAttachPreviewIndicator").style.display = "block";
-        }
-      } else {
-        document.getElementById("inpNoteDocTitle").value = "";
-        document.getElementById("inpNoteDocBody").value = "";
-      }
-
-      document.getElementById("noteEditorModal").style.display = "flex";
-    }
-
-    function closeNoteEditor() {
-      document.getElementById("noteEditorModal").style.display = "none";
-      state.editingNoteId = null;
-      state.tempNoteAttachment = null;
-    }
-
-    function saveNoteDocument() {
-      const title = document.getElementById("inpNoteDocTitle").value.trim();
-      const body = document.getElementById("inpNoteDocBody").value.trim();
-      const attachment = state.tempNoteAttachment;
-
-      if (!title && !body && !attachment) {
-        alert(state.lang === "km" ? "សូមសរសេរចំណងជើង ខ្លឹមសារ ឬភ្ជាប់ឯកសារ!" : "Please write a title, content, or attach a photo!");
-        return;
-      }
-
-      const nowStr = new Date().toLocaleDateString(state.lang === "km" ? "km-KH" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-
-      if (state.editingNoteId) {
-        const note = state.notes.find(n => n.id === state.editingNoteId);
-        if (note) {
-          note.title = title;
-          note.body = body;
-          note.attachment = attachment;
-          note.updatedAt = nowStr;
-        }
-      } else {
-        state.notes.unshift({
-          id: "note_" + Date.now(),
-          title: title,
-          body: body,
-          attachment: attachment,
-          createdAt: nowStr,
-          updatedAt: nowStr
-        });
-      }
-
-      saveState();
-      closeNoteEditor();
-      renderNotesCards();
-    }
-
-    function deleteNoteDoc(id, event) {
-      event.stopPropagation();
-      if (confirm(state.lang === "km" ? "តើអ្នកចង់លុបកំណត់ចំណាំនេះមែនទេ?" : "Delete this note?")) {
-        state.notes = state.notes.filter(n => n.id !== id);
-        saveState();
-        renderNotesCards();
-      }
-    }
-
-    function openNotePassModal() {
-      document.getElementById("inpNewNotePass").value = state.notePass || "";
-      document.getElementById("notePassModal").style.display = "flex";
-    }
-
-    function closeNotePassModal() {
-      document.getElementById("notePassModal").style.display = "none";
-    }
-
-    function saveNotePassword() {
-      const pass = document.getElementById("inpNewNotePass").value.trim();
-      state.notePass = pass;
-      state.notesUnlocked = pass ? true : false;
-      saveState();
-      closeNotePassModal();
-      renderNotesTab();
-      alert(state.lang === "km" ? "លេខកូដត្រូវបានរក្សាទុក!" : "Note password updated!");
-    }
-
-    function openImageModal(imgSrc) {
-      if (imgSrc) {
-        document.getElementById("viewerImage").src = imgSrc;
-        document.getElementById("receiptViewerModal").style.display = "flex";
-      }
-    }
-
     /* Core Render Engine */
     function render() {
       const now = new Date();
@@ -2034,7 +1710,6 @@
       renderCategoryList(catMap, monthUSD);
       renderFilteredEntriesList();
       renderPlansList();
-      renderNotesTab();
       updateNotificationButton();
 
       document.getElementById("langBtn").innerText = state.lang === "en" ? "🇺🇸 English" : "🇰🇭 ភាសាខ្មែរ";
@@ -2590,10 +2265,9 @@
       document.getElementById("btnOpenExport").innerText = t("open_export");
       document.getElementById("searchBar").placeholder = t("search_placeholder");
       
-      // Navigation Tabs
+      // 4-Tab Navigation
       document.getElementById("tabNameDash").innerText = t("dashboard");
       document.getElementById("tabNamePlans").innerText = t("plans");
-      document.getElementById("tabNameNotes").innerText = t("notes");
       document.getElementById("tabNameEntries").innerText = t("entries");
       document.getElementById("tabNameSettings").innerText = t("settings");
       
@@ -2630,41 +2304,12 @@
       document.getElementById("lblNotifSubtitle").innerText = t("notif_sub");
       document.getElementById("planAlertText").innerText = t("plan_alert_banner_text");
 
-      // Notes
-      document.getElementById("lblLockScreenTitle").innerText = t("lock_screen_title");
-      document.getElementById("lblLockScreenSub").innerText = t("lock_screen_sub");
-      document.getElementById("btnUnlockNotes").innerText = t("unlock_btn");
-      document.getElementById("unlockErrMsg").innerText = t("unlock_err");
-      document.getElementById("lblNotesTitle").innerText = t("notes_title");
-      document.getElementById("btnSetNotePass").innerText = t("key_pass");
-      document.getElementById("btnLockNow").innerText = t("lock_now");
-      document.getElementById("lblNoteModalTitle").innerText = t("create_note_title");
-      document.getElementById("lblNoteTitle").innerText = t("note_doc_title");
-      document.getElementById("lblNoteBody").innerText = t("note_doc_body");
-      document.getElementById("lblNoteAttach").innerText = t("note_doc_attach");
-      document.getElementById("lblChooseNoteAttachBtn").innerText = t("choose_file");
-      document.getElementById("btnSaveNoteDoc").innerText = t("save_note_doc");
-      document.getElementById("btnCancelNoteDoc").innerText = t("cancel");
-      document.getElementById("lblPassModalTitle").innerText = t("pass_modal_title");
-      document.getElementById("lblNewPass").innerText = t("new_pass_lbl");
-      document.getElementById("btnSaveNotePass").innerText = t("save_pass_btn");
-      document.getElementById("btnCancelNotePass").innerText = t("cancel");
-      document.getElementById("messengerQuickInput").placeholder = t("no_notes_hint").replace("Tap on the ", "").replace(" message bar above to write anything!", "...");
-
       const fileInput = document.getElementById("inpReceipt");
       if (!fileInput.files || fileInput.files.length === 0) {
         document.getElementById("fileChosenText").innerText = t("no_file_chosen");
       }
-      
-      const noteFileInput = document.getElementById("inpNoteAttachment");
-      if (!noteFileInput.files || noteFileInput.files.length === 0) {
-        if (!state.tempNoteAttachment) {
-          document.getElementById("noteAttachChosenText").innerText = t("no_file_chosen");
-        }
-      }
 
       document.getElementById("receiptPreviewIndicator").innerText = t("photo_ready");
-      document.getElementById("noteAttachPreviewIndicator").innerText = t("photo_ready");
       document.getElementById("btnSave").innerText = t("save");
       document.getElementById("btnCancel").innerText = t("cancel");
       document.getElementById("lblNewCatTitle").innerText = t("new_cat_title");
@@ -2703,13 +2348,11 @@
     function switchTab(tab) {
       document.getElementById("tabDashboard").style.display = tab === "dashboard" ? "block" : "none";
       document.getElementById("tabPlans").style.display = tab === "plans" ? "block" : "none";
-      document.getElementById("tabNotes").style.display = tab === "notes" ? "block" : "none";
       document.getElementById("tabEntries").style.display = tab === "entries" ? "block" : "none";
       document.getElementById("tabSettings").style.display = tab === "settings" ? "block" : "none";
 
       document.getElementById("navDash").className = "nav-tab " + (tab === "dashboard" ? "active" : "");
       document.getElementById("navPlans").className = "nav-tab " + (tab === "plans" ? "active" : "");
-      document.getElementById("navNotes").className = "nav-tab " + (tab === "notes" ? "active" : "");
       document.getElementById("navEntries").className = "nav-tab " + (tab === "entries" ? "active" : "");
       document.getElementById("navSettings").className = "nav-tab " + (tab === "settings" ? "active" : "");
 
@@ -2717,8 +2360,6 @@
         playTypewriterGreeting();
       } else if (tab === "plans") {
         renderPlansList();
-      } else if (tab === "notes") {
-        renderNotesTab();
       }
     }
   </script>
